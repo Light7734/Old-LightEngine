@@ -1,0 +1,8 @@
+[18:16:44]: <error>: Test ERROR: 1576421204
+[18:16:44]: <trace>: This is a sample Trace test
+[18:16:44]: <info>: This is a sample Info test
+[18:16:44]: <debug>: This is a sample Debug test
+[18:16:44]: <warning>: This is a sample Warn test
+[18:16:44]: <critical>: This is a sample Fatal test
+WARNING: Logger::Terminate() called (without a call to Logger::Init() / multiple times)
+WARNING: Logger::Terminate() called (without a call to Logger::Init() / multiple times)
