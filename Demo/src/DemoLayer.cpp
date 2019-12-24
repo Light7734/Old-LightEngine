@@ -16,15 +16,19 @@ void DemoLayer::OnDetatch()
 void DemoLayer::OnUpdate(float deltaTime)
 {
 	static Light::Timer timer; // timer class saves the start time point on construction
-	static long long frames = 0;
+	static uint32_t frames = 0u;
+	static uint32_t fpsLogTime = 1u;
 
 	frames++;
-	if (timer.ElapsedTime() >= 1.0f)
+	if (timer.ElapsedTime() >= fpsLogTime++)
 	{
 		LT_DEBUG("FPS: {}", frames);
 		frames = 0;
-		timer.Reset(); // reset the start point
 	}
+
+	const float c = abs(sin(timer.ElapsedTime()));
+	const float c2 = abs(cos(timer.ElapsedTime()));
+	Light::RenderCommand::ClearBuffer(c2 * 177, c * 255, c2 * 255, 255);
 
 
 	if (Light::Input::GetKey(KEY_ENTER))

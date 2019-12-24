@@ -8,7 +8,7 @@ namespace Light {
 
 	GraphicsAPI GraphicsContext::s_Api;
 
-	void GraphicsContext::Init(std::shared_ptr<Window> window)
+	void GraphicsContext::Init(std::shared_ptr<Window> game_window)
 	{
 		GraphicsContext* context;
 
@@ -19,7 +19,7 @@ namespace Light {
 			LT_CORE_ASSERT(false, EC_FEATURE_NOT_SUPPORTED, "GraphicsAPI::None is not supported");
 			break;
 		case GraphicsAPI::DirectX:
-			context = new dxGraphicsContext(window, window->GetWindowStyle());
+			context = new dxGraphicsContext(game_window);
 			break;
 		case GraphicsAPI::Opengl:
 			LT_CORE_ASSERT(false, EC_FEATURE_NOT_SUPPORTED, "GraphicsAPI::OpenGL is not supported");

@@ -44,7 +44,7 @@ namespace Light {
 		// Adjust window's rect and style
 		RECT rect = { 0, 0, data.width, data.height };
 		AdjustWindowRect(&rect, m_Style, false);
-		SetWindowStyle(data.style);
+		SetDisplayMode(data.displayMode);
 
 		// Create window
 		m_WindowHandle = CreateWindow( LT_WINDOWCLASSNAME,
@@ -116,11 +116,11 @@ namespace Light {
 		UpdateShowState();
 	}
 
-	void WindowsWindow::SetWindowStyle(WindowStyle style)
+	void WindowsWindow::SetDisplayMode(DisplayMode mode)
 	{
-		m_Style = style == WindowStyle::Windowed ? WS_SYSMENU | WS_CAPTION | WS_MINIMIZEBOX : WS_POPUP;
+		m_Style = mode == DisplayMode::Windowed ? WS_SYSMENU | WS_CAPTION | WS_MINIMIZEBOX : WS_POPUP;
 
-		m_Data.style = style;
+		m_Data.displayMode = mode;
 		m_Data.state = WindowState::Visible;
 
 		SetWindowLongPtr(m_WindowHandle, GWL_STYLE, m_Style);
@@ -165,7 +165,7 @@ namespace Light {
 		ShowWindow( m_WindowHandle, m_Data.state == WindowState::Hidden    ? SW_HIDE     :
 		                            m_Data.state == WindowState::Minimized ? SW_MINIMIZE :
 		                            m_Data.state == WindowState::Visible   ?
-		                                m_Data.style == WindowStyle::ExclusiveFullscreen ? SW_MAXIMIZE : SW_RESTORE : SW_RESTORE);
+		                                m_Data.displayMode == DisplayMode::ExclusiveFullscreen ? SW_MAXIMIZE : SW_RESTORE : SW_RESTORE);
 	}
 
 	LRESULT CALLBACK WindowsWindow::StaticProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)

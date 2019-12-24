@@ -6,7 +6,7 @@ namespace Light {
 
 	class Event;
 
-	enum class WindowStyle
+	enum class DisplayMode
 	{
 		ExclusiveFullscreen = 0 ,
 		Windowed                ,
@@ -24,8 +24,8 @@ namespace Light {
 	{
 		std::string title = "";
 
-		WindowStyle style = WindowStyle::Windowed;
-		WindowState state = WindowState::Visible;
+		DisplayMode displayMode = DisplayMode::Windowed;
+		WindowState state       = WindowState::Visible ;
 
 		uint16_t width = 0, height = 0;
 		int16_t  x     = 0, y      = 0;
@@ -56,7 +56,7 @@ namespace Light {
 		virtual void SetTitle(const std::string& title) = 0;
 
 		virtual void SetWindowState (WindowState state) = 0;
-		virtual void SetWindowStyle (WindowStyle style) = 0;
+		virtual void SetDisplayMode (DisplayMode mode ) = 0;
 
 		virtual void SetVSync (bool vSync) = 0;
 
@@ -74,8 +74,8 @@ namespace Light {
 
 		virtual inline std::string_view GetTitle() const { return m_Data.title; }
 
-		virtual inline WindowState GetWindowState() const { return m_Data.state; }
-		virtual inline WindowStyle GetWindowStyle() const { return m_Data.style; }
+		virtual inline WindowState GetWindowState() const { return m_Data.state;       }
+		virtual inline DisplayMode GetDisplayMode() const { return m_Data.displayMode; }
 
 		virtual inline bool isVSync () const { return m_Data.vSync; }
 

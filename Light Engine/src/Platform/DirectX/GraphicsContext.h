@@ -29,9 +29,11 @@ namespace Light {
 		Microsoft::WRL::ComPtr<IDXGISwapChain> m_SwapChain;
 		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_RenderTargetView;
 	public:
-		dxGraphicsContext(std::shared_ptr<const Window> window_handle, WindowStyle window_style);
+		dxGraphicsContext(std::shared_ptr<const Window> game_window);
 
 		void SwapBuffers() override;
+		void ClearBuffer(uint8_t r, uint8_t g, uint8_t b, uint8_t a) override;
+
 		void HandleWindowEvents(Event& event) override;
 	private:
 		bool OnWindowMaximize(WindowMaximizedEvent& event);

@@ -8,7 +8,7 @@ Demo::Demo()
 	LT_TRACE("Constructing Demo");
 
 	// Create window data to initialize window
-	Light::WindowData data = { "Demo", Light::WindowStyle::Windowed, Light::WindowState::Visible, 400, 400, 100, 100, false };
+	Light::WindowData data = { "Demo", Light::DisplayMode::Windowed, Light::WindowState::Visible, 400, 400, 100, 100, false };
 
 	m_Window = Light::Window::Create(data);
 	m_Window->SetEventCallbackFunction(LT_EVENT_FN(Light::Application::OnEvent));

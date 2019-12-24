@@ -3,7 +3,6 @@
 #include "Core/Core.h"
 
 #include <ostream>
-
 #include <functional>
 
 namespace Light {

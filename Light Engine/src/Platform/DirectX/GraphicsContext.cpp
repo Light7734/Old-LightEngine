@@ -9,15 +9,15 @@
 
 namespace Light {
 
-	dxGraphicsContext::dxGraphicsContext(std::shared_ptr<const Window> window_handle, WindowStyle window_style)
-		: m_GameWindow(window_handle)
+	dxGraphicsContext::dxGraphicsContext(std::shared_ptr<const Window> game_window)
+		: m_GameWindow(game_window)
 	{
-		bool windowed = window_style != WindowStyle::ExclusiveFullscreen;
+		bool windowed = game_window->GetDisplayMode() != DisplayMode::ExclusiveFullscreen;
 
 		// Create and set swap chain's description
 		DXGI_SWAP_CHAIN_DESC sd = { 0 };
 
-		sd.OutputWindow = static_cast<HWND>(window_handle->GetHandle());
+		sd.OutputWindow = static_cast<HWND>(game_window->GetHandle());
 
 		sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 		sd.BufferCount = 1;
@@ -64,6 +64,12 @@ namespace Light {
 	void dxGraphicsContext::SwapBuffers()
 	{
 		m_SwapChain->Present(m_GameWindow->isVSync(), NULL);
+	}
+
+	void dxGraphicsContext::ClearBuffer(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
+	{
+		const float channels[] = { r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f };
+		m_DeviceContext->ClearRenderTargetView(m_RenderTargetView.Get(), channels);
 	}
 
 	void dxGraphicsContext::HandleWindowEvents(Event& event)

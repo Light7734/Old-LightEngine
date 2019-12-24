@@ -31,7 +31,7 @@ namespace Light {
 		void SetTitle(const std::string& title) override;
 
 		void SetWindowState(WindowState state) override;
-		void SetWindowStyle(WindowStyle style) override;
+		void SetDisplayMode(DisplayMode mode ) override;
 
 		void SetVSync (bool vSync) override;
 
