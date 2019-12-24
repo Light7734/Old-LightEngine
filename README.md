@@ -1,2 +1,2 @@
 # LightEngine
-Cross-platform 2D GameEngine
+Light is a cross-platform 2D game engine.
