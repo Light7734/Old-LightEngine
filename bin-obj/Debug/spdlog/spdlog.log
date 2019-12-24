@@ -1,8 +1,0 @@
-﻿  async.cpp
-  color_sinks.cpp
-  file_sinks.cpp
-  fmt.cpp
-  spdlog.cpp
-  stdout_sinks.cpp
-  Generating Code...
-  spdlog.vcxproj -> C:\dev\Light Engine Desktop github\spdlog\..\bin\Debug\spdlog\spdlog.lib
