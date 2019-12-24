@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Engine">
+      <UniqueIdentifier>{12A1320E-FE58-745B-6760-4DB753370F4C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Engine\Core">
+      <UniqueIdentifier>{AA407579-16CC-E23D-1FDD-65328BE73E3E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Engine\Debug">
+      <UniqueIdentifier>{08B129A8-F4A9-48FA-1DDC-2D7F09342806}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Engine\Events">
+      <UniqueIdentifier>{B624EAB0-223B-E846-6BB2-7368D707B9CE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Engine\Input">
+      <UniqueIdentifier>{915689A8-7D4F-A8FA-A681-8D7F92D98706}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Engine\Layers">
+      <UniqueIdentifier>{910FCDBF-FD25-CB55-469D-5677B2F29BDD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Engine\Renderer">
+      <UniqueIdentifier>{F838018B-649A-DE98-ED07-254B59681558}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Platform">
+      <UniqueIdentifier>{21CA02E5-0D2D-9289-B6B2-CA3FA2F45D0C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Platform\DirectX">
+      <UniqueIdentifier>{E33DFBCB-CFCC-8495-78EB-98906459953B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Platform\Windows">
+      <UniqueIdentifier>{5B054582-4794-CE4B-F0B2-E246DC20DFF1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Engine\Core\Application.h">
+      <Filter>src\Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Core\Core.h">
+      <Filter>src\Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Core\EntryPoint.h">
+      <Filter>src\Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Core\Timer.h">
+      <Filter>src\Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Core\Window.h">
+      <Filter>src\Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Debug\ExitCodes.h">
+      <Filter>src\Engine\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Debug\KeycodeToString.h">
+      <Filter>src\Engine\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Debug\Logger.h">
+      <Filter>src\Engine\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Events\Event.h">
+      <Filter>src\Engine\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Events\KeyboardEvents.h">
+      <Filter>src\Engine\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Events\MouseEvents.h">
+      <Filter>src\Engine\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Events\WindowEvents.h">
+      <Filter>src\Engine\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Input\Input.h">
+      <Filter>src\Engine\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Input\Keycodes.h">
+      <Filter>src\Engine\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Layers\Layer.h">
+      <Filter>src\Engine\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\LightEngine.h">
+      <Filter>src\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Renderer\GraphicsContext.h">
+      <Filter>src\Engine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Renderer\RenderCommand.h">
+      <Filter>src\Engine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\ltpch.h">
+      <Filter>src\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\DirectX\GraphicsContext.h">
+      <Filter>src\Platform\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Windows\WindowsWindow.h">
+      <Filter>src\Platform\Windows</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Engine\Core\Application.cpp">
+      <Filter>src\Engine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Core\Timer.cpp">
+      <Filter>src\Engine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Debug\Logger.cpp">
+      <Filter>src\Engine\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Input\Input.cpp">
+      <Filter>src\Engine\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Renderer\GraphicsContext.cpp">
+      <Filter>src\Engine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Renderer\RenderCommand.cpp">
+      <Filter>src\Engine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\ltpch.cpp">
+      <Filter>src\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\DirectX\GraphicsContext.cpp">
+      <Filter>src\Platform\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp">
+      <Filter>src\Platform\Windows</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="premake5.lua" />
+  </ItemGroup>
+</Project>
