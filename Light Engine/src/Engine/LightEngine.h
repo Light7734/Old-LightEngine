@@ -4,7 +4,6 @@
 
 // Platform ==================
 #ifdef LIGHT_PLATFORM_WINDOWS
-	#include "Platform/Windows/WindowsWindow.h"
 #endif
 
 #ifdef LIGHT_PLATFORM_LINUX
@@ -23,7 +22,7 @@
 // Debug ---------------------
 #include "Debug/Logger.h"
 #include "Debug/ExitCodes.h"
-#include "Debug/KeycodeToString.h"
+#include "Debug/InputcodeToString.h"
 // ---------------------------
 
 // Events --------------------
@@ -35,7 +34,7 @@
 
 // Input ---------------------
 #include "Input/Input.h"
-#include "Input/Keycodes.h"
+#include "Input/InputCodes.h"
 // ---------------------------
 
 // Physics ------------------
@@ -44,7 +43,7 @@
 // Renderer -----------------
 #include "Renderer/GraphicsContext.h"
 #include "Renderer/RenderCommand.h"
-#include "Platform/DirectX/GraphicsContext.h"
+#include "Platform/DirectX/dxGraphicsContext.h"
 // --------------------------
 
 // Layers --------------------

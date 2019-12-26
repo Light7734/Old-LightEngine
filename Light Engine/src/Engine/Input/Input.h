@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Keycodes.h"
+#include "InputCodes.h"
 
 #include "Core/Core.h"
 

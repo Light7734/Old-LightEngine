@@ -54,9 +54,6 @@
     <ClInclude Include="src\Engine\Debug\ExitCodes.h">
       <Filter>src\Engine\Debug</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\Debug\KeycodeToString.h">
-      <Filter>src\Engine\Debug</Filter>
-    </ClInclude>
     <ClInclude Include="src\Engine\Debug\Logger.h">
       <Filter>src\Engine\Debug</Filter>
     </ClInclude>
@@ -75,9 +72,6 @@
     <ClInclude Include="src\Engine\Input\Input.h">
       <Filter>src\Engine\Input</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\Input\Keycodes.h">
-      <Filter>src\Engine\Input</Filter>
-    </ClInclude>
     <ClInclude Include="src\Engine\Layers\Layer.h">
       <Filter>src\Engine\Layers</Filter>
     </ClInclude>
@@ -93,11 +87,15 @@
     <ClInclude Include="src\Engine\ltpch.h">
       <Filter>src\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\DirectX\GraphicsContext.h">
-      <Filter>src\Platform\DirectX</Filter>
+    <ClInclude Include="src\Engine\Input\InputCodes.h">
+      <Filter>src\Engine\Input</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Windows\WindowsWindow.h">
-      <Filter>src\Platform\Windows</Filter>
+    <ClInclude Include="src\Platform\Opengl\glGraphicsContext.h" />
+    <ClInclude Include="src\Engine\Debug\InputcodeToString.h">
+      <Filter>src\Engine\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\DirectX\dxGraphicsContext.h">
+      <Filter>src\Platform\DirectX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -122,11 +120,10 @@
     <ClCompile Include="src\Engine\ltpch.cpp">
       <Filter>src\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\DirectX\GraphicsContext.cpp">
+    <ClCompile Include="src\Engine\Core\Window.cpp" />
+    <ClCompile Include="src\Platform\Opengl\glGraphicsContext.cpp" />
+    <ClCompile Include="src\Platform\DirectX\dxGraphicsContext.cpp">
       <Filter>src\Platform\DirectX</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp">
-      <Filter>src\Platform\Windows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -2,13 +2,14 @@
 #include "GraphicsContext.h"
 #include "RenderCommand.h"
 
-#include "Platform/DirectX/GraphicsContext.h"
+#include "Platform/DirectX/dxGraphicsContext.h"
+#include "Platform/Opengl/glGraphicsContext.h"
 
 namespace Light {
 
 	GraphicsAPI GraphicsContext::s_Api;
 
-	void GraphicsContext::Init(std::shared_ptr<Window> game_window)
+	void GraphicsContext::Init(std::shared_ptr<Window> game_window, bool v_sync)
 	{
 		GraphicsContext* context;
 
@@ -19,10 +20,10 @@ namespace Light {
 			LT_CORE_ASSERT(false, EC_FEATURE_NOT_SUPPORTED, "GraphicsAPI::None is not supported");
 			break;
 		case GraphicsAPI::DirectX:
-			context = new dxGraphicsContext(game_window);
+			context = new dxGraphicsContext(game_window, v_sync);
 			break;
 		case GraphicsAPI::Opengl:
-			LT_CORE_ASSERT(false, EC_FEATURE_NOT_SUPPORTED, "GraphicsAPI::OpenGL is not supported");
+			context = new glGraphicsContext(game_window, v_sync);
 			break;
 		default:
 			LT_CORE_ASSERT(false, EC_INVALID_GRAPHICS_API, "Invalid GraphicsAPI");

@@ -37,7 +37,7 @@ namespace Light {
 		while (m_Window->isRunning())
 		{
 			Time::Update();
-
+			RenderCommand::Clear();
 
 			for (auto layer : m_Layers)
 				layer->OnUpdate(Time::GetDeltaTime());
@@ -58,6 +58,8 @@ namespace Light {
 
 	void Application::OnEvent(Event& event)
 	{
+		LT_CORE_TRACE(event.GetLogInfo());
+
 		if(event.isInCategory(EventCategory_Input))
 			Input::OnEvent(event);
 

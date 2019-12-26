@@ -1,23 +1,26 @@
 #include "ltpch.h"
-#include "GraphicsContext.h"
-
+#include "dxGraphicsContext.h"
+	
 #include "Events/Event.h"
 #include "Events/WindowEvents.h"
 
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3d10.lib")
+#pragma comment(lib, "dxgi.lib")
+
+#include <dxgi.h>
 
 namespace Light {
 
-	dxGraphicsContext::dxGraphicsContext(std::shared_ptr<const Window> game_window)
-		: m_GameWindow(game_window)
+	dxGraphicsContext::dxGraphicsContext(std::shared_ptr<const Window> game_window, bool v_sync)
 	{
+		b_VSync = v_sync;
 		bool windowed = game_window->GetDisplayMode() != DisplayMode::ExclusiveFullscreen;
 
 		// Create and set swap chain's description
 		DXGI_SWAP_CHAIN_DESC sd = { 0 };
 
-		sd.OutputWindow = static_cast<HWND>(game_window->GetHandle());
+		sd.OutputWindow = static_cast<HWND>(game_window->GetNativeHandle());
 
 		sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 		sd.BufferCount = 1;
@@ -59,11 +62,33 @@ namespace Light {
 		Microsoft::WRL::ComPtr<ID3D11Resource> backBuffer = nullptr;
 		m_SwapChain->GetBuffer(0, __uuidof(ID3D11Resource), &backBuffer);
 		m_Device->CreateRenderTargetView(backBuffer.Get(), nullptr, &m_RenderTargetView);
+
+		// This shit is complicated for no god damn reason
+		IDXGIDevice * DXGIDevice;
+		IDXGIAdapter* adapter;
+		DXGI_ADAPTER_DESC desc;
+
+		m_Device->QueryInterface(__uuidof(IDXGIDevice), (void**)&DXGIDevice);
+		DXGIDevice->GetAdapter(&adapter);
+		adapter->GetDesc(&desc);
+
+		char DefChar = ' ';
+		char ch[180];
+		WideCharToMultiByte(CP_ACP, 0, desc.Description, -1, ch, 180, &DefChar, NULL);
+		std::string renderer(ch);
+
+		LT_CORE_INFO("dxGraphicsContext:");
+		LT_CORE_INFO("        Renderer: {}", renderer);
 	}
 
 	void dxGraphicsContext::SwapBuffers()
 	{
-		m_SwapChain->Present(m_GameWindow->isVSync(), NULL);
+		m_SwapChain->Present(b_VSync, NULL);
+	}
+
+	void dxGraphicsContext::Clear()
+	{
+
 	}
 
 	void dxGraphicsContext::ClearBuffer(uint8_t r, uint8_t g, uint8_t b, uint8_t a)

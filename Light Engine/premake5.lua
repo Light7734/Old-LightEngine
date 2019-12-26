@@ -25,9 +25,11 @@ project "Light Engine"
 
     includedirs
     {
-		"%{prj.location}/src/Engine/" ,
-		"%{prj.location}/src/"        ,
-		"%{wks.location}/spdlog/"     ,
+		"%{prj.location}/src/Engine/"  ,
+		"%{prj.location}/src/"         ,
+		"%{wks.location}/spdlog/"      ,
+		"%{wks.location}/glfw/include" ,
+		"%{wks.location}/glad/"        ,
     }
 
 

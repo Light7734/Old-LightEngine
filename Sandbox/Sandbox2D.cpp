@@ -22,13 +22,13 @@ public:
 	{ 
 		LT_DEBUG("Constructing Sandbox2D");
 
-		Light::WindowData data = { "Light Engine", Light::DisplayMode::Windowed, Light::WindowState::Visible, 500, 400, 200, 20, false };
+		Light::WindowData data = { "Light Engine", Light::DisplayMode::Windowed, Light::WindowState::Visible, 500, 400, 200, 20 };
 
-		m_Window = Light::Window::Create(data);
+		m_Window = std::make_shared<Light::Window>(data);
 		m_Window->SetEventCallbackFunction(std::bind(&Light::Application::OnEvent, this, std::placeholders::_1));
 
 		Light::GraphicsContext::SetAPI(Light::GraphicsAPI::DirectX);
-		Light::GraphicsContext::Init(m_Window);
+		Light::GraphicsContext::Init(m_Window, true);
 
 		AttachLayer(std::make_shared<ClearBufferLayer>());
 	}	

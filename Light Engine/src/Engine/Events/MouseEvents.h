@@ -1,7 +1,8 @@
 #pragma once
-#include "ltpch.h"
 
 #include "Event.h"
+
+#include "Debug/InputcodeToString.h"
 
 #include "Core/Core.h"
 
@@ -12,14 +13,14 @@ namespace Light {
 	class MouseMovedEvent : public Event
 	{
 	private:
-		int16_t m_MouseX, m_MouseY;
+		int m_MouseX, m_MouseY;
 	public:
-		MouseMovedEvent(int16_t x, int16_t y): m_MouseX(x), m_MouseY(y) {}
+		MouseMovedEvent(int x, int y): m_MouseX(x), m_MouseY(y) {}
 
-		inline uint16_t GetX() { return m_MouseX; }
-		inline uint16_t GetY() { return m_MouseY; }
+		inline int GetX() { return m_MouseX; }
+		inline int GetY() { return m_MouseY; }
 
-		inline std::pair<uint16_t, uint16_t> GetPos() { return { m_MouseX, m_MouseY }; }
+		inline std::pair<int, int> GetPos() { return { m_MouseX, m_MouseY }; }
 
 		std::string GetLogInfo() const override
 		{
@@ -35,9 +36,9 @@ namespace Light {
 	class MouseButtonPressedEvent : public Event
 	{
 	private:
-		uint8_t m_Button;
+		int m_Button;
 	public:
-		MouseButtonPressedEvent(uint8_t button): m_Button(button) {}
+		MouseButtonPressedEvent(int button): m_Button(button) {}
 
 		inline int GetButton() { return m_Button; }
 
@@ -45,7 +46,7 @@ namespace Light {
 		{
 			// #todo: convert button's code to button's name
 			std::stringstream ss;
-			ss << "Mouse button pressed: " << (int)m_Button;
+			ss << "Mouse button pressed: " << ButtonToString(m_Button);
 			return ss.str();
 		}
 
@@ -56,7 +57,7 @@ namespace Light {
 	class MouseButtonReleasedEvent : public Event
 	{
 	private:
-		uint8_t m_Button;
+		int m_Button;
 	public:
 		MouseButtonReleasedEvent(uint8_t button): m_Button(button) {}
 
@@ -66,7 +67,7 @@ namespace Light {
 		{ 
 			// #todo: convert button's code to button's name
 			std::stringstream ss;
-			ss << "Mouse button released: " << (int)m_Button;
+			ss << "Mouse button released: " << ButtonToString(m_Button);
 			return  ss.str();
 		}
 

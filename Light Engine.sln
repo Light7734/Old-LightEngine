@@ -7,6 +7,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Light Engine", "Light Engin
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sandbox", "Sandbox\Sandbox.vcxproj", "{F4C124E3-60A1-A37E-69B9-2E55D5170AE0}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glad", "glad\glad.vcxproj", "{DD62977C-C999-980D-7286-7E105E9C140F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glfw", "glfw\glfw.vcxproj", "{9563977C-819A-980D-2A87-7E10169D140F}"
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "spdlog", "spdlog\spdlog.vcxproj", "{8EAD431C-7A4F-6EF2-630A-82464F4BF542}"
 EndProject
 Global
@@ -34,6 +38,18 @@ Global
 		{F4C124E3-60A1-A37E-69B9-2E55D5170AE0}.Distribution|x64.Build.0 = Distribution|x64
 		{F4C124E3-60A1-A37E-69B9-2E55D5170AE0}.Release|x64.ActiveCfg = Release|x64
 		{F4C124E3-60A1-A37E-69B9-2E55D5170AE0}.Release|x64.Build.0 = Release|x64
+		{DD62977C-C999-980D-7286-7E105E9C140F}.Debug|x64.ActiveCfg = Debug|x64
+		{DD62977C-C999-980D-7286-7E105E9C140F}.Debug|x64.Build.0 = Debug|x64
+		{DD62977C-C999-980D-7286-7E105E9C140F}.Distribution|x64.ActiveCfg = Distribution|x64
+		{DD62977C-C999-980D-7286-7E105E9C140F}.Distribution|x64.Build.0 = Distribution|x64
+		{DD62977C-C999-980D-7286-7E105E9C140F}.Release|x64.ActiveCfg = Release|x64
+		{DD62977C-C999-980D-7286-7E105E9C140F}.Release|x64.Build.0 = Release|x64
+		{9563977C-819A-980D-2A87-7E10169D140F}.Debug|x64.ActiveCfg = Debug|x64
+		{9563977C-819A-980D-2A87-7E10169D140F}.Debug|x64.Build.0 = Debug|x64
+		{9563977C-819A-980D-2A87-7E10169D140F}.Distribution|x64.ActiveCfg = Distribution|x64
+		{9563977C-819A-980D-2A87-7E10169D140F}.Distribution|x64.Build.0 = Distribution|x64
+		{9563977C-819A-980D-2A87-7E10169D140F}.Release|x64.ActiveCfg = Release|x64
+		{9563977C-819A-980D-2A87-7E10169D140F}.Release|x64.Build.0 = Release|x64
 		{8EAD431C-7A4F-6EF2-630A-82464F4BF542}.Debug|x64.ActiveCfg = Debug|x64
 		{8EAD431C-7A4F-6EF2-630A-82464F4BF542}.Debug|x64.Build.0 = Debug|x64
 		{8EAD431C-7A4F-6EF2-630A-82464F4BF542}.Distribution|x64.ActiveCfg = Distribution|x64

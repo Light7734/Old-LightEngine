@@ -27,6 +27,8 @@ project "Demo"
 		"%{wks.location}/Light Engine/src/Engine/" ,
 		"%{wks.location}/Light Engine/src"         ,
 		"%{wks.location}/spdlog/"                  ,
+		"%{wks.location}/glfw/include"             ,
+		"%{wks.location}/glad/"                    ,
     }
 
 

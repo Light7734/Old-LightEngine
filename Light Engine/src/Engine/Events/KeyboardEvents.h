@@ -2,7 +2,7 @@
 
 #include "Event.h"
 
-#include "Debug/KeycodeToString.h"
+#include "Debug/InputcodeToString.h"
 
 #include "Core/Core.h"
 
@@ -13,11 +13,11 @@ namespace Light {
 	class KeyboardKeyPressedEvent : public Event
 	{
 	private:
-		int16_t m_Key;
+		int m_Key;
 	public:
 		KeyboardKeyPressedEvent(int16_t key): m_Key(key) {}
 
-		inline int16_t GetKey() const { return m_Key; }
+		inline int GetKey() const { return m_Key; }
 
 		std::string GetLogInfo() const 
 		{ 
@@ -33,11 +33,11 @@ namespace Light {
 	class KeyboardKeyReleasedEvent : public Event
 	{
 	private:
-		int16_t m_Key;
+		int m_Key;
 	public:
-		KeyboardKeyReleasedEvent(int16_t key): m_Key(key) {}
+		KeyboardKeyReleasedEvent(int key): m_Key(key) {}
 
-		inline int16_t GetKey() const { return m_Key; }
+		inline int GetKey() const { return m_Key; }
 
 		std::string GetLogInfo() const
 		{ 

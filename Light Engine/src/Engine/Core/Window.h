@@ -2,6 +2,8 @@
 
 #include "Core/Core.h"
 
+struct GLFWwindow;
+
 namespace Light {
 
 	class Event;
@@ -27,60 +29,60 @@ namespace Light {
 		DisplayMode displayMode = DisplayMode::Windowed;
 		WindowState state       = WindowState::Visible ;
 
-		uint16_t width = 0, height = 0;
-		int16_t  x     = 0, y      = 0;
+		unsigned int width = 0, height = 0;
+		int          x     = 0, y      = 0;
 
-		bool vSync      = true;
 		bool active     = true; // input focus
 		bool running    = true;
 		
-		std::function<void(Event&)> eventCallback;
+		std::function<void(Event&)> eventCallback = [](Event&) {};
 	};
 	
 	class Window
 	{
-	protected:
-		WindowData m_Data;
+	private:
+		GLFWwindow* m_Window = nullptr;
+		void* m_NativeHandle = nullptr;
+
+		WindowData m_Data = {};
 	public:
-		virtual ~Window() = default;
+		Window(const WindowData& data);
+		~Window();
 
-		static std::unique_ptr<Window> Create(const WindowData& data);
+		void HandleEvents();
 
-		virtual void HandleEvents() = 0;
+		void SetEventCallbackFunction(std::function<void(Event&)> event_callback_func);
 
-		virtual void SetEventCallbackFunction(std::function<void(Event&)> event_callback_func) = 0;
+		void Resize    (uint16_t width, uint16_t height);
+		void Reposition(int16_t  x    , int16_t  y     );
 
-		virtual void Resize    (uint16_t width, uint16_t height) = 0;
-		virtual void Reposition(int16_t  x    , int16_t  y     ) = 0;
+		void SetTitle(const std::string& title);
 
-		virtual void SetTitle(const std::string& title) = 0;
+		void SetWindowState(WindowState state);
+		void SetDisplayMode(DisplayMode mode );
 
-		virtual void SetWindowState (WindowState state) = 0;
-		virtual void SetDisplayMode (DisplayMode mode ) = 0;
+		void Center();
+		void Show  ();
+		void Hide  ();
 
-		virtual void SetVSync (bool vSync) = 0;
-
-		virtual void Center() = 0;
-		virtual void Show  () = 0;
-		virtual void Hide  () = 0;
-
-		virtual void Close() = 0;
+		void Close();
 
 
-		virtual inline void* GetHandle() const = 0;
+		inline GLFWwindow* GetHandle() const { return m_Window; }
+		void* GetNativeHandle() const;
 
-		virtual inline std::pair<uint16_t, uint16_t> GetSize    () const { return { m_Data.width, m_Data.height }; }
-		virtual inline std::pair<int16_t , int16_t > GetPosition() const { return { m_Data.x    , m_Data.y      }; }
+		inline std::pair<uint16_t, uint16_t> GetSize    () const { return { m_Data.width, m_Data.height }; }
+		inline std::pair<int16_t , int16_t > GetPosition() const { return { m_Data.x    , m_Data.y      }; }
 
-		virtual inline std::string_view GetTitle() const { return m_Data.title; }
+		inline std::string_view GetTitle() const { return m_Data.title; }
 
-		virtual inline WindowState GetWindowState() const { return m_Data.state;       }
-		virtual inline DisplayMode GetDisplayMode() const { return m_Data.displayMode; }
+		inline WindowState GetWindowState() const { return m_Data.state;       }
+		inline DisplayMode GetDisplayMode() const { return m_Data.displayMode; }
 
-		virtual inline bool isVSync () const { return m_Data.vSync; }
-
-		virtual inline bool isActive () const { return m_Data.active;  }
-		virtual inline bool isRunning() const { return m_Data.running; }
+		inline bool isActive () const { return m_Data.active;  }
+		inline bool isRunning() const { return m_Data.running; }
+	private:
+		void SetGlfwCallbacks();
 	};
 
 }

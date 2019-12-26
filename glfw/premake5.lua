@@ -9,25 +9,32 @@ project "glfw"
 	targetdir (TargetDir)
 	objdir    (ObjectDir)
 
-
-	
-	defines "_GLFW_WIN32"
 	defines "_CRT_SECURE_NO_WARNINGS"
-
-	files
-	{
-		"%{prj.location}/**.c"         ,
-		"%{prj.location}/**.cpp"       ,
-		"%{prj.location}/**.h"         ,
-		"%{prj.location}/premake5.lua" ,
-	}
 	
-	filter "platforms:windows"
+	filter "system:windows"
+		defines "_GLFW_WIN32"
+		files
+		{
+			"GLFWSource/win32**"       ,
+			"GLFWSource/context.c"     ,
+			"GLFWSource/egl**"         ,
+			"GLFWSource/init.c"        ,
+			"GLFWSource/input.c"       ,
+			"GLFWSource/internal.h"    ,
+			"GLFWSource/mappings.h"    ,
+			"GLFWSource/monitor.c"     ,
+			"GLFWSource/nsgl_context.h",
+			"GLFWSource/osmesa**"      ,
+			"GLFWSource/wgl**"         ,
+			"GLFWSource/window.c"      ,
+			"GLFWSource/xkb**"         ,
+			"GLFWSource/premake5.lua"  ,
+		}
 
-	filter "platforms:linux"
-
-	filter "platforms:mac"
-	
+	filter "system:linux"
+	-- #todo
+	filter "system:mac"
+	-- #todo
 
 	filter "configurations:debug"
 		optimize "debug"
