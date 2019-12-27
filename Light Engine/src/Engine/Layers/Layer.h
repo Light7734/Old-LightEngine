@@ -10,8 +10,8 @@ namespace Light {
 	{
 	public:
 		Layer           (            ) = default;
-		Layer& operator=(const Layer&) = delete ;
 		Layer           (const Layer&) = delete ;
+		Layer& operator=(const Layer&) = delete ;
 		virtual ~Layer  (            ) = default;
 
 		virtual void OnAttach () {}

@@ -78,16 +78,16 @@ namespace Light {
 	class MouseScrolledEvent : public Event
 	{
 	private:
-		int8_t m_XOffset;
+		int m_XOffset;
 	public:
-		MouseScrolledEvent(int8_t xOffset): m_XOffset(xOffset) {}
+		MouseScrolledEvent(int xOffset): m_XOffset(xOffset) {}
 
-		inline int8_t GetOffset() { return m_XOffset; }
+		inline int GetOffset() { return m_XOffset; }
 
 		std::string GetLogInfo() const override 
 		{
 			std::stringstream ss;
-			ss << "Mouse scrolled: " << (int)m_XOffset;
+			ss << "Mouse scrolled: " << m_XOffset;
 			return ss.str();
 		}
 

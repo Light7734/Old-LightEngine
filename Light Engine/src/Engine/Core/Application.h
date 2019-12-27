@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core.h"
+#include "Core/Core.h"
 
 namespace Light {
 
@@ -16,14 +16,15 @@ namespace Light {
 		static Application* s_Instance;
 	protected:
 		std::shared_ptr<Window> m_Window;
-		std::vector<std::shared_ptr<Layer>> m_Layers;
+		std::vector<std::shared_ptr<Layer>> m_LayerStack;
 	public:
-		Application();
-		virtual ~Application();
+		Application           (                  )        ;
+		Application           (const Application&) = delete;
+		Application& operator=(const Application&) = delete;
+		virtual ~Application  (                  )         ;
 
-		void GameLoop();
-
-		void OnEvent(Event& event);
+		void GameLoop(            );
+		void OnEvent (Event& event);
 
 		void AttachLayer (std::shared_ptr<Layer> layer);
 		void DetatchLayer(std::shared_ptr<Layer> layer);

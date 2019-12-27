@@ -5,13 +5,12 @@
 
 namespace Light {
 
-	GraphicsContext* RenderCommand::s_GraphicsContext;
+	GraphicsContext* RenderCommand::s_GraphicsContext = nullptr;
 
 	void RenderCommand::SwapBuffers()
 	{
 		s_GraphicsContext->SwapBuffers();
 	}
-
 
 	void RenderCommand::Clear()
 	{

@@ -144,12 +144,6 @@
     <None Include="premake5.lua" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\glad\glad.vcxproj">
-      <Project>{dd62977c-c999-980d-7286-7e105e9c140f}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\glfw\glfw.vcxproj">
-      <Project>{9563977c-819a-980d-2a87-7e10169d140f}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\Light Engine\Light Engine.vcxproj">
       <Project>{D3F2C7DC-BF55-5781-68DB-8F37541D2304}</Project>
     </ProjectReference>

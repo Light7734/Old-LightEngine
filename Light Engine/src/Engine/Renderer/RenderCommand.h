@@ -16,6 +16,8 @@ namespace Light {
 		static inline void SetGraphicsContext(GraphicsContext* context) 
 			{ s_GraphicsContext = context; }
 
+		static bool isInitialized() { return s_GraphicsContext; }
+
 		static void SwapBuffers();
 
 		static void Clear();

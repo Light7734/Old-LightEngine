@@ -1,14 +1,15 @@
 #include "ltpch.h"
 #include "Application.h"
 
-#include "Window.h"
 #include "Timer.h"
+#include "Window.h"
 
-#include "Layers/Layer.h"
+#include "Events/Event.h"
+#include "Events/WindowEvents.h"
 
 #include "Input/Input.h"
 
-#include "Events/WindowEvents.h"
+#include "Layers/Layer.h"
 
 #include "Renderer/RenderCommand.h"
 
@@ -34,19 +35,23 @@ namespace Light {
 
 	void Application::GameLoop()
 	{
+		LT_CORE_ASSERT(m_Window, EC_NO_INIT_WINDOW, "Application::m_Window is not initialized");
+		LT_CORE_ASSERT(RenderCommand::isInitialized(), EC_NO_INIT_GRAPHICSC_CONTEXT, "GraphicsContext::Init() was never called");
+
 		while (m_Window->isRunning())
 		{
 			Time::Update();
 			RenderCommand::Clear();
 
-			for (auto layer : m_Layers)
+
+			for (auto layer : m_LayerStack)
 				layer->OnUpdate(Time::GetDeltaTime());
 
-			for (auto layer : m_Layers)
+			for (auto layer : m_LayerStack)
 				layer->OnRender();
 
 			// UserInterface::Begin(); #todo: Add ImGui
-			for (auto layer : m_Layers)
+			for (auto layer : m_LayerStack)
 				layer->OnUserInterfaceUpdate();
 			// UserInterface::End  (); #todo: Add ImGui
 
@@ -58,15 +63,13 @@ namespace Light {
 
 	void Application::OnEvent(Event& event)
 	{
-		LT_CORE_TRACE(event.GetLogInfo());
-
 		if(event.isInCategory(EventCategory_Input))
 			Input::OnEvent(event);
 
 		if (event.isInCategory(EventCategory_Window))
 			RenderCommand::HandleWindowEvents(event);
 
-		for (auto it = m_Layers.end(); it != m_Layers.begin();)
+		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();)
 		{
 			(*--it)->OnEvent(event);
 			if (event.b_Dispatched)
@@ -79,18 +82,22 @@ namespace Light {
 
 	void Application::AttachLayer(std::shared_ptr<Layer> layer)
 	{
-		m_Layers.push_back(layer);
+		m_LayerStack.push_back(layer);
 		layer->OnAttach();
+
+		LDO( LT_CORE_TRACE("LayerStack size: ", m_LayerStack.size()) );
 	}
 
 	void Application::DetatchLayer(std::shared_ptr<Layer> layer)
 	{
-		auto it = std::find(m_Layers.begin(), m_Layers.end(), layer);
+		auto it = std::find(m_LayerStack.begin(), m_LayerStack.end(), layer);
 
-		if (it != m_Layers.end())
-			{ layer->OnDetatch(); m_Layers.erase(it); }
+		if (it != m_LayerStack.end())
+			{ layer->OnDetatch(); m_LayerStack.erase(it); }
 		else
 			LT_CORE_ERROR("failed to find the specified layer from LayerStack");
+
+		LDO( LT_CORE_TRACE("LayerStack size: ", m_LayerStack.size()) );
 	}
 
 	bool Application::OnWindowClosedEvent(WindowClosedEvent& event)

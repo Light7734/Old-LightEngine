@@ -20,6 +20,8 @@ project "Light Engine"
     links
     {
         "spdlog"       ,
+		"glfw"         ,
+		"glad"         ,
         "opengl32.lib" ,
     }
 

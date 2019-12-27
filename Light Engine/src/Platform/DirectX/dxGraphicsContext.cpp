@@ -14,8 +14,8 @@ namespace Light {
 
 	dxGraphicsContext::dxGraphicsContext(std::shared_ptr<const Window> game_window, bool v_sync)
 	{
-		b_VSync = v_sync;
 		bool windowed = game_window->GetDisplayMode() != DisplayMode::ExclusiveFullscreen;
+		b_VSync = v_sync;
 
 		// Create and set swap chain's description
 		DXGI_SWAP_CHAIN_DESC sd = { 0 };
@@ -99,7 +99,6 @@ namespace Light {
 
 	void dxGraphicsContext::HandleWindowEvents(Event& event)
 	{
-		// handle m_SwapChain's Fullscreen state
 		Dispatcher dispatcher(event);
 
 		dispatcher.Dispatch<WindowMaximizedEvent>(LT_EVENT_FN(dxGraphicsContext::OnWindowMaximize));

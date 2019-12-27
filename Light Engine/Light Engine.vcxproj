@@ -172,23 +172,21 @@
     <ClCompile Include="src\Engine\ltpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\Platform\DirectX\dxGraphicsContext.cpp">
-      <ObjectFileName>$(IntDir)\GraphicsContext1.obj</ObjectFileName>
-    </ClCompile>
+    <ClCompile Include="src\Platform\DirectX\dxGraphicsContext.cpp" />
     <ClCompile Include="src\Platform\Opengl\glGraphicsContext.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="premake5.lua" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\glad\glad.vcxproj">
-      <Project>{dd62977c-c999-980d-7286-7e105e9c140f}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\glfw\glfw.vcxproj">
-      <Project>{9563977c-819a-980d-2a87-7e10169d140f}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\spdlog\spdlog.vcxproj">
       <Project>{8EAD431C-7A4F-6EF2-630A-82464F4BF542}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\glfw\glfw.vcxproj">
+      <Project>{9563977C-819A-980D-2A87-7E10169D140F}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\glad\glad.vcxproj">
+      <Project>{DD62977C-C999-980D-7286-7E105E9C140F}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

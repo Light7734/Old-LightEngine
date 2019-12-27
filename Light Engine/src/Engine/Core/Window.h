@@ -32,8 +32,8 @@ namespace Light {
 		unsigned int width = 0, height = 0;
 		int          x     = 0, y      = 0;
 
-		bool active     = true; // input focus
-		bool running    = true;
+		bool active  = true; // input focus
+		bool running = true;
 		
 		std::function<void(Event&)> eventCallback = [](Event&) {};
 	};
@@ -46,28 +46,29 @@ namespace Light {
 
 		WindowData m_Data = {};
 	public:
-		Window(const WindowData& data);
-		~Window();
+		Window           (const WindowData& data)         ;
+		Window           (const Window&         ) = delete;
+		Window& operator=(const Window&         ) = delete;
+		~Window          (                      )         ;
 
 		void HandleEvents();
 
+		// Setters
 		void SetEventCallbackFunction(std::function<void(Event&)> event_callback_func);
 
-		void Resize    (uint16_t width, uint16_t height);
-		void Reposition(int16_t  x    , int16_t  y     );
+		void Resize    (unsigned int width, unsigned int height);
+		void Reposition(int          x    , int          y     );
 
 		void SetTitle(const std::string& title);
 
-		void SetWindowState(WindowState state);
+		void SetState      (WindowState state);
 		void SetDisplayMode(DisplayMode mode );
 
 		void Center();
-		void Show  ();
-		void Hide  ();
 
 		void Close();
 
-
+		// Getters
 		inline GLFWwindow* GetHandle() const { return m_Window; }
 		void* GetNativeHandle() const;
 

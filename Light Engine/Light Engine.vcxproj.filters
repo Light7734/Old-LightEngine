@@ -31,8 +31,8 @@
     <Filter Include="src\Platform\DirectX">
       <UniqueIdentifier>{E33DFBCB-CFCC-8495-78EB-98906459953B}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Platform\Windows">
-      <UniqueIdentifier>{5B054582-4794-CE4B-F0B2-E246DC20DFF1}</UniqueIdentifier>
+    <Filter Include="src\Platform\Opengl">
+      <UniqueIdentifier>{75A89437-E109-7245-6A77-B8F7D6D7A804}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -54,6 +54,9 @@
     <ClInclude Include="src\Engine\Debug\ExitCodes.h">
       <Filter>src\Engine\Debug</Filter>
     </ClInclude>
+    <ClInclude Include="src\Engine\Debug\InputcodeToString.h">
+      <Filter>src\Engine\Debug</Filter>
+    </ClInclude>
     <ClInclude Include="src\Engine\Debug\Logger.h">
       <Filter>src\Engine\Debug</Filter>
     </ClInclude>
@@ -72,6 +75,9 @@
     <ClInclude Include="src\Engine\Input\Input.h">
       <Filter>src\Engine\Input</Filter>
     </ClInclude>
+    <ClInclude Include="src\Engine\Input\InputCodes.h">
+      <Filter>src\Engine\Input</Filter>
+    </ClInclude>
     <ClInclude Include="src\Engine\Layers\Layer.h">
       <Filter>src\Engine\Layers</Filter>
     </ClInclude>
@@ -87,15 +93,11 @@
     <ClInclude Include="src\Engine\ltpch.h">
       <Filter>src\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\Input\InputCodes.h">
-      <Filter>src\Engine\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Opengl\glGraphicsContext.h" />
-    <ClInclude Include="src\Engine\Debug\InputcodeToString.h">
-      <Filter>src\Engine\Debug</Filter>
-    </ClInclude>
     <ClInclude Include="src\Platform\DirectX\dxGraphicsContext.h">
       <Filter>src\Platform\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Opengl\glGraphicsContext.h">
+      <Filter>src\Platform\Opengl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -103,6 +105,9 @@
       <Filter>src\Engine\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Engine\Core\Timer.cpp">
+      <Filter>src\Engine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Core\Window.cpp">
       <Filter>src\Engine\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Engine\Debug\Logger.cpp">
@@ -120,10 +125,11 @@
     <ClCompile Include="src\Engine\ltpch.cpp">
       <Filter>src\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="src\Engine\Core\Window.cpp" />
-    <ClCompile Include="src\Platform\Opengl\glGraphicsContext.cpp" />
     <ClCompile Include="src\Platform\DirectX\dxGraphicsContext.cpp">
       <Filter>src\Platform\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Opengl\glGraphicsContext.cpp">
+      <Filter>src\Platform\Opengl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

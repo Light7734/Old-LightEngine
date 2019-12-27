@@ -2,9 +2,9 @@
 #include "Window.h"
 
 #include "Events/Event.h"
-#include "Events/WindowEvents.h"
 #include "Events/KeyboardEvents.h"
 #include "Events/MouseEvents.h"
+#include "Events/WindowEvents.h"
 
 #if   defined(LIGHT_PLATFORM_WINDOWS)
 	#define GLFW_EXPOSE_NATIVE_WIN32
@@ -16,6 +16,7 @@
 	#define GLFW_EXPOSE_NATIVE_COCOA
 
 #endif
+
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
 #include <glfw/glfw3native.h>
@@ -24,14 +25,33 @@ namespace Light {
 
 	Window::Window(const WindowData& data)
 	{
+		// Initialize glfw and set window data
+		LT_CORE_ASSERT(glfwInit(), EC_CALL_FAIL_GLFW_INIT, "glfwInit() failed");
 		m_Data = data;
-		glfwInit();
 
+
+		// Window hints
+		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+		glfwWindowHint(GLFW_VISIBLE  , data.state != WindowState::Hidden);
+		glfwWindowHint(GLFW_ICONIFIED, data.state == WindowState::Minimized);
+		glfwWindowHint(GLFW_DECORATED, data.displayMode != DisplayMode::BorderlessWindowed);
+
+
+		// Create and check glfw window
 		m_Window = glfwCreateWindow(data.width, data.height, data.title.c_str(),
 		                            data.displayMode == DisplayMode::ExclusiveFullscreen ? glfwGetPrimaryMonitor() : NULL, NULL);
+		LT_CORE_ASSERT(m_Window, EC_ENGINE_ASSERTION, "failed to create glfw window");
+
 
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		Center();
+
+		// Set native window handle
+#	ifdef GLFW_EXPOSE_NATIVE_WIN32
+		m_NativeHandle = glfwGetWin32Window(m_Window);
+#	else
+		#error "Light engine only supports Windows for now"
+#	endif
 	}
 
 	Window::~Window()
@@ -50,12 +70,12 @@ namespace Light {
 		SetGlfwCallbacks();
 	}
 
-	void Window::Resize(uint16_t width, uint16_t height)
+	void Window::Resize(unsigned int width, unsigned int height)
 	{
 		glfwSetWindowSize(m_Window, width, height);
 	}
 
-	void Window::Reposition(int16_t x, int16_t y)
+	void Window::Reposition(int x, int y)
 	{
 		glfwSetWindowPos(m_Window, x, y);
 	}
@@ -66,7 +86,7 @@ namespace Light {
 		m_Data.title = title;
 	}
 
-	void Window::SetWindowState(WindowState state)
+	void Window::SetState(WindowState state)
 	{
 		switch (state)
 		{
@@ -165,12 +185,7 @@ namespace Light {
 
 	void* Window::GetNativeHandle() const
 	{
-#ifdef GLFW_EXPOSE_NATIVE_WIN32
-		return glfwGetWin32Window(m_Window);
-
-#elif
-#error "Light engine only supports window for now"
-#endif
+		return m_NativeHandle;
 	}
 
 	void Window::SetGlfwCallbacks()
@@ -191,19 +206,19 @@ namespace Light {
 
 		glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xpos, double ypos)
 		{
-			MouseMovedEvent event(xpos, ypos);
+			MouseMovedEvent event(static_cast<int>(xpos), static_cast<int>(ypos));
 			(*(WindowData*)glfwGetWindowUserPointer(window)).eventCallback(event);
 		});
 
 		glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xoffset, double yoffset)
 		{
-			MouseScrolledEvent event(yoffset);
+			MouseScrolledEvent event(static_cast<int>(yoffset));
 			(*(WindowData*)glfwGetWindowUserPointer(window)).eventCallback(event);
 		});
 
 		glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
 		{
-			if (action == GLFW_PRESS /* || action == GLFW_REPEAT */)
+			if (action == GLFW_PRESS)
 			{
 				KeyboardKeyPressedEvent event(key);
 				(*(WindowData*)glfwGetWindowUserPointer(window)).eventCallback(event);
@@ -223,8 +238,6 @@ namespace Light {
 			data->width = width;
 			data->height = height;
 			data->eventCallback(event);
-
-			glViewport(0, 0, width, height);
 		});
 
 		glfwSetWindowPosCallback(m_Window, [](GLFWwindow* window, int xpos, int ypos)

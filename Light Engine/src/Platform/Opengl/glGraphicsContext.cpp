@@ -1,6 +1,9 @@
 #include "ltpch.h"
 #include "glGraphicsContext.h"
 
+#include "Events/Event.h"
+#include "Events/WindowEvents.h"
+
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
 
@@ -17,10 +20,10 @@ namespace Light {
 
 		LT_CORE_INFO("glGraphicsContext:");
 		LT_CORE_INFO("        Renderer: {}", glGetString(GL_RENDERER));
-		LT_CORE_INFO("        Version : {}", glGetString(GL_VERSION));
+		LT_CORE_INFO("        Version : {}", glGetString(GL_VERSION ));
 	}
 
-	glGraphicsContext::~glGraphicsContext()
+	glGraphicsContext::~glGraphicsContext()	
 	{
 		glfwMakeContextCurrent(NULL);
 	}
@@ -42,6 +45,14 @@ namespace Light {
 
 	void glGraphicsContext::HandleWindowEvents(Event& event)
 	{
+		Dispatcher dispatcher(event);
+		dispatcher.Dispatch<WindowResizedEvent>(LT_EVENT_FN(glGraphicsContext::OnWindowResize));
+	}
+
+	bool glGraphicsContext::OnWindowResize(WindowResizedEvent& event)
+	{
+		glViewport(0, 0, event.GetWidth(), event.GetHeight());
+		return false;
 	}
 
 }

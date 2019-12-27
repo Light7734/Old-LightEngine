@@ -28,6 +28,7 @@ project "glfw"
 			"GLFWSource/wgl**"         ,
 			"GLFWSource/window.c"      ,
 			"GLFWSource/xkb**"         ,
+			"GLFWSource/vulkan.c"      ,
 			"GLFWSource/premake5.lua"  ,
 		}
 

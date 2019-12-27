@@ -9,6 +9,7 @@ struct GLFWwindow;
 namespace Light {
 
 	class Event;
+	class WindowResizedEvent;
 
 	class glGraphicsContext : public GraphicsContext
 	{
@@ -24,6 +25,8 @@ namespace Light {
 		void ClearBuffer(uint8_t r, uint8_t g, uint8_t b, uint8_t a) override;
 
 		void HandleWindowEvents(Event& event) override;
+	private:
+		bool OnWindowResize(WindowResizedEvent& event);
 	};
 
 }

@@ -15,7 +15,7 @@ project "spdlog"
 		"SPDLOG_COMPILED_LIB"     ,
 	}
 
-    files "%{prj.location}/**.**"
+    files    "%{prj.location}/**.**"
     excludes "%{prj.location}/**.vcxproj**"
     
 	includedirs

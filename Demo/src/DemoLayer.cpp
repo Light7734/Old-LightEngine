@@ -42,7 +42,7 @@ void DemoLayer::OnRender()
 
 void DemoLayer::OnEvent(Light::Event& event)
 {
-	// LT_TRACE(event.GetLogInfo()); // log every events
+	LT_TRACE(event.GetLogInfo()); // log every events
 
 	Light::Dispatcher dispatcher(event);
 	dispatcher.Dispatch<Light::KeyboardKeyPressedEvent>(LT_EVENT_FN(DemoLayer::OnKeyPress));
@@ -51,20 +51,6 @@ void DemoLayer::OnEvent(Light::Event& event)
 
 bool DemoLayer::OnKeyPress(Light::KeyboardKeyPressedEvent& event)
 {
-	if (event.GetKey() == KEY_1)
-		m_GameWindow->SetDisplayMode(Light::DisplayMode::BorderlessWindowed);
-	if (event.GetKey() == KEY_2)
-		m_GameWindow->SetDisplayMode(Light::DisplayMode::ExclusiveFullscreen);
-	if (event.GetKey() == KEY_3)
-		m_GameWindow->SetDisplayMode(Light::DisplayMode::Windowed);
-
-	if (event.GetKey() == KEY_Q)
-		m_GameWindow->SetWindowState(Light::WindowState::Visible);
-	if (event.GetKey() == KEY_W)
-		m_GameWindow->SetWindowState(Light::WindowState::Hidden);
-	if (event.GetKey() == KEY_E)
-		m_GameWindow->SetWindowState(Light::WindowState::Minimized);
-
 	if (event.GetKey() == KEY_ESCAPE)
 		m_GameWindow->Close();
 

@@ -1,10 +1,12 @@
 #pragma once
 
 #include "Application.h"
-#include "Core.h"
 
-int main ()
+#include "Core/Core.h"
+
+int main()
 {
+// Hide the command line if we are in distribution build
 #ifdef LIGHT_DIST
 	#ifdef LIGHT_PLATFORM_WINDOWS
 		::ShowWindow(::GetConsoleWindow(), SW_HIDE);
@@ -22,6 +24,8 @@ int main ()
 	try
 	{
 		app = Light::CreateApplication();
+		LT_CORE_ASSERT(app, EC_NO_INIT_APPLICATION, "Light::Application is not initialized!");
+
 		app->GameLoop();
 	}
 	catch (Light::TerminationReq req)
@@ -29,10 +33,9 @@ int main ()
 		LT_CORE_ERROR("Error code: {}", req.exitCode);
 
 		delete app;
-
 		return req.exitCode;
 	}
 
 	delete app;
-	return EC_SUCCESSFULL_EXECUTION;
+	return EC_SUCCESSFUL_EXECUTION;
 }

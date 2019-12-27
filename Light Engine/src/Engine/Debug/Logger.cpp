@@ -22,14 +22,14 @@ namespace Light {
 			{ LT_CORE_WARN("Logger::Init() called multiple times"); return; }
 
 
-		// log file's name is the time application reached its constructor
+		// log file's name is the time logger reached its constructor
 		time_t timeAndDate = time(0);
 		s_FileLogPath = ctime(&timeAndDate);
 		s_FileLogPath = s_FileLogPath.substr(3, s_FileLogPath.size() - 4);
 		std::replace(s_FileLogPath.begin(), s_FileLogPath.end(), ':', '.');
 		s_FileLogPath = "Logs/" + s_FileLogPath + ".log";
 
-		// since spdlog cannot create a folder we need to make sure it exists
+		// spdlog doesn't create a folder, so we need to make sure it exists
 		std::filesystem::create_directory("Logs");
 
 
