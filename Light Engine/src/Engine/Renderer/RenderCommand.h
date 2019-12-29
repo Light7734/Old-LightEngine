@@ -1,8 +1,10 @@
 #pragma once
 
+#include "GraphicsContext.h"
+
 #include "Core/Core.h"
 
-#include "GraphicsContext.h"
+#include <memory>
 
 namespace Light {
 
@@ -11,17 +13,20 @@ namespace Light {
 	class RenderCommand
 	{
 	private:
-		static GraphicsContext* s_GraphicsContext;
+		static std::unique_ptr<GraphicsContext> s_GraphicsContext;
 	public:
-		static inline void SetGraphicsContext(GraphicsContext* context) 
-			{ s_GraphicsContext = context; }
+		static inline void SetGraphicsContext(std::unique_ptr<GraphicsContext> context) 
+			{  s_GraphicsContext = std::move(context); }
 
-		static bool isInitialized() { return s_GraphicsContext; }
+		static bool isInitialized() { return s_GraphicsContext ? true : false; }
 
 		static void SwapBuffers();
 
+		static void EnableVSync ();
+		static void DisableVSync();
+
 		static void Clear();
-		static void ClearBuffer(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
+		static void ClearBuffer(float r, float g, float b, float a);
 
 		static void HandleWindowEvents(Event& event);
 	};

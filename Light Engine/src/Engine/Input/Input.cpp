@@ -2,16 +2,15 @@
 #include "Input.h"
 
 #include "Events/Event.h"
-
-#include "Events/MouseEvents.h"
 #include "Events/KeyboardEvents.h"
+#include "Events/MouseEvents.h"
 
 namespace Light {
 
-	int16_t Input::s_MousePosX = 0, Input::s_MousePosY = 0;
-	int16_t Input::s_MouseOffX = 0, Input::s_MouseOffY = 0;
+	int Input::s_MousePosX = 0, Input::s_MousePosY = 0;
+	int Input::s_MouseOffX = 0, Input::s_MouseOffY = 0;
 
-	int8_t  Input::s_MouseWheelOff = 0;
+	int  Input::s_MouseWheelOff = 0;
 
 	bool Input::s_Keys[LIGHT_MAX_KEYS];
 	bool Input::s_Buttons[LIGHT_MAX_BUTTONS];
@@ -56,7 +55,7 @@ namespace Light {
 
 	bool Input::OnMouseMove(MouseMovedEvent& event)
 	{
-		int16_t prevX = s_MousePosX, prevY = s_MousePosY;
+		int prevX = s_MousePosX, prevY = s_MousePosY;
 
 		s_MousePosX = event.GetX();
 		s_MousePosY = event.GetY();

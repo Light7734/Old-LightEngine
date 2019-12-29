@@ -36,7 +36,7 @@ namespace Light {
 	public:
 		bool b_Dispatched = false;
 	public:
-		Event() {}
+		Event() = default;
 
 		virtual inline EventType   GetEventType() const = 0;
 		virtual        std::string GetLogInfo  () const = 0;

@@ -47,16 +47,17 @@ namespace Light {
 		Center();
 
 		// Set native window handle
-#	ifdef GLFW_EXPOSE_NATIVE_WIN32
-		m_NativeHandle = glfwGetWin32Window(m_Window);
-#	else
-		#error "Light engine only supports Windows for now"
-#	endif
+#		ifdef GLFW_EXPOSE_NATIVE_WIN32
+			m_NativeHandle = glfwGetWin32Window(m_Window);
+#		else
+			#error "Light engine only supports Windows for now"
+#		endif
 	}
 
 	Window::~Window()
 	{
 		glfwDestroyWindow(m_Window);
+		glfwTerminate();
 	}
 
 	void Window::HandleEvents()

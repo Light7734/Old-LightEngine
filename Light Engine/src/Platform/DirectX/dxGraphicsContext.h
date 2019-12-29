@@ -3,7 +3,6 @@
 #include "Renderer/GraphicsContext.h"
 
 #include "Core/Core.h"
-#include "Core/Window.h"
 
 #include <Windows.h>
 
@@ -12,6 +11,7 @@
 
 namespace Light {
 
+	class Window;
 	class Event;
 
 	class WindowResizedEvent  ;
@@ -27,12 +27,16 @@ namespace Light {
 		Microsoft::WRL::ComPtr<IDXGISwapChain> m_SwapChain;
 		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_RenderTargetView;
 	public:
-		dxGraphicsContext(std::shared_ptr<const Window> game_window, bool v_sync);
+		dxGraphicsContext(std::shared_ptr<const Window> game_window, GraphicsData data);
+		~dxGraphicsContext();
 
 		void SwapBuffers() override;
 
+		void EnableVSync () override;
+		void DisableVSync() override;
+
 		void Clear() override;
-		void ClearBuffer(uint8_t r, uint8_t g, uint8_t b, uint8_t a) override;
+		void ClearBuffer(float r, float g, float b, float a) override;
 
 		void HandleWindowEvents(Event& event) override;
 	private:

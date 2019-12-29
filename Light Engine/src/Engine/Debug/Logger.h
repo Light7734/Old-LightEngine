@@ -52,10 +52,15 @@ namespace Light {
 
 		static bool s_Initialized;
 	public:
+		Logger() = delete;
+
 		static void Init();
 		static void Terminate();
 
 		static inline void SetPattern(const char* pattern) { s_GameLogger->set_pattern(pattern); }
+
+		static inline void SetCoreLevel(spdlog::level::level_enum lvl) { s_CoreLogger->set_level(lvl); }
+		static inline void SetGameLevel(spdlog::level::level_enum lvl) { s_GameLogger->set_level(lvl); }
 
 		static inline std::shared_ptr<spdlog::logger> GetCoreLogger() { return s_CoreLogger; }
 		static inline std::shared_ptr<spdlog::logger> GetGameLogger() { return s_GameLogger; }
@@ -63,7 +68,6 @@ namespace Light {
 
 		static inline bool isInitialized() { return s_Initialized; }
 	private:
-		Logger() {}
 	};
 
 }

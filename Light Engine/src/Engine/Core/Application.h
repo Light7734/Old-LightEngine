@@ -18,7 +18,7 @@ namespace Light {
 		std::shared_ptr<Window> m_Window;
 		std::vector<std::shared_ptr<Layer>> m_LayerStack;
 	public:
-		Application           (                  )        ;
+		Application           (                  )         ;
 		Application           (const Application&) = delete;
 		Application& operator=(const Application&) = delete;
 		virtual ~Application  (                  )         ;

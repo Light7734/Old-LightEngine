@@ -21,13 +21,6 @@
 
 #define BIT(x) 1 << x
 
-// Light debug only
-#ifdef LIGHT_DEBUG
-#define LDO(x) x
-#else
-#define LDO(x)
-#endif
-
 #define LT_EVENT_FN(fn)        std::bind(&##fn, this, std::placeholders::_1)
 #define LT_EVENT_FN_STATIC(fn) std::bind(&##fn,       std::placeholders::_1)
 

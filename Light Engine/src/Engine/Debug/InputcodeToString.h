@@ -1,11 +1,11 @@
 #pragma once
 
-#include <string>
-#include <unordered_map>
-
 #include "Input/InputCodes.h"
 
 #include "Core/Core.h"
+
+#include <string>
+#include <unordered_map>
 
 namespace Light {
 

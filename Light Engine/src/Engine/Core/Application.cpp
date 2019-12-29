@@ -85,7 +85,7 @@ namespace Light {
 		m_LayerStack.push_back(layer);
 		layer->OnAttach();
 
-		LDO( LT_CORE_TRACE("LayerStack size: ", m_LayerStack.size()) );
+		LT_CORE_TRACE("LayerStack size: ", m_LayerStack.size());
 	}
 
 	void Application::DetatchLayer(std::shared_ptr<Layer> layer)
@@ -97,7 +97,7 @@ namespace Light {
 		else
 			LT_CORE_ERROR("failed to find the specified layer from LayerStack");
 
-		LDO( LT_CORE_TRACE("LayerStack size: ", m_LayerStack.size()) );
+		LT_CORE_TRACE("LayerStack size: ", m_LayerStack.size());
 	}
 
 	bool Application::OnWindowClosedEvent(WindowClosedEvent& event)

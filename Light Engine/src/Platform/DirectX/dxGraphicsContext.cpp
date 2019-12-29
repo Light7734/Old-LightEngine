@@ -1,21 +1,21 @@
 #include "ltpch.h"
 #include "dxGraphicsContext.h"
 	
+#include "Core/Window.h"
+
 #include "Events/Event.h"
 #include "Events/WindowEvents.h"
 
-#pragma comment(lib, "d3d11.lib")
-#pragma comment(lib, "d3d10.lib")
-#pragma comment(lib, "dxgi.lib")
-
 #include <dxgi.h>
+
+#pragma comment(lib, "d3d11.lib")
 
 namespace Light {
 
-	dxGraphicsContext::dxGraphicsContext(std::shared_ptr<const Window> game_window, bool v_sync)
+	dxGraphicsContext::dxGraphicsContext(std::shared_ptr<const Window> game_window, GraphicsData data)
 	{
+		m_Data = data;
 		bool windowed = game_window->GetDisplayMode() != DisplayMode::ExclusiveFullscreen;
-		b_VSync = v_sync;
 
 		// Create and set swap chain's description
 		DXGI_SWAP_CHAIN_DESC sd = { 0 };
@@ -63,27 +63,50 @@ namespace Light {
 		m_SwapChain->GetBuffer(0, __uuidof(ID3D11Resource), &backBuffer);
 		m_Device->CreateRenderTargetView(backBuffer.Get(), nullptr, &m_RenderTargetView);
 
-		// This shit is complicated for no god damn reason
+
 		IDXGIDevice * DXGIDevice;
 		IDXGIAdapter* adapter;
 		DXGI_ADAPTER_DESC desc;
 
+		// Get the IDXGIAdapter trough IDXGIDevice
 		m_Device->QueryInterface(__uuidof(IDXGIDevice), (void**)&DXGIDevice);
 		DXGIDevice->GetAdapter(&adapter);
 		adapter->GetDesc(&desc);
-
+		
+		// Get the adapter desc
 		char DefChar = ' ';
 		char ch[180];
 		WideCharToMultiByte(CP_ACP, 0, desc.Description, -1, ch, 180, &DefChar, NULL);
 		std::string renderer(ch);
+		
+		// Release memory
+		DXGIDevice->Release();
+		adapter->Release();
 
+		// Log info
 		LT_CORE_INFO("dxGraphicsContext:");
 		LT_CORE_INFO("        Renderer: {}", renderer);
 	}
 
+	dxGraphicsContext::~dxGraphicsContext()
+	{
+		LT_CORE_DEBUG("Destructing dxGraphicsContext");
+	}
+
 	void dxGraphicsContext::SwapBuffers()
 	{
-		m_SwapChain->Present(b_VSync, NULL);
+		m_SwapChain->Present(m_Data.vSync, NULL);
+	}
+
+
+	void dxGraphicsContext::EnableVSync()
+	{
+		m_Data.vSync = true;
+	}
+
+	void dxGraphicsContext::DisableVSync()
+	{
+		m_Data.vSync = false;
 	}
 
 	void dxGraphicsContext::Clear()
@@ -91,9 +114,9 @@ namespace Light {
 
 	}
 
-	void dxGraphicsContext::ClearBuffer(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
+	void dxGraphicsContext::ClearBuffer(float r, float g, float b, float a)
 	{
-		const float channels[] = { r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f };
+		const float channels[] = { r, g, b, a };
 		m_DeviceContext->ClearRenderTargetView(m_RenderTargetView.Get(), channels);
 	}
 

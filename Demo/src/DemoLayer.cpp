@@ -16,19 +16,20 @@ void DemoLayer::OnDetatch()
 void DemoLayer::OnUpdate(float deltaTime)
 {
 	static Light::Timer timer; // timer class saves the start time point on construction
-	static uint32_t frames = 0u;
-	static uint32_t fpsLogTime = 1u;
+	static int frames = 0;
+	static int fpsLogTime = 1;
 
 	frames++;
-	if (timer.ElapsedTime() >= fpsLogTime++)
+	if (timer.ElapsedTime() >= fpsLogTime)
 	{
+		fpsLogTime++;
 		LT_DEBUG("FPS: {}", frames);
 		frames = 0;
 	}
 
 	const float c = abs(sin(timer.ElapsedTime()));
 	const float c2 = abs(cos(timer.ElapsedTime()));
-	Light::RenderCommand::ClearBuffer(c2 * 177, c * 255, c2 * 255, 255);
+	Light::RenderCommand::ClearBuffer(c2, c, c2, 1.0f);
 
 
 	if (Light::Input::GetKey(KEY_ENTER))
@@ -53,6 +54,12 @@ bool DemoLayer::OnKeyPress(Light::KeyboardKeyPressedEvent& event)
 {
 	if (event.GetKey() == KEY_ESCAPE)
 		m_GameWindow->Close();
+
+	if (event.GetKey() == KEY_KP_1)
+		Light::GraphicsContext::Init(Light::GraphicsAPI::DirectX, {true}, m_GameWindow);
+
+	if (event.GetKey() == KEY_KP_2)
+		Light::GraphicsContext::Init(Light::GraphicsAPI::Opengl, {true}, m_GameWindow);
 
 	return true;
 }

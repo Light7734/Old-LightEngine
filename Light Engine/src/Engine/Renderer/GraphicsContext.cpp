@@ -7,29 +7,30 @@
 
 namespace Light {
 
-	GraphicsAPI GraphicsContext::s_Api;
+	GraphicsAPI GraphicsContext::s_Api = GraphicsAPI::Default;
 
-	void GraphicsContext::Init(std::shared_ptr<Window> game_window, bool v_sync)
+	void GraphicsContext::Init(GraphicsAPI api, GraphicsData data, std::shared_ptr<Window> game_window)
 	{
-		GraphicsContext* context;
+		std::unique_ptr<GraphicsContext> context;
+		s_Api = api;
 
+		// #todo remove directX stuff if we are not in windows
 		switch (s_Api)
 		{
-		case GraphicsAPI::None:
-			// If GraphicsAPI is none we should choose a default GraphicsAPI
-			LT_CORE_ASSERT(false, EC_FEATURE_NOT_SUPPORTED, "GraphicsAPI::None is not supported");
+		case GraphicsAPI::Default:
+			context = std::make_unique<dxGraphicsContext>(game_window, data);
 			break;
-		case GraphicsAPI::DirectX:
-			context = new dxGraphicsContext(game_window, v_sync);
+		case GraphicsAPI::DirectX: 
+			context = std::make_unique<dxGraphicsContext>(game_window, data);
 			break;
 		case GraphicsAPI::Opengl:
-			context = new glGraphicsContext(game_window, v_sync);
+			context = std::make_unique<glGraphicsContext>(game_window, data);
 			break;
 		default:
 			LT_CORE_ASSERT(false, EC_INVALID_GRAPHICS_API, "Invalid GraphicsAPI");
 		}
 
-		RenderCommand::SetGraphicsContext(context);
+		RenderCommand::SetGraphicsContext(std::move(context));
 	}
 
 }

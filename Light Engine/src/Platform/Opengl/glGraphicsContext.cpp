@@ -1,6 +1,8 @@
 #include "ltpch.h"
 #include "glGraphicsContext.h"
 
+#include "Core/Window.h"
+
 #include "Events/Event.h"
 #include "Events/WindowEvents.h"
 
@@ -9,14 +11,14 @@
 
 namespace Light {
 
-	glGraphicsContext::glGraphicsContext(std::shared_ptr<Window> game_window, bool v_sync)
+	glGraphicsContext::glGraphicsContext(std::shared_ptr<Window> game_window, GraphicsData data)
 	{
 		m_WindowHandle = game_window->GetHandle();
-		b_VSync = v_sync;
+		m_Data = data;
 
 		glfwMakeContextCurrent(game_window->GetHandle());
-		glfwSwapInterval(v_sync);
-		gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+		glfwSwapInterval(data.vSync);
+		LT_CORE_ASSERT(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress), EC_CALL_FAIL_GLAD_LOAD, "gladLoadGLLoader failed");
 
 		LT_CORE_INFO("glGraphicsContext:");
 		LT_CORE_INFO("        Renderer: {}", glGetString(GL_RENDERER));
@@ -25,7 +27,7 @@ namespace Light {
 
 	glGraphicsContext::~glGraphicsContext()	
 	{
-		glfwMakeContextCurrent(NULL);
+		LT_CORE_DEBUG("Destructing glGraphicsContext");
 	}
 
 	void glGraphicsContext::SwapBuffers()
@@ -33,14 +35,26 @@ namespace Light {
 		glfwSwapBuffers(m_WindowHandle);
 	}
 
+	void glGraphicsContext::EnableVSync()
+	{
+		m_Data.vSync = true;
+		glfwSwapInterval(1);
+	}
+
+	void glGraphicsContext::DisableVSync()
+	{
+		m_Data.vSync = false;
+		glfwSwapInterval(0);
+	}
+
 	void glGraphicsContext::Clear()
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	}
 
-	void glGraphicsContext::ClearBuffer(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
+	void glGraphicsContext::ClearBuffer(float r, float g, float b, float a)
 	{
-		glClearColor(r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);
+		glClearColor(r, g, b, a);
 	}
 
 	void glGraphicsContext::HandleWindowEvents(Event& event)
