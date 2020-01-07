@@ -15,8 +15,17 @@ namespace Light {
 		~glVertexBuffer();
 
 		void Bind() override;
+	};
 
-		inline unsigned int GetID() const { return m_BufferID; }
+	class glIndexBuffer : public IndexBuffer
+	{
+	private:
+		unsigned int m_BufferID = 0;
+	public:
+		glIndexBuffer(unsigned int* indices, unsigned int size);
+		~glIndexBuffer();
+
+		void Bind() override;
 	};
 
 }

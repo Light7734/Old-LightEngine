@@ -185,4 +185,9 @@ namespace Light {
 		return false;
 	}
 
+	void dxGraphicsContext::DrawIndexed(unsigned int count)
+	{
+		s_DeviceContext->DrawIndexed(count, 0u, 0u);
+	}
+
 }

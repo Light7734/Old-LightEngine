@@ -21,4 +21,21 @@ namespace Light {
 		glBindBuffer(GL_ARRAY_BUFFER, m_BufferID);
 	}
 
+
+	glIndexBuffer::glIndexBuffer(unsigned int* indices, unsigned int size)
+	{
+		glCreateBuffers(1, &m_BufferID);
+		glNamedBufferData(m_BufferID, size, indices, GL_STATIC_DRAW);
+	}
+
+	glIndexBuffer::~glIndexBuffer()
+	{
+		glDeleteBuffers(1, &m_BufferID);
+	}
+
+	void glIndexBuffer::Bind()
+	{
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_BufferID);
+	}
+
 }

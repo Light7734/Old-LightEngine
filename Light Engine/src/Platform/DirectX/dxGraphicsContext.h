@@ -41,6 +41,7 @@ namespace Light {
 		void ClearBuffer(float r, float g, float b, float a) override;
 
 		void Draw(unsigned int count) override;
+		void DrawIndexed(unsigned int count) override;
 
 		// Getters
 		static ID3D11Device*        GetDevice       () { return s_Device.Get()       ; }

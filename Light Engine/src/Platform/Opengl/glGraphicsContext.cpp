@@ -68,6 +68,11 @@ namespace Light {
 		glDrawArrays(GL_TRIANGLES, 0, count);
 	}
 
+	void glGraphicsContext::DrawIndexed(unsigned int count)
+	{
+		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
+	}
+
 	bool glGraphicsContext::OnWindowResize(WindowResizedEvent& event)
 	{
 		glViewport(0, 0, event.GetWidth(), event.GetHeight());

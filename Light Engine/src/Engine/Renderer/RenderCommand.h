@@ -30,6 +30,7 @@ namespace Light {
 		static void ClearBuffer(float r, float g, float b, float a);
 
 		static void Draw(unsigned int count);
+		static void DrawIndexed(unsigned int count);
 	};
 
 }

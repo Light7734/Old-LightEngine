@@ -21,4 +21,15 @@ namespace Light {
 		void Bind() override;
 	};
 
+	class dxIndexBuffer : public IndexBuffer
+	{
+	private:
+		Microsoft::WRL::ComPtr<ID3D11Buffer> m_Buffer;
+	public:
+		dxIndexBuffer(unsigned int* indices, unsigned int size);
+		~dxIndexBuffer();
+
+		void Bind() override;
+	};
+
 }

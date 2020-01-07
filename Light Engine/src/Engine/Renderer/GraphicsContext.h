@@ -42,6 +42,7 @@ namespace Light {
 		virtual void ClearBuffer(float r, float g, float b, float a) = 0;
 
 		virtual void Draw(unsigned int count) = 0;
+		virtual void DrawIndexed(unsigned int count) = 0;
 
 		// Getters
 		static const GraphicsConfigurations& GetConfigurations() { return s_Configurations; };

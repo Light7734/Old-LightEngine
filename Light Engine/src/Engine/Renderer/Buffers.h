@@ -14,4 +14,14 @@ namespace Light {
 		virtual void Bind() = 0;
 	};
 
+	class IndexBuffer
+	{
+	public:
+		virtual ~IndexBuffer() = default;
+
+		static std::shared_ptr<IndexBuffer> Create(unsigned int* indices, unsigned int size);
+
+		virtual void Bind() = 0;
+	};
+
 }

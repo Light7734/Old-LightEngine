@@ -51,4 +51,9 @@ namespace Light {
 		s_GraphicsContext->Draw(count);
 	}
 
+	void RenderCommand::DrawIndexed(unsigned int count)
+	{
+		s_GraphicsContext->DrawIndexed(count);
+	}
+
 }
