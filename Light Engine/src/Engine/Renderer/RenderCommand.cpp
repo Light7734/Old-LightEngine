@@ -1,15 +1,24 @@
 #include "ltpch.h"
 #include "RenderCommand.h"
 
+#include "GraphicsContext.h"
+
 #include "Events/Event.h"
+
+#include <glad/glad.h>
 
 namespace Light {
 
 	std::unique_ptr<GraphicsContext> RenderCommand::s_GraphicsContext;
 
-	void RenderCommand::SwapBuffers()
+	void RenderCommand::SetGraphicsContext(std::unique_ptr<GraphicsContext> context)
 	{
-		s_GraphicsContext->SwapBuffers();
+		s_GraphicsContext = std::move(context);
+	}
+
+	void RenderCommand::HandleWindowEvents(Event& event)
+	{
+		s_GraphicsContext->HandleWindowEvents(event);
 	}
 
 	void RenderCommand::EnableVSync()
@@ -17,10 +26,14 @@ namespace Light {
 		s_GraphicsContext->EnableVSync();
 	}
 
-
 	void RenderCommand::DisableVSync()
 	{
 		s_GraphicsContext->DisableVSync();
+	}
+
+	void RenderCommand::SwapBuffers()
+	{
+		s_GraphicsContext->SwapBuffers();
 	}
 
 	void RenderCommand::Clear()
@@ -33,9 +46,9 @@ namespace Light {
 		s_GraphicsContext->ClearBuffer(r, g, b, a);
 	}
 
-	void RenderCommand::HandleWindowEvents(Event& event)
+	void RenderCommand::Draw(unsigned int count)
 	{
-		s_GraphicsContext->HandleWindowEvents(event);
+		s_GraphicsContext->Draw(count);
 	}
 
 }

@@ -9,7 +9,9 @@
 * 2x not initialized
 * 3x multiple instances
 * 4x (function) call failed
-* 9x invalid values
+* 5x invalid values
+* 6x file read failed
+* 7x  dynamic cast failed
 *
 */
 
@@ -26,9 +28,14 @@
 #define EC_NO_INIT_WINDOW               21
 #define EC_NO_INIT_GRAPHICSC_CONTEXT    22
 
+#define EC_MULTIPLE_INSTANCES_APPLICATION    30
+
 #define EC_CALL_FAIL_GLFW_INIT    40
 #define EC_CALL_FAIL_GLAD_LOAD    41
 
-#define EC_MULTIPLE_INSTANCES_APPLICATION    30
+#define EC_INVALID_GRAPHICS_API    50
+#define EC_INvALID_VERTEX_TYPE     51
 
-#define EC_INVALID_GRAPHICS_API 90
+#define EC_FILE_READ_FAIL_SHADER    60
+
+#define EC_CAST_FAIL    70

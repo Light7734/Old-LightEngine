@@ -191,6 +191,12 @@ namespace Light {
 
 	void Window::SetGlfwCallbacks()
 	{
+
+		glfwSetErrorCallback([](int code, const char* error) 
+		{
+			LT_CORE_ERROR(error);
+		});
+
 		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods)
 		{
 			if (action == GLFW_PRESS)

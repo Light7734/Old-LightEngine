@@ -16,18 +16,21 @@ namespace Light {
 	private:
 		GLFWwindow* m_WindowHandle;
 	public:
-		glGraphicsContext(std::shared_ptr<Window> game_window, GraphicsData data);
+		glGraphicsContext(std::shared_ptr<Window> game_window, GraphicsConfigurations data);
 		~glGraphicsContext();
 
-		void SwapBuffers() override;
+		void HandleWindowEvents(Event& event) override;
 
 		void EnableVSync () override;
 		void DisableVSync() override;
 
+		void SwapBuffers() override;
+
 		void Clear() override;
 		void ClearBuffer(float r, float g, float b, float a) override;
 
-		void HandleWindowEvents(Event& event) override;
+		void Draw(unsigned int count) override;
+
 	private:
 		bool OnWindowResize(WindowResizedEvent& event);
 	};

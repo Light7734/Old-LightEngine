@@ -41,6 +41,10 @@
 // --------------------------
 
 // Renderer -----------------
+#include "Renderer/BufferLayout.h"
+#include "Renderer/Buffers.h"
+#include "Renderer/Shader.h"
+#include "Renderer/VertexLayout.h"
 #include "Renderer/GraphicsContext.h"
 #include "Renderer/RenderCommand.h"
 #include "Platform/DirectX/dxGraphicsContext.h"

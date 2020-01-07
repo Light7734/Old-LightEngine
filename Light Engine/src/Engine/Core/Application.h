@@ -14,9 +14,9 @@ namespace Light {
 	{
 	private:
 		static Application* s_Instance;
+		std::vector<std::shared_ptr<Layer>> m_LayerStack;
 	protected:
 		std::shared_ptr<Window> m_Window;
-		std::vector<std::shared_ptr<Layer>> m_LayerStack;
 	public:
 		Application           (                  )         ;
 		Application           (const Application&) = delete;
@@ -26,11 +26,14 @@ namespace Light {
 		void GameLoop(            );
 		void OnEvent (Event& event);
 
-		void AttachLayer (std::shared_ptr<Layer> layer);
-		void DetatchLayer(std::shared_ptr<Layer> layer);
+		static inline void AttachLayer(std::shared_ptr<Layer> layer)  { s_Instance->AttachLayerImpl(layer); }
+		static inline void DetatchLayer(std::shared_ptr<Layer> layer) { s_Instance->DetatchLayerImpl(layer); }
 
 		static inline std::shared_ptr<Window> GetGameWindow() { return s_Instance->m_Window; }
 	private:
+		void AttachLayerImpl (std::shared_ptr<Layer> layer);
+		void DetatchLayerImpl(std::shared_ptr<Layer> layer);
+
 		bool OnWindowClosedEvent(WindowClosedEvent& event);
 	};
 

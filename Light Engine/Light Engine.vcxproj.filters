@@ -25,6 +25,9 @@
     <Filter Include="src\Engine\Renderer">
       <UniqueIdentifier>{F838018B-649A-DE98-ED07-254B59681558}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Engine\Utility">
+      <UniqueIdentifier>{55516F99-4135-30EF-AA95-2A4296981A71}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Platform">
       <UniqueIdentifier>{21CA02E5-0D2D-9289-B6B2-CA3FA2F45D0C}</UniqueIdentifier>
     </Filter>
@@ -84,19 +87,58 @@
     <ClInclude Include="src\Engine\LightEngine.h">
       <Filter>src\Engine</Filter>
     </ClInclude>
+    <ClInclude Include="src\Engine\Renderer\BufferLayout.h">
+      <Filter>src\Engine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Renderer\Buffers.h">
+      <Filter>src\Engine\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Engine\Renderer\GraphicsContext.h">
       <Filter>src\Engine\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\Renderer\RenderCommand.h">
       <Filter>src\Engine\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Engine\Renderer\Shader.h">
+      <Filter>src\Engine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Renderer\VertexLayout.h">
+      <Filter>src\Engine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Utility\FileManager.h">
+      <Filter>src\Engine\Utility</Filter>
+    </ClInclude>
     <ClInclude Include="src\Engine\ltpch.h">
       <Filter>src\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\DirectX\dxBufferLayout.h">
+      <Filter>src\Platform\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\DirectX\dxBuffers.h">
+      <Filter>src\Platform\DirectX</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\DirectX\dxGraphicsContext.h">
       <Filter>src\Platform\DirectX</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\DirectX\dxShader.h">
+      <Filter>src\Platform\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\DirectX\dxVertexLayout.h">
+      <Filter>src\Platform\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Opengl\glBufferLayout.h">
+      <Filter>src\Platform\Opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Opengl\glBuffers.h">
+      <Filter>src\Platform\Opengl</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\Opengl\glGraphicsContext.h">
+      <Filter>src\Platform\Opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Opengl\glShader.h">
+      <Filter>src\Platform\Opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Opengl\glVertexLayout.h">
       <Filter>src\Platform\Opengl</Filter>
     </ClInclude>
   </ItemGroup>
@@ -116,19 +158,58 @@
     <ClCompile Include="src\Engine\Input\Input.cpp">
       <Filter>src\Engine\Input</Filter>
     </ClCompile>
+    <ClCompile Include="src\Engine\Renderer\BufferLayout.cpp">
+      <Filter>src\Engine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Renderer\Buffers.cpp">
+      <Filter>src\Engine\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Engine\Renderer\GraphicsContext.cpp">
       <Filter>src\Engine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Engine\Renderer\RenderCommand.cpp">
       <Filter>src\Engine\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Engine\Renderer\Shader.cpp">
+      <Filter>src\Engine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Renderer\VertexLayout.cpp">
+      <Filter>src\Engine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Utility\FileManager.cpp">
+      <Filter>src\Engine\Utility</Filter>
+    </ClCompile>
     <ClCompile Include="src\Engine\ltpch.cpp">
       <Filter>src\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\DirectX\dxBufferLayout.cpp">
+      <Filter>src\Platform\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\DirectX\dxBuffers.cpp">
+      <Filter>src\Platform\DirectX</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\DirectX\dxGraphicsContext.cpp">
       <Filter>src\Platform\DirectX</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\DirectX\dxShader.cpp">
+      <Filter>src\Platform\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\DirectX\dxVertexLayout.cpp">
+      <Filter>src\Platform\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Opengl\glBufferLayout.cpp">
+      <Filter>src\Platform\Opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Opengl\glBuffers.cpp">
+      <Filter>src\Platform\Opengl</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\Opengl\glGraphicsContext.cpp">
+      <Filter>src\Platform\Opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Opengl\glShader.cpp">
+      <Filter>src\Platform\Opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Opengl\glVertexLayout.cpp">
       <Filter>src\Platform\Opengl</Filter>
     </ClCompile>
   </ItemGroup>

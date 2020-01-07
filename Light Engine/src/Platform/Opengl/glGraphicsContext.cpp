@@ -11,10 +11,10 @@
 
 namespace Light {
 
-	glGraphicsContext::glGraphicsContext(std::shared_ptr<Window> game_window, GraphicsData data)
+	glGraphicsContext::glGraphicsContext(std::shared_ptr<Window> game_window, GraphicsConfigurations data)
 	{
 		m_WindowHandle = game_window->GetHandle();
-		m_Data = data;
+		s_Configurations = data;
 
 		glfwMakeContextCurrent(game_window->GetHandle());
 		glfwSwapInterval(data.vSync);
@@ -30,21 +30,27 @@ namespace Light {
 		LT_CORE_DEBUG("Destructing glGraphicsContext");
 	}
 
-	void glGraphicsContext::SwapBuffers()
+	void glGraphicsContext::HandleWindowEvents(Event& event)
 	{
-		glfwSwapBuffers(m_WindowHandle);
+		Dispatcher dispatcher(event);
+		dispatcher.Dispatch<WindowResizedEvent>(LT_EVENT_FN(glGraphicsContext::OnWindowResize));
 	}
 
 	void glGraphicsContext::EnableVSync()
 	{
-		m_Data.vSync = true;
+		s_Configurations.vSync = true;
 		glfwSwapInterval(1);
 	}
 
 	void glGraphicsContext::DisableVSync()
 	{
-		m_Data.vSync = false;
+		s_Configurations.vSync = false;
 		glfwSwapInterval(0);
+	}
+
+	void glGraphicsContext::SwapBuffers()
+	{
+		glfwSwapBuffers(m_WindowHandle);
 	}
 
 	void glGraphicsContext::Clear()
@@ -57,10 +63,9 @@ namespace Light {
 		glClearColor(r, g, b, a);
 	}
 
-	void glGraphicsContext::HandleWindowEvents(Event& event)
+	void glGraphicsContext::Draw(unsigned int count)
 	{
-		Dispatcher dispatcher(event);
-		dispatcher.Dispatch<WindowResizedEvent>(LT_EVENT_FN(glGraphicsContext::OnWindowResize));
+		glDrawArrays(GL_TRIANGLES, 0, count);
 	}
 
 	bool glGraphicsContext::OnWindowResize(WindowResizedEvent& event)

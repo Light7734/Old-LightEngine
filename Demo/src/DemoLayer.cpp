@@ -1,11 +1,12 @@
 #include "DemoLayer.h"
 
-#include <functional>
-
 void DemoLayer::OnAttach()
 {
 	LT_TRACE("Attached DemoLayer");
 	m_GameWindow = Light::Application::GetGameWindow();
+
+	m_TriangleLayer = std::make_shared<TriangleLayer>();
+	Light::Application::AttachLayer(m_TriangleLayer);
 }
 
 void DemoLayer::OnDetatch()
@@ -15,7 +16,7 @@ void DemoLayer::OnDetatch()
 
 void DemoLayer::OnUpdate(float deltaTime)
 {
-	static Light::Timer timer; // timer class saves the start time point on construction
+	static Light::Timer timer;
 	static int frames = 0;
 	static int fpsLogTime = 1;
 
@@ -28,26 +29,19 @@ void DemoLayer::OnUpdate(float deltaTime)
 	}
 
 	const float c = abs(sin(timer.ElapsedTime()));
-	const float c2 = abs(cos(timer.ElapsedTime()));
-	Light::RenderCommand::ClearBuffer(c2, c, c2, 1.0f);
+	Light::RenderCommand::ClearBuffer(0.3f, 0.1, c, 1.0f);
 
 
 	if (Light::Input::GetKey(KEY_ENTER))
 		LT_TRACE("Enter key is down!");
 }
 
-void DemoLayer::OnRender()
-{
-	// Light engine doesn't have a renderer yet
-}
-
 void DemoLayer::OnEvent(Light::Event& event)
 {
-	LT_TRACE(event.GetLogInfo()); // log every events
+	LT_TRACE(event.GetLogInfo());
 
 	Light::Dispatcher dispatcher(event);
 	dispatcher.Dispatch<Light::KeyboardKeyPressedEvent>(LT_EVENT_FN(DemoLayer::OnKeyPress));
-	dispatcher.Dispatch<Light::MouseScrolledEvent>(LT_EVENT_FN(DemoLayer::OnMouseScroll));
 }
 
 bool DemoLayer::OnKeyPress(Light::KeyboardKeyPressedEvent& event)
@@ -55,25 +49,15 @@ bool DemoLayer::OnKeyPress(Light::KeyboardKeyPressedEvent& event)
 	if (event.GetKey() == KEY_ESCAPE)
 		m_GameWindow->Close();
 
-	if (event.GetKey() == KEY_KP_1)
-		Light::GraphicsContext::Init(Light::GraphicsAPI::DirectX, {true}, m_GameWindow);
+	if (event.GetKey() == KEY_KP_1 || event.GetKey() == KEY_KP_2)
+	{
+		Light::GraphicsContext::Init(event.GetKey() == KEY_KP_1 ?
+		                             Light::GraphicsAPI::Opengl : Light::GraphicsAPI::DirectX,
+		                             { true }, m_GameWindow);
+	
+		Light::Application::DetatchLayer(m_TriangleLayer);
+		Light::Application::AttachLayer(m_TriangleLayer);
+	}
 
-	if (event.GetKey() == KEY_KP_2)
-		Light::GraphicsContext::Init(Light::GraphicsAPI::Opengl, {true}, m_GameWindow);
-
-	return true;
-}
-
-bool DemoLayer::OnMouseScroll(Light::MouseScrolledEvent& event)
-{
-	// this is just an example of LT_ASSERT, mouse wheel offset can be 0
-	LT_ASSERT(event.GetOffset(), EC_CLIENT_ASSERTION, "Mouse wheel offset is 0"); 
-
-	return true;
-}
-
-bool DemoLayer::OnWindowResize(Light::WindowResizedEvent& event)
-{
-	LT_INFO(event.GetLogInfo());
 	return true;
 }
