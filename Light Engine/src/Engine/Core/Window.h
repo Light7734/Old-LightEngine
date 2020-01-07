@@ -41,6 +41,8 @@ namespace Light {
 	class Window
 	{
 	private:
+		static Window* s_Instance;
+
 		GLFWwindow* m_Window = nullptr;
 		void* m_NativeHandle = nullptr;
 

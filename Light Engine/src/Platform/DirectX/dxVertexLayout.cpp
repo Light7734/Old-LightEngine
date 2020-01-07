@@ -42,7 +42,7 @@ namespace Light {
 		case Light::VertexType::Double3:
 		case Light::VertexType::Double4:
 
-		default: LT_CORE_ASSERT(false, EC_INvALID_VERTEX_TYPE, "Invalid vertex type");
+		default: LT_CORE_ASSERT(false, EC_INVALID_VERTEX_TYPE, "Invalid vertex type");
 		}
 	}
 

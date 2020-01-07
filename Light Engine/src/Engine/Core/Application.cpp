@@ -20,8 +20,8 @@ namespace Light {
 	Application::Application()
 	{
 		LT_CORE_ASSERT(!s_Instance, EC_MULTIPLE_INSTANCES_APPLICATION, "Multiple Application instances");
-
 		s_Instance = this;
+
 		Logger::Init();
 	}
 

@@ -34,6 +34,8 @@ namespace Light {
 			return std::make_shared<dxIndexBuffer>(indices, size);
 		case GraphicsAPI::Opengl:
 			return std::make_shared<glIndexBuffer>(indices, size);
+		default:
+			LT_CORE_ASSERT(false, EC_INVALID_GRAPHICS_API, "Invalid GraphicsAPI");
 		}
 	}
 

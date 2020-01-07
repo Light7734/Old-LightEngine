@@ -23,10 +23,15 @@
 
 namespace Light {
 
+	Window* Window::s_Instance = nullptr;
+
 	Window::Window(const WindowData& data)
 	{
+		LT_CORE_ASSERT(!s_Instance, EC_MULTIPLE_INSTANCES_WINDOW, "Multiple Window instances");
+		s_Instance = this;
+
 		// Initialize glfw and set window data
-		LT_CORE_ASSERT(glfwInit(), EC_CALL_FAIL_GLFW_INIT, "glfwInit() failed");
+		LT_CORE_ASSERT(glfwInit(), EC_CALL_FAIL_GLFW_INIT, "Failed to intialize glfw");
 		m_Data = data;
 
 
@@ -40,7 +45,7 @@ namespace Light {
 		// Create and check glfw window
 		m_Window = glfwCreateWindow(data.width, data.height, data.title.c_str(),
 		                            data.displayMode == DisplayMode::ExclusiveFullscreen ? glfwGetPrimaryMonitor() : NULL, NULL);
-		LT_CORE_ASSERT(m_Window, EC_ENGINE_ASSERTION, "failed to create glfw window");
+		LT_CORE_ASSERT(m_Window, EC_CALL_FAIL_GLFW_CREATE_WINDOW, "Failed to create glfw window");
 
 
 		glfwSetWindowUserPointer(m_Window, &m_Data);

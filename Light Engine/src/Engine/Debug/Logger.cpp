@@ -22,17 +22,13 @@ namespace Light {
 			{ LT_CORE_WARN("Logger::Init() called multiple times"); return; }
 
 
-		// log file's name is the time logger reached its constructor
-		time_t timeAndDate = time(0);
-		s_FileLogPath = ctime(&timeAndDate);
-		s_FileLogPath = s_FileLogPath.substr(3, s_FileLogPath.size() - 4);
-		std::replace(s_FileLogPath.begin(), s_FileLogPath.end(), ':', '.');
-		s_FileLogPath = "Logs/" + s_FileLogPath + ".log";
-
 		// spdlog doesn't create a folder, so we need to make sure it exists
 		std::filesystem::create_directory("Logs");
 
+		// Set output directory
+		InitLogFileOutputDir();
 
+		// Initialize spdlog
 		spdlog::set_level(spdlog::level::trace);
 
 		s_CoreLogger = spdlog::stdout_color_mt("<Engine>");
@@ -53,6 +49,9 @@ namespace Light {
 #ifndef LIGHT_DIST
 			printf("WARNING: Logger::Terminate() called (without a call to Logger::Init() / multiple times)\n");
 #else
+			if (s_FileLogPath.empty())
+				InitLogFileOutputDir();
+
 			std::ofstream out;
 			out.open(s_FileLogPath, std::ios::app);
 			out << "WARNING: Logger::Terminate() called (without a call to Logger::Init() / multiple times)\n";
@@ -69,6 +68,17 @@ namespace Light {
 		spdlog::shutdown();
 
 		s_Initialized = false;
+	}
+
+	void Logger::InitLogFileOutputDir()
+	{
+		// log file's name is the time logger reached its constructor
+		time_t timeAndDate = time(0);
+		s_FileLogPath = ctime(&timeAndDate);
+		s_FileLogPath = s_FileLogPath.substr(3, s_FileLogPath.size() - 4);
+		std::replace(s_FileLogPath.begin(), s_FileLogPath.end(), ':', '.');
+		s_FileLogPath = "Logs/" + s_FileLogPath + ".log";
+
 	}
 
 }

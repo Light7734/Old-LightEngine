@@ -68,6 +68,7 @@ namespace Light {
 
 		static inline bool isInitialized() { return s_Initialized; }
 	private:
+		static void InitLogFileOutputDir();
 	};
 
 }
