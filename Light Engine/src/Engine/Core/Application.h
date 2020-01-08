@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Layers/LayerStack.h"
+
 #include "Core/Core.h"
 
 namespace Light {
@@ -14,7 +16,7 @@ namespace Light {
 	{
 	private:
 		static Application* s_Instance;
-		std::vector<std::shared_ptr<Layer>> m_LayerStack;
+		LayerStack m_LayerStack;
 	protected:
 		std::shared_ptr<Window> m_Window;
 	public:
@@ -26,14 +28,8 @@ namespace Light {
 		void GameLoop(            );
 		void OnEvent (Event& event);
 
-		static inline void AttachLayer(std::shared_ptr<Layer> layer)  { s_Instance->AttachLayerImpl(layer); }
-		static inline void DetatchLayer(std::shared_ptr<Layer> layer) { s_Instance->DetatchLayerImpl(layer); }
-
 		static inline std::shared_ptr<Window> GetGameWindow() { return s_Instance->m_Window; }
 	private:
-		void AttachLayerImpl (std::shared_ptr<Layer> layer);
-		void DetatchLayerImpl(std::shared_ptr<Layer> layer);
-
 		bool OnWindowClosedEvent(WindowClosedEvent& event);
 	};
 

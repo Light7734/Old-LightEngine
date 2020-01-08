@@ -154,6 +154,7 @@
     <ClInclude Include="src\Engine\Input\Input.h" />
     <ClInclude Include="src\Engine\Input\InputCodes.h" />
     <ClInclude Include="src\Engine\Layers\Layer.h" />
+    <ClInclude Include="src\Engine\Layers\LayerStack.h" />
     <ClInclude Include="src\Engine\LightEngine.h" />
     <ClInclude Include="src\Engine\Renderer\BufferLayout.h" />
     <ClInclude Include="src\Engine\Renderer\Buffers.h" />
@@ -180,6 +181,7 @@
     <ClCompile Include="src\Engine\Core\Window.cpp" />
     <ClCompile Include="src\Engine\Debug\Logger.cpp" />
     <ClCompile Include="src\Engine\Input\Input.cpp" />
+    <ClCompile Include="src\Engine\Layers\LayerStack.cpp" />
     <ClCompile Include="src\Engine\Renderer\BufferLayout.cpp" />
     <ClCompile Include="src\Engine\Renderer\Buffers.cpp" />
     <ClCompile Include="src\Engine\Renderer\GraphicsContext.cpp" />
@@ -218,4 +220,4 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
-</Project>
+</Project> 

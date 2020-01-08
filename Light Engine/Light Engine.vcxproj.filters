@@ -84,6 +84,9 @@
     <ClInclude Include="src\Engine\Layers\Layer.h">
       <Filter>src\Engine\Layers</Filter>
     </ClInclude>
+    <ClInclude Include="src\Engine\Layers\LayerStack.h">
+      <Filter>src\Engine\Layers</Filter>
+    </ClInclude>
     <ClInclude Include="src\Engine\LightEngine.h">
       <Filter>src\Engine</Filter>
     </ClInclude>
@@ -157,6 +160,9 @@
     </ClCompile>
     <ClCompile Include="src\Engine\Input\Input.cpp">
       <Filter>src\Engine\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Layers\LayerStack.cpp">
+      <Filter>src\Engine\Layers</Filter>
     </ClCompile>
     <ClCompile Include="src\Engine\Renderer\BufferLayout.cpp">
       <Filter>src\Engine\Renderer</Filter>

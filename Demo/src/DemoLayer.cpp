@@ -6,7 +6,7 @@ void DemoLayer::OnAttach()
 	m_GameWindow = Light::Application::GetGameWindow();
 
 	m_TriangleLayer = std::make_shared<TriangleLayer>();
-	Light::Application::AttachLayer(m_TriangleLayer);
+	Light::LayerStack::AttachLayer(m_TriangleLayer);
 }
 
 void DemoLayer::OnDetatch()
@@ -55,8 +55,8 @@ bool DemoLayer::OnKeyPress(Light::KeyboardKeyPressedEvent& event)
 		                             Light::GraphicsAPI::Opengl : Light::GraphicsAPI::DirectX,
 		                             { true }, m_GameWindow);
 	
-		Light::Application::DetatchLayer(m_TriangleLayer);
-		Light::Application::AttachLayer(m_TriangleLayer);
+		Light::LayerStack::DetatchLayer(m_TriangleLayer);
+		Light::LayerStack::AttachLayer(m_TriangleLayer);
 	}
 
 	return true;

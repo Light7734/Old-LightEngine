@@ -80,26 +80,6 @@ namespace Light {
 		dispatcher.Dispatch<WindowClosedEvent>(LT_EVENT_FN(Application::OnWindowClosedEvent));
 	}
 
-	void Application::AttachLayerImpl(std::shared_ptr<Layer> layer)
-	{
-		m_LayerStack.push_back(layer);
-		layer->OnAttach();
-
-		LT_CORE_TRACE("LayerStack size: {}", (int)m_LayerStack.size());
-	}
-
-	void Application::DetatchLayerImpl(std::shared_ptr<Layer> layer)
-	{
-		auto it = std::find(m_LayerStack.begin(), m_LayerStack.end(), layer);
-
-		if (it != m_LayerStack.end())
-			{ layer->OnDetatch(); m_LayerStack.erase(it); }
-		else
-			LT_CORE_ERROR("Failed to find the specified layer from LayerStack");
-
-		LT_CORE_TRACE("LayerStack size: {}", m_LayerStack.size());
-	}
-
 	bool Application::OnWindowClosedEvent(WindowClosedEvent& event)
 	{
 		m_Window->Close();

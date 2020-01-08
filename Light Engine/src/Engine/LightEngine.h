@@ -52,4 +52,5 @@
 
 // Layers --------------------
 #include "Layers/Layer.h"
+#include "Layers/LayerStack.h"
 // ---------------------------
