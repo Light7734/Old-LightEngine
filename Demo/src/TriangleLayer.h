@@ -15,6 +15,8 @@ public:
 
 	void OnAttach() override
 	{
+		LT_TRACE("Attached TriangleLayer");
+
 		float vertices[] =
 		{
 			-0.5f, -0.5f, 1.0f, 1.0f, 0.0f,
@@ -35,6 +37,11 @@ public:
 		m_Buffer = Light::VertexBuffer::Create(vertices, sizeof(vertices), sizeof(float) * 5);
 		m_Layout = Light::BufferLayout::Create(m_Shader, m_Buffer, layout);
 		m_IndexBuffer = Light::IndexBuffer::Create(indices, sizeof(indices));
+	}
+
+	void OnDetatch() override
+	{
+		LT_TRACE("Detatched TriangleLayer");
 	}
 
 	void OnRender() override

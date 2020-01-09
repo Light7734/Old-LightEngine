@@ -18,7 +18,7 @@ Demo::Demo()
 	Light::GraphicsContext::Init(Light::GraphicsAPI::Opengl, gc, m_Window);
 
 	// Attach the DemoLayer
-	Light::LayerStack::AttachLayer(std::make_shared<DemoLayer>());
+	Light::LayerStack::AttachLayer(new DemoLayer);
 }
 
 Demo::~Demo()

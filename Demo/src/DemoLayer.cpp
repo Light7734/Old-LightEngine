@@ -5,7 +5,7 @@ void DemoLayer::OnAttach()
 	LT_TRACE("Attached DemoLayer");
 	m_GameWindow = Light::Application::GetGameWindow();
 
-	m_TriangleLayer = std::make_shared<TriangleLayer>();
+	m_TriangleLayer = new TriangleLayer;
 	Light::LayerStack::AttachLayer(m_TriangleLayer);
 }
 
@@ -17,20 +17,8 @@ void DemoLayer::OnDetatch()
 void DemoLayer::OnUpdate(float deltaTime)
 {
 	static Light::Timer timer;
-	static int frames = 0;
-	static int fpsLogTime = 1;
-
-	frames++;
-	if (timer.ElapsedTime() >= fpsLogTime)
-	{
-		fpsLogTime++;
-		LT_DEBUG("FPS: {}", frames);
-		frames = 0;
-	}
-
 	const float c = abs(sin(timer.ElapsedTime()));
 	Light::RenderCommand::ClearBuffer(0.3f, 0.1, c, 1.0f);
-
 
 	if (Light::Input::GetKey(KEY_ENTER))
 		LT_TRACE("Enter key is down!");
@@ -38,10 +26,12 @@ void DemoLayer::OnUpdate(float deltaTime)
 
 void DemoLayer::OnEvent(Light::Event& event)
 {
-	LT_TRACE(event.GetLogInfo());
+	// Uncomment to log every event
+	// LT_TRACE(event.GetLogInfo());
 
 	Light::Dispatcher dispatcher(event);
 	dispatcher.Dispatch<Light::KeyboardKeyPressedEvent>(LT_EVENT_FN(DemoLayer::OnKeyPress));
+	dispatcher.Dispatch<Light::MouseMovedEvent>(LT_EVENT_FN(DemoLayer::OnMouseMove));
 }
 
 bool DemoLayer::OnKeyPress(Light::KeyboardKeyPressedEvent& event)
@@ -58,6 +48,22 @@ bool DemoLayer::OnKeyPress(Light::KeyboardKeyPressedEvent& event)
 		Light::LayerStack::DetatchLayer(m_TriangleLayer);
 		Light::LayerStack::AttachLayer(m_TriangleLayer);
 	}
+
+	if (event.GetKey() == KEY_D)
+		m_TriangleLayer->Disable();
+	if (event.GetKey() == KEY_E)
+		m_TriangleLayer->Enable();
+
+
+	return true;
+}
+
+bool DemoLayer::OnMouseMove(Light::MouseMovedEvent& event)
+{
+	if (event.GetX() > 200 && event.GetX() < 600 && event.GetY() > 150 && event.GetY() < 450)
+		m_TriangleLayer->Disable();
+	else
+		m_TriangleLayer->Enable();
 
 	return true;
 }

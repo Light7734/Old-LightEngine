@@ -8,11 +8,16 @@ namespace Light {
 	
 	class Layer
 	{
+	private:
+		bool b_Enabled = true;
 	public:
 		Layer           (            ) = default;
 		Layer           (const Layer&) = delete ;
 		Layer& operator=(const Layer&) = delete ;
 		virtual ~Layer  (            ) = default;
+
+		virtual void Enable () { b_Enabled = true ; }
+		virtual void Disable() { b_Enabled = false; }
 
 		virtual void OnAttach () {}
 		virtual void OnDetatch() {}
@@ -22,6 +27,8 @@ namespace Light {
 		virtual void OnUserInterfaceUpdate(  ) {}
 
 		virtual void OnEvent(Event& event) {}
+
+		inline bool IsEnable() const { return b_Enabled; }
 	};
 
 }

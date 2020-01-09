@@ -44,19 +44,24 @@ namespace Light {
 			RenderCommand::Clear();
 
 
-			for (auto layer : m_LayerStack)
-				layer->OnUpdate(Time::GetDeltaTime());
+			for (Layer* layer : m_LayerStack)
+				if(layer->IsEnable()) 
+					layer->OnUpdate(Time::GetDeltaTime());
 
-			for (auto layer : m_LayerStack)
-				layer->OnRender();
+			for (Layer* layer : m_LayerStack)
+				if (layer->IsEnable())
+					layer->OnRender();
 
 			// UserInterface::Begin(); #todo: Add ImGui
-			for (auto layer : m_LayerStack)
-				layer->OnUserInterfaceUpdate();
+			for (Layer* layer : m_LayerStack)
+				if (layer->IsEnable())
+					layer->OnUserInterfaceUpdate();
 			// UserInterface::End  (); #todo: Add ImGui
 
 
+			m_LayerStack.HandleQueuedLayers();
 			m_Window->HandleEvents();
+
 			RenderCommand::SwapBuffers();
 		}
 	}
@@ -71,7 +76,9 @@ namespace Light {
 
 		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)
 		{
-			(*it)->OnEvent(event);
+			if((*it)->IsEnable())
+				(*it)->OnEvent(event);
+
 			if (event.b_Dispatched)
 				return;
 		}
