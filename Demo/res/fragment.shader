@@ -3,20 +3,20 @@
 
 out vec4 FragmentColor;
 
-in vec3 VSOut_Color;
+in vec4 VSOut_Color;
 
 void main()
 {
-	FragmentColor = vec4(VSOut_Color, 1.0);
+	FragmentColor = vec4(VSOut_Color);
 }
 
 -GLSL
 
 +HLSL
 
-float4 main(float3 col : Color) : SV_Target
+float4 main(float4 col : Color) : SV_Target
 {
-	return float4(col, 1.0f);
+	return float4(col);
 }
 
 -HLSL

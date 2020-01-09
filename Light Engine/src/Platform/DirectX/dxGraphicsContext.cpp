@@ -108,11 +108,6 @@ namespace Light {
 		LT_CORE_INFO("        Renderer: {}", renderer);
 	}
 
-	dxGraphicsContext::~dxGraphicsContext()
-	{
-		LT_CORE_DEBUG("Destructing dxGraphicsContext");
-	}
-
 	void dxGraphicsContext::HandleWindowEvents(Event& event)
 	{
 		Dispatcher dispatcher(event);

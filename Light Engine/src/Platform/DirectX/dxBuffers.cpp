@@ -12,18 +12,25 @@ namespace Light {
 		D3D11_SUBRESOURCE_DATA sd = {};
 
 		bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		bd.Usage     = D3D11_USAGE_DEFAULT;
+		bd.Usage     = D3D11_USAGE_DYNAMIC;
+		bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		bd.ByteWidth = size;
 		bd.StructureByteStride = stride;
 
 		sd.pSysMem = vertices;
 
-		dxGraphicsContext::GetDevice()->CreateBuffer(&bd, &sd, &m_Buffer);
+		dxGraphicsContext::GetDevice()->CreateBuffer(&bd, sd.pSysMem ? &sd : nullptr, &m_Buffer);
 	}
 
-	dxVertexBuffer::~dxVertexBuffer()
+	void* dxVertexBuffer::Map()
 	{
+		dxGraphicsContext::GetDeviceContext()->Map(m_Buffer.Get(), NULL, D3D11_MAP_WRITE_DISCARD, NULL, &m_Map);
+		return m_Map.pData;
+	}
 
+	void dxVertexBuffer::UnMap()
+	{
+		dxGraphicsContext::GetDeviceContext()->Unmap(m_Buffer.Get(), NULL);
 	}
 
 	void dxVertexBuffer::Bind()
@@ -45,11 +52,6 @@ namespace Light {
 		sd.pSysMem = indices;
 
 		dxGraphicsContext::GetDevice()->CreateBuffer(&bd, &sd, &m_Buffer);
-	}
-
-	dxIndexBuffer::~dxIndexBuffer()
-	{
-
 	}
 
 	void dxIndexBuffer::Bind()

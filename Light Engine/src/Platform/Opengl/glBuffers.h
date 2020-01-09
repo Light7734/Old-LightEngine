@@ -15,6 +15,9 @@ namespace Light {
 		~glVertexBuffer();
 
 		void Bind() override;
+
+		void* Map  () override;
+		void  UnMap() override;
 	};
 
 	class glIndexBuffer : public IndexBuffer

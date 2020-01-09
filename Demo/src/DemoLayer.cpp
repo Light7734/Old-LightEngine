@@ -3,10 +3,12 @@
 void DemoLayer::OnAttach()
 {
 	LT_TRACE("Attached DemoLayer");
-	m_GameWindow = Light::Application::GetGameWindow();
+	LT_INFO("NOTE: You can change GraphicsAPI with keypad keys 1 and 2");
 
-	m_TriangleLayer = new TriangleLayer;
-	Light::LayerStack::AttachLayer(m_TriangleLayer);
+	m_GameWindow = Light::Application::GetGameWindow();
+	
+	m_QuadLayer = new QuadLayer;
+	Light::LayerStack::AttachLayer(m_QuadLayer);
 }
 
 void DemoLayer::OnDetatch()
@@ -40,20 +42,9 @@ bool DemoLayer::OnKeyPress(Light::KeyboardKeyPressedEvent& event)
 		m_GameWindow->Close();
 
 	if (event.GetKey() == KEY_KP_1 || event.GetKey() == KEY_KP_2)
-	{
 		Light::GraphicsContext::Init(event.GetKey() == KEY_KP_1 ?
 		                             Light::GraphicsAPI::Opengl : Light::GraphicsAPI::DirectX,
 		                             { true }, m_GameWindow);
-	
-		Light::LayerStack::DetatchLayer(m_TriangleLayer);
-		Light::LayerStack::AttachLayer(m_TriangleLayer);
-	}
-
-	if (event.GetKey() == KEY_D)
-		m_TriangleLayer->Disable();
-	if (event.GetKey() == KEY_E)
-		m_TriangleLayer->Enable();
-
 
 	return true;
 }
@@ -61,9 +52,9 @@ bool DemoLayer::OnKeyPress(Light::KeyboardKeyPressedEvent& event)
 bool DemoLayer::OnMouseMove(Light::MouseMovedEvent& event)
 {
 	if (event.GetX() > 200 && event.GetX() < 600 && event.GetY() > 150 && event.GetY() < 450)
-		m_TriangleLayer->Disable();
+		m_QuadLayer->Disable();
 	else
-		m_TriangleLayer->Enable();
+		m_QuadLayer->Enable();
 
 	return true;
 }

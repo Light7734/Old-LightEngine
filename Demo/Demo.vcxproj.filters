@@ -15,7 +15,7 @@
     <ClInclude Include="src\DemoLayer.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\TriangleLayer.h">
+    <ClInclude Include="src\QuadLayer.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

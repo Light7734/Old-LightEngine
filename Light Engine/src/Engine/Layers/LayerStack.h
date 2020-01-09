@@ -25,13 +25,13 @@ namespace Light {
 
 		static unsigned int GetSize() { return s_Layers.size(); }
 
-		void HandleQueuedLayers();
-
 		std::vector<Layer*>::iterator begin() { return s_Layers.begin(); }
 		std::vector<Layer*>::iterator end() { return s_Layers.end(); }
 
 		std::vector<Layer*>::reverse_iterator rbegin() { return s_Layers.rbegin(); }
 		std::vector<Layer*>::reverse_iterator rend() { return s_Layers.rend(); }
+	private:
+		void HandleQueuedLayers();
 	};
 
 }

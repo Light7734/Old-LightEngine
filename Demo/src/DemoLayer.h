@@ -2,13 +2,13 @@
 
 #include <LightEngine.h>
 
-#include "TriangleLayer.h"
+#include "QuadLayer.h"
 
 class DemoLayer : public Light::Layer
 {
 private:
 	std::shared_ptr<Light::Window> m_GameWindow;
-	TriangleLayer* m_TriangleLayer;
+	QuadLayer* m_QuadLayer;
 public:
 	void OnAttach() override;
 	void OnDetatch() override;

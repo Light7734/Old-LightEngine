@@ -25,11 +25,6 @@ namespace Light {
 		LT_CORE_INFO("        Version : {}", glGetString(GL_VERSION ));
 	}
 
-	glGraphicsContext::~glGraphicsContext()	
-	{
-		LT_CORE_DEBUG("Destructing glGraphicsContext");
-	}
-
 	void glGraphicsContext::HandleWindowEvents(Event& event)
 	{
 		Dispatcher dispatcher(event);

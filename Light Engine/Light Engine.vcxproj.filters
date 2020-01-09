@@ -144,6 +144,7 @@
     <ClInclude Include="src\Platform\Opengl\glVertexLayout.h">
       <Filter>src\Platform\Opengl</Filter>
     </ClInclude>
+    <ClInclude Include="src\Engine\Renderer\Renderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Engine\Core\Application.cpp">
@@ -218,6 +219,7 @@
     <ClCompile Include="src\Platform\Opengl\glVertexLayout.cpp">
       <Filter>src\Platform\Opengl</Filter>
     </ClCompile>
+    <ClCompile Include="src\Engine\Renderer\Renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="premake5.lua" />

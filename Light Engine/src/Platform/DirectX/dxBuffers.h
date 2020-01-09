@@ -13,10 +13,13 @@ namespace Light {
 	{
 	private:
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_Buffer;
+		D3D11_MAPPED_SUBRESOURCE m_Map;
 		unsigned int m_Stride = 0u, m_Offset = 0u;
 	public:
 		dxVertexBuffer(float* vertices, unsigned int size, unsigned int stride);
-		~dxVertexBuffer();
+
+		void* Map  () override;
+		void  UnMap() override;
 
 		void Bind() override;
 	};
@@ -27,7 +30,6 @@ namespace Light {
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_Buffer;
 	public:
 		dxIndexBuffer(unsigned int* indices, unsigned int size);
-		~dxIndexBuffer();
 
 		void Bind() override;
 	};

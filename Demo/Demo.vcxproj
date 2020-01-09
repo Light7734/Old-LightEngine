@@ -135,7 +135,7 @@
   <ItemGroup>
     <ClInclude Include="src\Demo.h" />
     <ClInclude Include="src\DemoLayer.h" />
-    <ClInclude Include="src\TriangleLayer.h" />
+    <ClInclude Include="src\QuadLayer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Demo.cpp" />

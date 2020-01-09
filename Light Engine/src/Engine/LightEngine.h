@@ -47,7 +47,7 @@
 #include "Renderer/VertexLayout.h"
 #include "Renderer/GraphicsContext.h"
 #include "Renderer/RenderCommand.h"
-#include "Platform/DirectX/dxGraphicsContext.h"
+#include "Renderer/Renderer.h"
 // --------------------------
 
 // Layers --------------------

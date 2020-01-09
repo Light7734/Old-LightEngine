@@ -2,9 +2,9 @@
 #version 450 core
 
 layout(location = 0) in vec2 a_Pos;
-layout(location = 1) in vec3 a_Col;
+layout(location = 1) in vec4 a_Col;
 
-out vec3 VSOut_Color;
+out vec4 VSOut_Color;
 
 void main()
 {
@@ -18,12 +18,12 @@ void main()
 
 struct VSOut
 {
-	float3 col : Color;
+	float4 col : Color;
 	float4 pos : SV_Position;
 };
 
 
-VSOut main(float2 pos : Position, float3 col : Color) 
+VSOut main(float2 pos : Position, float4 col : Color) 
 {
 	VSOut vso;
 	vso.pos = float4(pos.x, pos.y, 0.0f, 1.0f);

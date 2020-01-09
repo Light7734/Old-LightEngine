@@ -8,7 +8,7 @@ namespace Light {
 	glVertexBuffer::glVertexBuffer(float* vertices, unsigned int size)
 	{
 		glCreateBuffers(1, &m_BufferID);
-		glNamedBufferData(m_BufferID, size, vertices, GL_STATIC_DRAW);
+		glNamedBufferData(m_BufferID, size, vertices, GL_DYNAMIC_DRAW);
 	}
 
 	glVertexBuffer::~glVertexBuffer()
@@ -21,6 +21,15 @@ namespace Light {
 		glBindBuffer(GL_ARRAY_BUFFER, m_BufferID);
 	}
 
+	void* glVertexBuffer::Map()
+	{
+		return glMapNamedBuffer(m_BufferID, GL_WRITE_ONLY);
+	}
+
+	void glVertexBuffer::UnMap()
+	{
+		glUnmapNamedBuffer(m_BufferID);
+	}
 
 	glIndexBuffer::glIndexBuffer(unsigned int* indices, unsigned int size)
 	{

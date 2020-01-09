@@ -28,7 +28,6 @@ namespace Light {
 		static Microsoft::WRL::ComPtr<ID3D11RenderTargetView> s_RenderTargetView;
 	public:
 		dxGraphicsContext(std::shared_ptr<const Window> game_window, GraphicsConfigurations data);
-		~dxGraphicsContext();
 
 		void HandleWindowEvents(Event& event) override;
 

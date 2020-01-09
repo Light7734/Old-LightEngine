@@ -11,6 +11,7 @@
 
 #include "Layers/Layer.h"
 
+#include "Renderer/Renderer.h"
 #include "Renderer/RenderCommand.h"
 
 namespace Light {
@@ -48,9 +49,11 @@ namespace Light {
 				if(layer->IsEnable()) 
 					layer->OnUpdate(Time::GetDeltaTime());
 
+			Renderer::Start();
 			for (Layer* layer : m_LayerStack)
 				if (layer->IsEnable())
 					layer->OnRender();
+			Renderer::End();
 
 			// UserInterface::Begin(); #todo: Add ImGui
 			for (Layer* layer : m_LayerStack)

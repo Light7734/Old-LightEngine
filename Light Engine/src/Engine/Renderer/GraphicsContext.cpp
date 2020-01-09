@@ -1,5 +1,7 @@
 #include "ltpch.h"
 #include "GraphicsContext.h"
+
+#include "Renderer.h"
 #include "RenderCommand.h"
 
 #include "Platform/DirectX/dxGraphicsContext.h"
@@ -32,6 +34,7 @@ namespace Light {
 			LT_CORE_ASSERT(false, EC_INVALID_GRAPHICS_API, "Invalid GraphicsAPI");
 		}
 
+		Renderer::Init();
 	}
 
 }
