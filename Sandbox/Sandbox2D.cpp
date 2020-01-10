@@ -1,43 +1,38 @@
 #include <LightEngine.h>
 #include <Core/EntryPoint.h>
 
-class ClearBufferLayer : public Light::Layer 
+
+class Sandbox : public Light::Application
 {
-private:
-	Light::Timer timer;
 public:
-	void OnUpdate(float DeltaTime) override
+	Sandbox()
 	{
-		const auto c = std::abs(sin(timer.ElapsedTime()));
-		const auto c2 = std::abs(cos(timer.ElapsedTime()));
-		LT_TRACE(c);
-		Light::RenderCommand::ClearBuffer(c * 127.0f, c * 255.0f, c2 * 255, 255);
+		// Create Window
+		Light::WindowData wd;
+		wd.title = "Sandbox";
+		wd.width = 800;
+		wd.height = 600;
+		wd.x = 200;
+		wd.y = 200;
+		wd.displayMode = Light::DisplayMode::Windowed;
+		wd.eventCallback = LT_EVENT_FN(Light::Application::OnEvent);
+
+		m_Window = std::make_shared<Light::Window>(wd);
+
+		// Initialize Graphics
+		Light::GraphicsConfigurations gc;
+		gc.vSync = true;
+
+		Light::GraphicsContext::Init(Light::GraphicsAPI::Opengl, gc, m_Window);
+	}
+	
+	~Sandbox()
+	{
+
 	}
 };
 
-class Sandbox2D : public Light::Application 
-{
-public:
-	Sandbox2D()  
-	{ 
-		LT_DEBUG("Constructing Sandbox2D");
-
-		Light::WindowData data = { "Light Engine", Light::DisplayMode::Windowed, Light::WindowState::Visible, 500, 400, 200, 20 };
-
-		m_Window = std::make_shared<Light::Window>(data);
-		m_Window->SetEventCallbackFunction(std::bind(&Light::Application::OnEvent, this, std::placeholders::_1));
-
-		Light::GraphicsContext::SetAPI(Light::GraphicsAPI::DirectX);
-		Light::GraphicsContext::Init(m_Window, true);
-
-		AttachLayer(std::make_shared<ClearBufferLayer>());
-	}	
-	~Sandbox2D() { LT_DEBUG("Destructing Sandbox2D");  }
-
-};
-
-
 Light::Application* Light::CreateApplication()
 {
-	return new Sandbox2D;
+	return new Sandbox;
 }
