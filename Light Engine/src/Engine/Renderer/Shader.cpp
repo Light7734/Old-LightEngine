@@ -3,7 +3,9 @@
 
 #include "GraphicsContext.h"
 
-#include "Platform/DirectX/dxShader.h"
+#ifdef LIGHT_PLATFORM_WINDOWS
+	#include "Platform/DirectX/dxShader.h"
+#endif
 #include "Platform/Opengl/glShader.h"
 
 #include "Utility/FileManager.h"
@@ -27,17 +29,17 @@ namespace Light {
 		case GraphicsAPI::Default:
 			LT_CORE_ASSERT(false, EC_NO_INIT_GRAPHICSC_CONTEXT, "Failed to create Shader: GraphicsContext::Init was never called");
 
-		case GraphicsAPI::DirectX:
-			ExtractShaderSource(vertex_source, "HLSL");
-			ExtractShaderSource(fragment_source, "HLSL");
-
-			return std::make_shared<dxShader>(vertex_source, fragment_source);
-
 		case GraphicsAPI::Opengl:
 			ExtractShaderSource(vertex_source, "GLSL");
 			ExtractShaderSource(fragment_source, "GLSL");
 
 			return std::make_shared<glShader>(vertex_source, fragment_source);
+
+		case GraphicsAPI::DirectX: LT_DX(
+			ExtractShaderSource(vertex_source, "HLSL");
+			ExtractShaderSource(fragment_source, "HLSL");
+
+			return std::make_shared<dxShader>(vertex_source, fragment_source); )
 
 		default:
 			LT_CORE_ASSERT(false, EC_INVALID_GRAPHICS_API, "Invalid GraphicsAPI");

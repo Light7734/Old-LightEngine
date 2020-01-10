@@ -25,6 +25,9 @@
     <Filter Include="src\Engine\Renderer">
       <UniqueIdentifier>{F838018B-649A-DE98-ED07-254B59681558}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Engine\Renderer\Shaders">
+      <UniqueIdentifier>{D1D52A5C-3DE3-5842-C6C9-542D32D624F9}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Engine\Utility">
       <UniqueIdentifier>{55516F99-4135-30EF-AA95-2A4296981A71}</UniqueIdentifier>
     </Filter>
@@ -102,6 +105,15 @@
     <ClInclude Include="src\Engine\Renderer\RenderCommand.h">
       <Filter>src\Engine\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Engine\Renderer\Renderer.h">
+      <Filter>src\Engine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Renderer\Shader.h">
+      <Filter>src\Engine\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Renderer\Shaders\QuadShader.h">
+      <Filter>src\Engine\Renderer\Shaders</Filter>
+    </ClInclude>
     <ClInclude Include="src\Engine\Renderer\VertexLayout.h">
       <Filter>src\Engine\Renderer</Filter>
     </ClInclude>
@@ -141,11 +153,6 @@
     <ClInclude Include="src\Platform\Opengl\glVertexLayout.h">
       <Filter>src\Platform\Opengl</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\Renderer\Renderer.h" />
-    <ClInclude Include="src\Engine\Renderer\Shaders\QuadShader.h" />
-    <ClInclude Include="src\Engine\Renderer\Shader.h">
-      <Filter>src\Engine\Renderer</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Engine\Core\Application.cpp">
@@ -176,6 +183,12 @@
       <Filter>src\Engine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Engine\Renderer\RenderCommand.cpp">
+      <Filter>src\Engine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Renderer\Renderer.cpp">
+      <Filter>src\Engine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Renderer\Shader.cpp">
       <Filter>src\Engine\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Engine\Renderer\VertexLayout.cpp">
@@ -216,10 +229,6 @@
     </ClCompile>
     <ClCompile Include="src\Platform\Opengl\glVertexLayout.cpp">
       <Filter>src\Platform\Opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Engine\Renderer\Renderer.cpp" />
-    <ClCompile Include="src\Engine\Renderer\Shader.cpp">
-      <Filter>src\Engine\Renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

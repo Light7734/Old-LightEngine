@@ -34,20 +34,23 @@ project "Light Engine"
 		"%{wks.location}/glad/"        ,
     }
 
+	-- Operating System
+	filter "system:not windows"
+		excludes "%{prj.location}/src/Platform/DirectX**"
 
     -- Configurations
     filter "configurations:debug"
-        defines  "LIGHT_DEBUG"
-        optimize "debug"
-        runtime  "debug"
-        symbols  "on"
+		defines  "LIGHT_DEBUG"
+		optimize "debug"
+		runtime  "debug"
+		symbols  "on"
 
     filter "configurations:release"
-        defines "LIGHT_RELEASE"
-        optimize "on"
-        runtime  "release"
+		defines "LIGHT_RELEASE"
+		optimize "on"
+		runtime  "release"
 
     filter "configurations:distribution"
-       defines "LIGHT_DIST"
-       optimize "on"
-       runtime  "release"
+		defines "LIGHT_DIST"
+		optimize "on"
+		runtime  "release"

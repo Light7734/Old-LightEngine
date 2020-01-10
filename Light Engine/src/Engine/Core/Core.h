@@ -19,6 +19,13 @@
 #endif
 
 
+#ifdef LIGHT_PLATFORM_WINDOWS
+	#define LT_DX(x) x
+#else
+	#define LT_DX(x)
+#endif
+
+
 #define BIT(x) 1 << x
 
 #define LT_EVENT_FN(fn)        std::bind(&##fn, this, std::placeholders::_1)
