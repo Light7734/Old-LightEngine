@@ -10,13 +10,16 @@
 
 namespace Light {
 
-	std::shared_ptr<Light::Shader> Shader::Create(const std::string& vertex_path, const std::string& fragment_path)
+	std::shared_ptr<Light::Shader> Shader::Create(const std::string& vertex, const std::string& fragment)
 	{
-		std::string vertex_source = FileManager::ReadTxtFile(vertex_path);
-		std::string fragment_source = FileManager::ReadTxtFile(fragment_path);
+		bool vsSourceInFile = vertex.find('\n') == std::string::npos;
+		bool fsSourceInFile = fragment.find('\n') == std::string::npos;
 
-		LT_CORE_ASSERT(!vertex_source.empty(), EC_FILE_READ_FAIL_SHADER, "Failed to find vertex shader");
-		LT_CORE_ASSERT(!fragment_source.empty(), EC_FILE_READ_FAIL_SHADER, "Failed to find fragment shader");
+		std::string vertex_source = vsSourceInFile ? FileManager::ReadTxtFile(vertex) : vertex;
+		std::string fragment_source = fsSourceInFile ? FileManager::ReadTxtFile(fragment) : fragment;
+
+		LT_CORE_ASSERT(!vertex_source.empty(), EC_FILE_READ_FAIL_SHADER, "Empty vertex shader source");
+		LT_CORE_ASSERT(!fragment_source.empty(), EC_FILE_READ_FAIL_SHADER, "Empty fragment shader source");
 
 
 		switch (GraphicsContext::GetAPI())

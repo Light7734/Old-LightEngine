@@ -11,7 +11,7 @@ namespace Light {
 	public:
 		virtual ~Shader() = default;
 
-		static std::shared_ptr<Shader> Create(const std::string& vertex_path, const std::string& fragment_path);
+		static std::shared_ptr<Shader> Create(const std::string& vertex, const std::string& fragment);
 
 		virtual void Bind() = 0;
 

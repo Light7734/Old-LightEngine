@@ -4,6 +4,8 @@
 #include "RenderCommand.h"
 #include "VertexLayout.h"
 
+#include "Shaders/QuadShader.h"
+
 #define LT_INIT_SPRITES 10000
 
 namespace Light {
@@ -22,7 +24,7 @@ namespace Light {
 	void Renderer::Init()
 	{
 		// Create Shader
-		s_Shader = Shader::Create("res/vertex.shader", "res/fragment.shader"); // #todo: pass source directly to shaders
+		s_Shader = Shader::Create(QuadShaderSrc_VS, QuadShaderSrc_FS);
 
 		// Create VertexBuffer
 		s_Buffer = VertexBuffer::Create(nullptr, LT_INIT_SPRITES * sizeof(float) * 6 * 4, sizeof(float) * 6);

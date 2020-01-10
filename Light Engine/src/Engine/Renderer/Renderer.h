@@ -2,9 +2,9 @@
 
 #include "Core/Core.h"
 
+#include "BufferLayout.h"
 #include "Buffers.h"
 #include "Shader.h"
-#include "BufferLayout.h"
 
 namespace Light {
 

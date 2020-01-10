@@ -143,8 +143,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="premake5.lua" />
-    <None Include="res\fragment.shader" />
-    <None Include="res\vertex.shader" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Light Engine\Light Engine.vcxproj">
