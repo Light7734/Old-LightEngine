@@ -6,8 +6,6 @@ namespace Light {
 	std::string FileManager::ReadTxtFile(const std::string& path)
 	{
 		std::fstream stream(path);
-		std::string line;
-		std::stringstream ss;
 
 		if (!stream.is_open())
 		{
@@ -15,9 +13,13 @@ namespace Light {
 			return "";
 		}
 
+		
+		std::string line;
+		std::stringstream ss;
 		while (std::getline(stream, line))
 			ss << line << '\n';
 			
+
 		return ss.str();
 	}
 

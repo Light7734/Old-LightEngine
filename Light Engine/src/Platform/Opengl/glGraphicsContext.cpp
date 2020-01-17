@@ -11,14 +11,29 @@
 
 namespace Light {
 
-	glGraphicsContext::glGraphicsContext(std::shared_ptr<Window> game_window, GraphicsConfigurations data)
+	glGraphicsContext::glGraphicsContext(const GraphicsConfigurations& configurations)
+		: m_WindowHandle(Window::GetGlfwHandle())
 	{
-		m_WindowHandle = game_window->GetHandle();
-		s_Configurations = data;
+		m_Configurations = configurations;
 
-		glfwMakeContextCurrent(game_window->GetHandle());
-		glfwSwapInterval(data.vSync);
-		LT_CORE_ASSERT(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress), EC_CALL_FAIL_GLAD_LOAD, "gladLoadGLLoader failed");
+		glfwMakeContextCurrent(m_WindowHandle);
+		glfwSwapInterval(m_Configurations.vSync);
+		LT_CORE_ASSERT(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress), "gladLoadGLLoader failed");
+
+		// Refresh display mode (because dxGraphicsContext's dtor sets SwapChain fullscreen state to false resulting in windowed window)
+		Window::SetDisplayMode(Window::GetDisplayMode());
+		glViewport(0, 0, Window::GetWidth(), Window::GetHeight());
+
+#ifndef LIGHT_DIST
+		glEnable(GL_DEBUG_OUTPUT);
+		glDebugMessageCallback([](GLenum src, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* msg, const void* prm)
+		{
+			// #todo: improve:
+			fprintf(stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
+				(type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""),
+				type, severity, msg);
+		}, NULL);
+#endif
 
 		LT_CORE_INFO("glGraphicsContext:");
 		LT_CORE_INFO("        Renderer: {}", glGetString(GL_RENDERER));
@@ -33,13 +48,13 @@ namespace Light {
 
 	void glGraphicsContext::EnableVSync()
 	{
-		s_Configurations.vSync = true;
+		m_Configurations.vSync = true;
 		glfwSwapInterval(1);
 	}
 
 	void glGraphicsContext::DisableVSync()
 	{
-		s_Configurations.vSync = false;
+		m_Configurations.vSync = false;
 		glfwSwapInterval(0);
 	}
 

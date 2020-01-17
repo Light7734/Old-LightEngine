@@ -4,6 +4,22 @@
 
 namespace Light {
 
+	class ConstantBuffers
+	{
+	private:
+		static std::unique_ptr<ConstantBuffers> s_Instance;
+	public:
+		virtual ~ConstantBuffers() = default;
+
+		static void Init();
+
+		static void SetViewMatrix(void* view) { s_Instance->SetViewMatrixImpl(view); }
+		static void SetProjMatrix(void* proj) { s_Instance->SetProjMatrixImpl(proj); }
+	protected:
+		virtual void SetViewMatrixImpl(void* view) = 0;
+		virtual void SetProjMatrixImpl(void* proj) = 0;
+	};
+
 	class VertexBuffer
 	{
 	public:

@@ -29,7 +29,7 @@ namespace Light {
 #define EVENT_TYPE(type) EventType GetEventType  () const override { return EventType::##type; } \
                   static EventType GetStaticType ()                { return EventType::##type; } \
 
-#define EVENT_CATEGORY(Category) inline bool isInCategory(EventCategory category) const override { return Category & category; }
+#define EVENT_CATEGORY(Category) inline bool isInCategory(EventCategory category) const override { return (Category) & category; }
 
 	class Event
 	{

@@ -16,7 +16,7 @@ namespace Light {
 	private:
 		GLFWwindow* m_WindowHandle;
 	public:
-		glGraphicsContext(std::shared_ptr<Window> game_window, GraphicsConfigurations data);
+		glGraphicsContext(const GraphicsConfigurations& configurations);
 
 		void HandleWindowEvents(Event& event) override;
 

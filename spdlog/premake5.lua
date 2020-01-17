@@ -23,6 +23,7 @@ project "spdlog"
 		"%{prj.location}/"
 	}
 
+
     -- Configurations
     filter "configurations:debug"
         defines  "LIGHT_DEBUG"

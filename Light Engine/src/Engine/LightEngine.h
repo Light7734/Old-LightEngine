@@ -13,6 +13,10 @@
 #endif
 // ===========================
 
+// 3rd Party libraries =======
+#include <glm/glm.hpp>
+// ===========================
+
 // Core ----------------------
 #include "Core/Application.h"
 #include "Core/Timer.h"
@@ -21,7 +25,6 @@
 
 // Debug ---------------------
 #include "Debug/Logger.h"
-#include "Debug/ExitCodes.h"
 #include "Debug/InputcodeToString.h"
 // ---------------------------
 
@@ -43,6 +46,7 @@
 // Renderer -----------------
 #include "Renderer/BufferLayout.h"
 #include "Renderer/Buffers.h"
+#include "Renderer/Camera.h"
 #include "Renderer/Shader.h"
 #include "Renderer/VertexLayout.h"
 #include "Renderer/GraphicsContext.h"

@@ -4,7 +4,6 @@
 
 namespace Light {
 
-	class Window;
 	class Event;
 
 	enum class GraphicsAPI
@@ -22,14 +21,14 @@ namespace Light {
 	private:
 		static GraphicsAPI s_Api;
 	protected:
-		static GraphicsConfigurations s_Configurations;
+		GraphicsConfigurations m_Configurations;
 	public:
 		GraphicsContext           (                      ) = default;
 		GraphicsContext           (const GraphicsContext&) = delete ;
 		GraphicsContext& operator=(const GraphicsContext&) = delete ;
 		virtual ~GraphicsContext  (                      ) = default;
 
-		static void Init(GraphicsAPI api, GraphicsConfigurations data, std::shared_ptr<Window> game_window);
+		static void CreateContext(GraphicsAPI api, const GraphicsConfigurations& configurations);
 
 		virtual void HandleWindowEvents(Event& event) = 0;
 
@@ -45,8 +44,6 @@ namespace Light {
 		virtual void DrawIndexed(unsigned int count) = 0;
 
 		// Getters
-		static const GraphicsConfigurations& GetConfigurations() { return s_Configurations; };
-
 		static GraphicsAPI GetAPI() { return s_Api; }
 	};
 

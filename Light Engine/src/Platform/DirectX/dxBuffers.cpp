@@ -4,7 +4,41 @@
 #include "dxGraphicsContext.h"
 
 namespace Light {
+	
+	// ConstantBuffers //
+	dxConstantBuffers::dxConstantBuffers()
+	{
+		// Create constant buffers
+		D3D11_BUFFER_DESC bd = {};
 
+		bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		bd.Usage = D3D11_USAGE_DYNAMIC;
+		bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		bd.ByteWidth = sizeof(glm::mat4);
+
+		dxGraphicsContext::GetDevice()->CreateBuffer(&bd, nullptr, &m_ViewMatrix);
+		dxGraphicsContext::GetDevice()->CreateBuffer(&bd, nullptr, &m_ProjectionMatrix);
+
+		// Bind constant buffers
+		dxGraphicsContext::GetDeviceContext()->VSSetConstantBuffers(CBufferIndex_ViewMatrix, 1u, m_ViewMatrix.GetAddressOf());
+		dxGraphicsContext::GetDeviceContext()->VSSetConstantBuffers(CBufferIndex_ProjectionMatrix, 1u, m_ProjectionMatrix.GetAddressOf());
+	}
+
+	void dxConstantBuffers::SetViewMatrixImpl(void* view)
+	{
+		dxGraphicsContext::GetDeviceContext()->Map(m_ViewMatrix.Get(), NULL, D3D11_MAP_WRITE_DISCARD, NULL, &m_Map);
+		memcpy(m_Map.pData, view, sizeof(glm::mat4));
+		dxGraphicsContext::GetDeviceContext()->Unmap(m_ViewMatrix.Get(), NULL);
+	}
+
+	void dxConstantBuffers::SetProjMatrixImpl(void* proj)
+	{
+		dxGraphicsContext::GetDeviceContext()->Map(m_ProjectionMatrix.Get(), NULL, D3D11_MAP_WRITE_DISCARD, NULL, &m_Map);
+		memcpy(m_Map.pData, proj, sizeof(glm::mat4));
+		dxGraphicsContext::GetDeviceContext()->Unmap(m_ProjectionMatrix.Get(), NULL);
+	}
+
+	// VertexBuffer //
 	dxVertexBuffer::dxVertexBuffer(float* vertices, unsigned int size, unsigned int stride)
 		: m_Stride(stride)
 	{
@@ -38,7 +72,7 @@ namespace Light {
 		dxGraphicsContext::GetDeviceContext()->IASetVertexBuffers(0u, 1u, m_Buffer.GetAddressOf(), &m_Stride, &m_Offset);
 	}
 
-
+	// IndexBuffer //
 	dxIndexBuffer::dxIndexBuffer(unsigned int* indices, unsigned int size)
 	{
 		D3D11_BUFFER_DESC bd = {};

@@ -26,8 +26,13 @@ namespace Light {
 		glAttachShader(m_ShaderID, fs);
 		glLinkProgram(m_ShaderID);
 
-		glGetProgramiv(m_ShaderID, GL_LINK_STATUS, &m_InitStatus);
-		if (!m_InitStatus)
+		glDeleteShader(vs);
+		glDeleteShader(fs);
+
+		// #todo: log what's wrong
+		int linkStatus;
+		glGetProgramiv(m_ShaderID, GL_LINK_STATUS, &linkStatus);
+		if (linkStatus == GL_FALSE)
 		{
 			LT_CORE_ERROR("Failed to link glShaders:");
 			LT_CORE_ERROR("vs:\n{}", vertex_source);
@@ -37,7 +42,7 @@ namespace Light {
 
 	glShader::~glShader()
 	{
-		glDeleteShader(m_ShaderID);
+		glDeleteProgram(m_ShaderID);
 	}
 
 	void glShader::Bind()

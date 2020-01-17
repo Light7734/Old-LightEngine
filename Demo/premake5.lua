@@ -29,6 +29,7 @@ project "Demo"
 		"%{wks.location}/spdlog/"                  ,
 		"%{wks.location}/glfw/include"             ,
 		"%{wks.location}/glad/"                    ,
+		"%{wks.location}/Dependencies/glm/"        ,
     }
 
 

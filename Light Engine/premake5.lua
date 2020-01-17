@@ -27,16 +27,26 @@ project "Light Engine"
 
     includedirs
     {
-		"%{prj.location}/src/Engine/"  ,
-		"%{prj.location}/src/"         ,
-		"%{wks.location}/spdlog/"      ,
-		"%{wks.location}/glfw/include" ,
-		"%{wks.location}/glad/"        ,
+		"%{prj.location}/src/Engine/"       ,
+		"%{prj.location}/src/"              ,
+		"%{wks.location}/spdlog/"           ,
+		"%{wks.location}/glfw/include"      ,
+		"%{wks.location}/glad/"             ,
+		"%{wks.location}/Dependencies/glm/" ,
     }
+
 
 	-- Operating System
 	filter "system:not windows"
 		excludes "%{prj.location}/src/Platform/DirectX**"
+
+	filter "system:windows"
+		links
+		{
+			"d3d11.lib"       ,
+			"D3DCompiler.lib" ,
+		}
+
 
     -- Configurations
     filter "configurations:debug"

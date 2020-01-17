@@ -11,7 +11,7 @@ namespace Light {
 	glBufferLayout::glBufferLayout(std::shared_ptr<VertexBuffer> buffer, std::shared_ptr<VertexLayout> layout)
 	{
 		std::shared_ptr<glVertexLayout> glpLayout = std::dynamic_pointer_cast<glVertexLayout>(layout);
-		LT_CORE_ASSERT(glpLayout, EC_CAST_FAIL, "Failed to cast VertexBuffer to glVertexBuffer");
+		LT_CORE_ASSERT(glpLayout, "Failed to cast VertexBuffer to glVertexBuffer");
 
 		glCreateVertexArrays(1, &m_ArrayID);
 
@@ -20,7 +20,7 @@ namespace Light {
 
 		unsigned int index = 0;
 		for (glVertexAttributes attribute : glpLayout->GetAttribtues())
-		{
+		{   // #todo: make a proper separator
 			if(attribute.type <= GL_UNSIGNED_INT)
 				glVertexAttribIPointer(index, attribute.count, attribute.type, glpLayout->GetStride(), (const void*)attribute.offset);
 			else

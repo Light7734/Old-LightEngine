@@ -23,7 +23,7 @@ namespace Light {
 		static void AttachLayer(Layer* layer);
 		static void DetatchLayer(Layer* layer);
 
-		static unsigned int GetSize() { return s_Layers.size(); }
+		static unsigned int GetSize() { return static_cast<unsigned int>(s_Layers.size()); }
 
 		std::vector<Layer*>::iterator begin() { return s_Layers.begin(); }
 		std::vector<Layer*>::iterator end() { return s_Layers.end(); }

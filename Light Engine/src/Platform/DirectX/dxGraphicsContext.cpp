@@ -6,28 +6,24 @@
 #include "Events/Event.h"
 #include "Events/WindowEvents.h"
 
-#pragma comment(lib, "d3d11.lib")
-
 namespace Light {
 
-	Microsoft::WRL::ComPtr<ID3D11Device>        dxGraphicsContext::s_Device;
-	Microsoft::WRL::ComPtr<ID3D11DeviceContext> dxGraphicsContext::s_DeviceContext;
+	dxGraphicsContext* dxGraphicsContext::s_Instance = nullptr;
 
-	Microsoft::WRL::ComPtr<IDXGISwapChain>         dxGraphicsContext::s_SwapChain;
-	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> dxGraphicsContext::s_RenderTargetView;
-
-	dxGraphicsContext::dxGraphicsContext(std::shared_ptr<const Window> game_window, GraphicsConfigurations data)
+	dxGraphicsContext::dxGraphicsContext(const GraphicsConfigurations& configurations) 
 	{
-		s_Configurations = data;
-		bool windowed = game_window->GetDisplayMode() != DisplayMode::ExclusiveFullscreen;
+		m_Configurations = configurations;
+		s_Instance = this;
+
+		bool windowed = Window::GetDisplayMode() != DisplayMode::Fullscreen;
 
 		// Create and set swap chain's description
 		DXGI_SWAP_CHAIN_DESC sd = { 0 };
 
-		sd.OutputWindow = static_cast<HWND>(game_window->GetNativeHandle());
+		sd.OutputWindow = static_cast<HWND>(Window::GetNativeHandle());
 
 		sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-		sd.BufferCount = 1;
+		sd.BufferCount = 1u;
 
 		sd.BufferDesc.Width  = NULL;
 		sd.BufferDesc.Height = NULL;
@@ -56,38 +52,39 @@ namespace Light {
 			NULL,
 			D3D11_SDK_VERSION,
 			&sd,
-			&s_SwapChain,
-			&s_Device,
+			&m_SwapChain,
+			&m_Device,
 			nullptr,
-			&s_DeviceContext   );
-
+			&m_DeviceContext   );
+		m_SwapChain->SetFullscreenState(!windowed, nullptr);
+		
 
 		// Access the back buffer and create a render target view
 		Microsoft::WRL::ComPtr<ID3D11Resource> backBuffer = nullptr;
-		s_SwapChain->GetBuffer(0u, __uuidof(ID3D11Resource), &backBuffer);
-		s_Device->CreateRenderTargetView(backBuffer.Get(), nullptr, &s_RenderTargetView);
+		m_SwapChain->GetBuffer(0u, __uuidof(ID3D11Resource), &backBuffer);
+		m_Device->CreateRenderTargetView(backBuffer.Get(), nullptr, &m_RenderTargetView);
 
 		// Bind render target view and set primitive topology
-		s_DeviceContext->OMSetRenderTargets(1u, s_RenderTargetView.GetAddressOf(), nullptr);
-		s_DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		m_DeviceContext->OMSetRenderTargets(1u, m_RenderTargetView.GetAddressOf(), nullptr);
+		m_DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 
-		// configure viewport
+		// Set rasterizer viewport
 		D3D11_VIEWPORT viewPort;
-		viewPort.Width = game_window->GetSize().first;
-		viewPort.Height = game_window->GetSize().second;
+		viewPort.Width = static_cast<float>(Window::GetWidth());
+		viewPort.Height = static_cast<float>(Window::GetHeight());
 		viewPort.MinDepth = 0;
 		viewPort.MaxDepth = 1;
 		viewPort.TopLeftX =  0;
 		viewPort.TopLeftY =  0;
-		s_DeviceContext->RSSetViewports(1u, &viewPort);
+		m_DeviceContext->RSSetViewports(1u, &viewPort);
 
-
+		
 		// Get the IDXGIAdapter trough IDXGIDevice
 		IDXGIDevice*  DXGIDevice;
 		IDXGIAdapter* adapter;
 
-		s_Device->QueryInterface(__uuidof(IDXGIDevice), (void**)&DXGIDevice);
+		m_Device->QueryInterface(__uuidof(IDXGIDevice), (void**)&DXGIDevice);
 		DXGIDevice->GetAdapter(&adapter);
 		
 		// Get the adapter desc
@@ -108,6 +105,11 @@ namespace Light {
 		LT_CORE_INFO("        Renderer: {}", renderer);
 	}
 
+	dxGraphicsContext::~dxGraphicsContext()
+	{
+		m_SwapChain->SetFullscreenState(false, nullptr);
+	}
+
 	void dxGraphicsContext::HandleWindowEvents(Event& event)
 	{
 		Dispatcher dispatcher(event);
@@ -119,17 +121,17 @@ namespace Light {
 
 	void dxGraphicsContext::EnableVSync()
 	{
-		s_Configurations.vSync = true;
+		m_Configurations.vSync = true;
 	}
 
 	void dxGraphicsContext::DisableVSync()
 	{
-		s_Configurations.vSync = false;
+		m_Configurations.vSync = false;
 	}
 
 	void dxGraphicsContext::SwapBuffers()
 	{
-		s_SwapChain->Present(s_Configurations.vSync, NULL);
+		m_SwapChain->Present(m_Configurations.vSync, NULL);
 	}
 
 	void dxGraphicsContext::Clear()
@@ -139,50 +141,49 @@ namespace Light {
 	void dxGraphicsContext::ClearBuffer(float r, float g, float b, float a)
 	{
 		const float channels[] = { r, g, b, a };
-		s_DeviceContext->ClearRenderTargetView(s_RenderTargetView.Get(), channels);
+		m_DeviceContext->ClearRenderTargetView(m_RenderTargetView.Get(), channels);
 	}
-
 
 	void dxGraphicsContext::Draw(unsigned int count)
 	{
-		s_DeviceContext->Draw(count, 0);
+		m_DeviceContext->Draw(count, 0u);
+	}
+
+	void dxGraphicsContext::DrawIndexed(unsigned int count)
+	{
+		m_DeviceContext->DrawIndexed(count, 0u, 0u);
 	}
 
 	bool dxGraphicsContext::OnWindowResize(WindowResizedEvent& event)
 	{
 		D3D11_VIEWPORT viewPort;
-		viewPort.Width = event.GetWidth();
-		viewPort.Height = event.GetHeight();
+		viewPort.Width = static_cast<float>(event.GetWidth());
+		viewPort.Height = static_cast<float>(event.GetHeight());
 		viewPort.MinDepth = 0;
 		viewPort.MaxDepth = 1;
 		viewPort.TopLeftX = 0;
 		viewPort.TopLeftY = 0;
-		s_DeviceContext->RSSetViewports(1u, &viewPort);
+		m_DeviceContext->RSSetViewports(1u, &viewPort);
 
 		return false;
 	}
 
 	bool dxGraphicsContext::OnWindowMaximize(WindowMaximizedEvent& event)
 	{
-		s_SwapChain->SetFullscreenState(true, NULL);
+		m_SwapChain->SetFullscreenState(true, nullptr);
 		return false;
 	}
 
 	bool dxGraphicsContext::OnWindowMinimize(WindowMinimizedEvent& event)
 	{
-		s_SwapChain->SetFullscreenState(false, NULL);
+		m_SwapChain->SetFullscreenState(false, nullptr);
 		return false;
 	}
 
 	bool dxGraphicsContext::OnWindowRestore(WindowRestoredEvent& event)
 	{
-		s_SwapChain->SetFullscreenState(false, NULL);
+		m_SwapChain->SetFullscreenState(false, nullptr);
 		return false;
-	}
-
-	void dxGraphicsContext::DrawIndexed(unsigned int count)
-	{
-		s_DeviceContext->DrawIndexed(count, 0u, 0u);
 	}
 
 }

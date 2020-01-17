@@ -11,8 +11,8 @@
 
 #include "Layers/Layer.h"
 
-#include "Renderer/Renderer.h"
 #include "Renderer/RenderCommand.h"
+#include "Renderer/Renderer.h"
 
 namespace Light {
 
@@ -20,10 +20,10 @@ namespace Light {
 
 	Application::Application()
 	{
-		LT_CORE_ASSERT(!s_Instance, EC_MULTIPLE_INSTANCES_APPLICATION, "Multiple Application instances");
-		s_Instance = this;
-
 		Logger::Init();
+
+		LT_CORE_ASSERT(!s_Instance, "Multiple Application instances");
+		s_Instance = this;
 	}
 
 	Application::~Application()
@@ -36,10 +36,10 @@ namespace Light {
 
 	void Application::GameLoop()
 	{
-		LT_CORE_ASSERT(m_Window, EC_NO_INIT_WINDOW, "Application::m_Window is not initialized");
-		LT_CORE_ASSERT(RenderCommand::isInitialized(), EC_NO_INIT_GRAPHICSC_CONTEXT, "GraphicsContext::Init() was never called");
+		LT_CORE_ASSERT(m_Window, "Application::m_Window is not initialized");
+		LT_CORE_ASSERT(RenderCommand::IsInitialized(), "GraphicsContext::CreateContext() was never called");
 
-		while (m_Window->isRunning())
+		while (!m_Window->IsClosed())
 		{
 			Time::Update();
 			RenderCommand::Clear();

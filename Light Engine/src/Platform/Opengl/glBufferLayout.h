@@ -7,6 +7,7 @@
 namespace Light {
 
 	class VertexBuffer;
+	class VertexLayout;
 
 	class glBufferLayout : public BufferLayout
 	{

@@ -4,7 +4,27 @@
 
 #include "Core/Core.h"
 
+#include <glm/glm.hpp>
+
 namespace Light {
+	
+	enum UniformBufferIndex
+	{
+		UBufferIndex_ViewProjection = 0,
+		// ...
+	};
+
+	class glUniformBuffers : public ConstantBuffers
+	{
+	private:
+		unsigned int m_ViewProjBuffer = 0;
+	public:
+		glUniformBuffers();
+		~glUniformBuffers();
+
+		void SetViewMatrixImpl(void* view) override;
+		void SetProjMatrixImpl(void* proj) override;
+	};
 
 	class glVertexBuffer : public VertexBuffer
 	{

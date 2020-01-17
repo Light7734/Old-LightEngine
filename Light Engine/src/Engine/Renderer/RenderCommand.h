@@ -2,8 +2,6 @@
 
 #include "Core/Core.h"
 
-#include <memory>
-
 namespace Light {
 
 	class GraphicsContext;
@@ -17,7 +15,7 @@ namespace Light {
 	public:
 		static void SetGraphicsContext(std::unique_ptr<GraphicsContext> context);
 
-		static bool isInitialized() { return s_GraphicsContext ? true : false; }
+		static bool IsInitialized() { return s_GraphicsContext.get() != nullptr; }
 
 		static void HandleWindowEvents(Event& event);
 

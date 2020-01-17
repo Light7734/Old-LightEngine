@@ -24,18 +24,16 @@ int main()
 	try
 	{
 		app = Light::CreateApplication();
-		LT_CORE_ASSERT(app, EC_NO_INIT_APPLICATION, "Light::Application is not initialized!");
+		LT_CORE_ASSERT(app, "Light::Application is not initialized!");
 
 		app->GameLoop();
 	}
 	catch (Light::TerminationReq req)
 	{
-		LT_CORE_ERROR("Error code: {}", req.exitCode);
-
 		delete app;
-		return req.exitCode;
+		return -1;
 	}
 
 	delete app;
-	return EC_SUCCESSFUL_EXECUTION;
+	return 0;
 }

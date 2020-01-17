@@ -8,7 +8,7 @@ class DemoLayer : public Light::Layer
 {
 private:
 	std::shared_ptr<Light::Window> m_GameWindow;
-	QuadLayer* m_QuadLayer;
+	QuadLayer* m_Quad;
 public:
 	void OnAttach() override;
 	void OnDetatch() override;
@@ -18,5 +18,4 @@ public:
 	void OnEvent(Light::Event& event);
 private:
 	bool OnKeyPress(Light::KeyboardKeyPressedEvent& event);
-	bool OnMouseMove(Light::MouseMovedEvent& event);
 };

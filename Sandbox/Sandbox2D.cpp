@@ -1,7 +1,6 @@
 #include <LightEngine.h>
 #include <Core/EntryPoint.h>
 
-
 class Sandbox : public Light::Application
 {
 public:
@@ -12,25 +11,20 @@ public:
 		wd.title = "Sandbox";
 		wd.width = 800;
 		wd.height = 600;
-		wd.x = 200;
-		wd.y = 200;
 		wd.displayMode = Light::DisplayMode::Windowed;
-		wd.eventCallback = LT_EVENT_FN(Light::Application::OnEvent);
 
-		m_Window = std::make_shared<Light::Window>(wd);
+		m_Window = std::make_unique<Light::Window>(wd);
+		m_Window->SetEventCallbackFunction(LT_EVENT_FN(Light::Application::OnEvent));
 
 		// Initialize Graphics
 		Light::GraphicsConfigurations gc;
 		gc.vSync = true;
 
-		Light::GraphicsContext::Init(Light::GraphicsAPI::Opengl, gc, m_Window);
+		Light::GraphicsContext::CreateContext(Light::GraphicsAPI::Opengl, gc);
+		Light::Camera::SetProjection(wd.width, wd.height);
+		Light::Camera::SetPosition(glm::vec2(0.0f, 0.0f));
 	}
-	
-	~Sandbox()
-	{
-
-	}
-};
+	};
 
 Light::Application* Light::CreateApplication()
 {

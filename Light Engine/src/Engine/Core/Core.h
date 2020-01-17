@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Debug/ExitCodes.h"
 #include "Debug/Logger.h"
 
 #ifdef _WIN32
@@ -31,11 +30,9 @@
 #define LT_EVENT_FN(fn)        std::bind(&##fn, this, std::placeholders::_1)
 #define LT_EVENT_FN_STATIC(fn) std::bind(&##fn,       std::placeholders::_1)
 
-#define LT_TERMINATE(code) throw Light::TerminationReq(code)
-
 #ifndef LIGHT_DIST
-	#define LT_ASSERT(x, code, ...)      if(!(x)) { LT_FATAL(__VA_ARGS__)     ; __debugbreak(); LT_TERMINATE(code); }
-	#define LT_CORE_ASSERT(x, code, ...) if(!(x)) { LT_CORE_FATAL(__VA_ARGS__); __debugbreak(); LT_TERMINATE(code); }
+	#define LT_ASSERT(x, ...)      if(!(x)) { LT_FATAL(__VA_ARGS__)     ; __debugbreak(); throw Light::TerminationReq(); }
+	#define LT_CORE_ASSERT(x, ...) if(!(x)) { LT_CORE_FATAL(__VA_ARGS__); __debugbreak(); throw Light::TerminationReq(); }
 #else
 	#define LT_ASSERT(x, code, ...)      if(!(x)) { LT_FATAL(__VA_ARGS__)     ; LT_TERMINATE(code); }
 	#define LT_CORE_ASSERT(x, code, ...) if(!(x)) { LT_CORE_FATAL(__VA_ARGS__); LT_TERMINATE(code); }
@@ -44,9 +41,9 @@
 
 namespace Light {
 
-	struct TerminationReq : public std::exception
+	struct TerminationReq : public std::exception 
 	{
-		int exitCode;
-		TerminationReq(int code): exitCode(code) {}
+		TerminationReq() = default; 
 	};
+
 }

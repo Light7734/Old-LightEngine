@@ -10,30 +10,23 @@ namespace Light {
 
 	enum class DisplayMode
 	{
-		ExclusiveFullscreen = 0 ,
-		Windowed                ,
-		BorderlessWindowed      ,
-	};
-
-	enum class WindowState
-	{
-		Visible = 0 ,
-		Hidden      ,
-		Minimized   ,
+		Fullscreen,
+		Windowed,
+		BorderlessWindowed,
 	};
 
 	struct WindowData
 	{
-		std::string title = "";
+		std::string title = "LightEngine Window";
 
 		DisplayMode displayMode = DisplayMode::Windowed;
-		WindowState state       = WindowState::Visible ;
 
-		unsigned int width = 0, height = 0;
+		unsigned int width = 800, height = 600;
 		int          x     = 0, y      = 0;
 
+		bool visible = true;
 		bool active  = true; // input focus
-		bool running = true;
+		bool closed  = false;
 		
 		std::function<void(Event&)> eventCallback = [](Event&) {};
 	};
@@ -42,11 +35,10 @@ namespace Light {
 	{
 	private:
 		static Window* s_Instance;
+		static WindowData s_Data;
 
-		GLFWwindow* m_Window = nullptr;
-		void* m_NativeHandle = nullptr;
-
-		WindowData m_Data = {};
+		static GLFWwindow* s_GlfwHandle;
+		static void* s_NativeHandle;
 	public:
 		Window           (const WindowData& data)         ;
 		Window           (const Window&         ) = delete;
@@ -58,32 +50,38 @@ namespace Light {
 		// Setters
 		void SetEventCallbackFunction(std::function<void(Event&)> event_callback_func);
 
-		void Resize    (unsigned int width, unsigned int height);
-		void Reposition(int          x    , int          y     );
+		static void Resize    (unsigned int width, unsigned int height);
+		static void Reposition(int          x    , int          y     );
 
-		void SetTitle(const std::string& title);
+		static void SetTitle(const std::string& title);
 
-		void SetState      (WindowState state);
-		void SetDisplayMode(DisplayMode mode );
+		static void SetDisplayMode(DisplayMode mode );
 
-		void Center();
+		static void SetVisibility(bool visible);
 
-		void Close();
+		static void Center();
+
+		static void Close();
 
 		// Getters
-		inline GLFWwindow* GetHandle() const { return m_Window; }
-		void* GetNativeHandle() const;
+		static GLFWwindow* GetGlfwHandle  () { return s_GlfwHandle;   }
+		static void*       GetNativeHandle() { return s_NativeHandle; }
 
-		inline std::pair<uint16_t, uint16_t> GetSize    () const { return { m_Data.width, m_Data.height }; }
-		inline std::pair<int16_t , int16_t > GetPosition() const { return { m_Data.x    , m_Data.y      }; }
+		static inline unsigned int GetWidth () { return s_Data.width ; }
+		static inline unsigned int GetHeight() { return s_Data.height; }
 
-		inline std::string_view GetTitle() const { return m_Data.title; }
+		static inline int GetPosX() { return s_Data.x; }
+		static inline int GetPosY() { return s_Data.y; }
 
-		inline WindowState GetWindowState() const { return m_Data.state;       }
-		inline DisplayMode GetDisplayMode() const { return m_Data.displayMode; }
+		static inline const std::string& GetTitle() { return s_Data.title; }
 
-		inline bool isActive () const { return m_Data.active;  }
-		inline bool isRunning() const { return m_Data.running; }
+		static inline DisplayMode GetDisplayMode() { return s_Data.displayMode; }
+
+		static inline bool IsInitialized() { return s_Instance; }
+
+		static inline bool IsVisible() { return s_Data.visible; }
+		static inline bool IsActive () { return s_Data.active;  }
+		static inline bool IsClosed () { return s_Data.closed; }
 	private:
 		void SetGlfwCallbacks();
 	};

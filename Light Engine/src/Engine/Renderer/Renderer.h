@@ -2,21 +2,23 @@
 
 #include "Core/Core.h"
 
-#include "BufferLayout.h"
-#include "Buffers.h"
-#include "Shader.h"
+#include <glm/glm.hpp>
 
 namespace Light {
+
+	class Shader;
+	class VertexBuffer;
+	class IndexBuffer;
+	class BufferLayout;
 
 	class Renderer
 	{
 	private:
 		static std::shared_ptr<Shader> s_Shader;
-		static std::shared_ptr<VertexBuffer> s_Buffer;
-		static std::shared_ptr<IndexBuffer> s_Indices;
 		static std::shared_ptr<BufferLayout> s_Layout;
+		static std::shared_ptr<IndexBuffer> s_Indices;
+		static std::shared_ptr<VertexBuffer> s_VertexBuffer;
 
-		static float* s_BufferMapStart;
 		static float* s_BufferMapCurrent;
 		static float* s_BufferMapEnd;
 
@@ -25,7 +27,7 @@ namespace Light {
 		static void Init();
 
 		static void Start();
-		static void DrawQuad(float x, float y, float width, float height);
+		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color);
 		static void End();
 	};
 

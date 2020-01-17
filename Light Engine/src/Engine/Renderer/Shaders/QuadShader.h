@@ -3,36 +3,48 @@ R"(
 +GLSL
 #version 450 core
 
-layout(location = 0) in vec2 a_Pos;
-layout(location = 1) in vec4 a_Col;
+layout(location = 0) in vec2 InPosition;
+layout(location = 1) in vec4 InColor;
 
-out vec4 VSOut_Color;
+layout(std140, binding = 0) uniform ViewProjectionUniform
+{
+	mat4 ViewMatrix;
+	mat4 ProjectionMatrix;
+};
+
+out vec4 OutColor;
 
 void main()
 {
-	gl_Position = vec4(a_Pos, 0.0, 1.0);
-	VSOut_Color = a_Col;
+	gl_Position = ProjectionMatrix * ViewMatrix * vec4(InPosition, 0.0, 1.0);
+	OutColor = InColor;
 }
-
 -GLSL
 
 +HLSL
-
-struct VSOut
+struct VertexOut
 {
-	float4 col : Color;
-	float4 pos : SV_Position;
+	float4 Color : COLOR;
+	float4 Position : SV_Position;
 };
 
-
-VSOut main(float2 pos : Position, float4 col : Color) 
+cbuffer	ViewVSConstant : register(b0)
 {
-	VSOut vso;
-	vso.pos = float4(pos.x, pos.y, 0.0f, 1.0f);
-	vso.col = col;
-	return vso;
+	row_major matrix ViewMatrix;
 }
 
+cbuffer ProjectionVSConstant : register(b1)
+{
+	row_major matrix ProjectionMatrix;
+}
+
+VertexOut main(float2 InPosition : POSITION, float4 InColor : COLOR) 
+{
+	VertexOut vso;
+	vso.Position = mul(float4(InPosition, 0.0f, 1.0f), mul(ViewMatrix, ProjectionMatrix));
+	vso.Color = InColor;
+	return vso;
+}
 -HLSL)"
 
 #define QuadShaderSrc_FS \
@@ -40,22 +52,19 @@ R"(
 +GLSL
 #version 450 core
 
-out vec4 FragmentColor;
+out vec4 OutFS;
 
-in vec4 VSOut_Color;
+in vec4 OutColor;
 
 void main()
 {
-	FragmentColor = vec4(VSOut_Color);
+	OutFS = vec4(OutColor);
 }
-
 -GLSL
 
 +HLSL
-
-float4 main(float4 col : Color) : SV_Target
+float4 main(float4 Color : COLOR) : SV_Target
 {
-	return float4(col);
+	return float4(Color);
 }
-
 -HLSL)"

@@ -37,7 +37,7 @@ namespace Light {
 		static bool GetButton(int  button) { return s_Buttons[button]; }
 
 
-		static inline int GetMouesX() { return s_MousePosX; }
+		static inline int GetMouseX() { return s_MousePosX; }
 		static inline int GetMouseY() { return s_MousePosY; }
 
 		static inline std::pair<int, int>GetMousePos() { return { s_MousePosX, s_MousePosY }; }

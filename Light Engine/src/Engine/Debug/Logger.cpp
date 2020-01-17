@@ -76,9 +76,10 @@ namespace Light {
 		time_t timeAndDate = time(0);
 		s_FileLogPath = ctime(&timeAndDate);
 		s_FileLogPath = s_FileLogPath.substr(3, s_FileLogPath.size() - 4);
-		std::replace(s_FileLogPath.begin(), s_FileLogPath.end(), ':', '.');
+		std::replace(s_FileLogPath.begin(), s_FileLogPath.end(), ':', '_');
 		s_FileLogPath = "Logs/" + s_FileLogPath + ".log";
 
 	}
 
 }
+	

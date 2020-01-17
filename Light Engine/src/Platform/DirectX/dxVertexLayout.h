@@ -17,7 +17,7 @@ namespace Light {
 
 		inline D3D11_INPUT_ELEMENT_DESC* GetElements() { return &(m_InputElements.front()); }
 
-		inline unsigned int GetElementsCount() const { return m_InputElements.size(); }
+		inline unsigned int GetElementsCount() const { return static_cast<unsigned int>(m_InputElements.size()); }
 	private:
 		DXGI_FORMAT GetDxgiFormat(VertexType type);
 	};

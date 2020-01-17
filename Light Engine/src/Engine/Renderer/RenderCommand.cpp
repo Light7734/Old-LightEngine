@@ -18,7 +18,8 @@ namespace Light {
 
 	void RenderCommand::HandleWindowEvents(Event& event)
 	{
-		s_GraphicsContext->HandleWindowEvents(event);
+		if(s_GraphicsContext)
+			s_GraphicsContext->HandleWindowEvents(event);
 	}
 
 	void RenderCommand::EnableVSync()

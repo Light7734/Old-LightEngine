@@ -3,12 +3,29 @@
 void DemoLayer::OnAttach()
 {
 	LT_TRACE("Attached DemoLayer");
-	LT_INFO("NOTE: You can change GraphicsAPI with keypad keys 1 and 2");
 
-	m_GameWindow = Light::Application::GetGameWindow();
-	
-	m_QuadLayer = new QuadLayer;
-	Light::LayerStack::AttachLayer(m_QuadLayer);
+	LT_INFO("------------------------------------");
+	LT_INFO("|    KEY    |        ACTION        |");
+	LT_INFO("|-----------|----------------------|");
+	LT_INFO("|    ESC    |         Exit         |");
+	LT_INFO("|     1     |  BorderlessWindowed  |");
+	LT_INFO("|     2     |       Windowed       |");
+	LT_INFO("|     3     |      Fullscreen      |");
+	LT_INFO("|-----------|----------------------|");
+	LT_INFO("|     E     |    GraphicsAPI:GL    |");
+	LT_INFO("|     R     |    GraphicsAPI:DX    |");
+	LT_INFO("|-----------|----------------------|");
+	LT_INFO("|     W     |      Move: Up        |");
+	LT_INFO("|     A     |      Move: Left      |");
+	LT_INFO("|     S     |      Move: Down      |");
+	LT_INFO("|     D     |      Move: Right     |");
+	LT_INFO("------------------------------------");
+
+	m_Quad = new QuadLayer;
+	Light::LayerStack::AttachLayer(m_Quad);
+
+	Light::Camera::SetPosition(glm::vec2(0.0f, 0.0f));
+	Light::Camera::SetProjection(Light::Window::GetWidth(), Light::Window::GetHeight());
 }
 
 void DemoLayer::OnDetatch()
@@ -19,42 +36,46 @@ void DemoLayer::OnDetatch()
 void DemoLayer::OnUpdate(float deltaTime)
 {
 	static Light::Timer timer;
-	const float c = abs(sin(timer.ElapsedTime()));
-	Light::RenderCommand::ClearBuffer(0.3f, 0.1, c, 1.0f);
+	Light::RenderCommand::ClearBuffer(0.0f, 0.0, abs(sin(timer.ElapsedTime())), 1.0f);
 
-	if (Light::Input::GetKey(KEY_ENTER))
-		LT_TRACE("Enter key is down!");
+	if (Light::Input::GetMouseX() > m_Quad->GetPosition().x&&
+		Light::Input::GetMouseX() < m_Quad->GetPosition().x + m_Quad->GetSize().x &&
+		Light::Input::GetMouseY() > m_Quad->GetPosition().y&&
+		Light::Input::GetMouseY() < m_Quad->GetPosition().y + m_Quad->GetSize().y)
+		m_Quad->Disable();
+	else
+		m_Quad->Enable();
 }
 
 void DemoLayer::OnEvent(Light::Event& event)
 {
-	// Uncomment to log every event
+	// uncomment to log every event
 	// LT_TRACE(event.GetLogInfo());
 
-	Light::Dispatcher dispatcher(event);
+	if (event.isInCategory(Light::EventCategory_Window)) // log all window events
+		LT_WARN(event.GetLogInfo());
+
+	Light::Dispatcher dispatcher(event); 
 	dispatcher.Dispatch<Light::KeyboardKeyPressedEvent>(LT_EVENT_FN(DemoLayer::OnKeyPress));
-	dispatcher.Dispatch<Light::MouseMovedEvent>(LT_EVENT_FN(DemoLayer::OnMouseMove));
 }
 
 bool DemoLayer::OnKeyPress(Light::KeyboardKeyPressedEvent& event)
 {
 	if (event.GetKey() == KEY_ESCAPE)
-		m_GameWindow->Close();
+		Light::Window::Close();
 
-	if (event.GetKey() == KEY_KP_1 || event.GetKey() == KEY_KP_2)
-		Light::GraphicsContext::Init(event.GetKey() == KEY_KP_1 ?
-		                             Light::GraphicsAPI::Opengl : Light::GraphicsAPI::DirectX,
-		                             { true }, m_GameWindow);
+	if (event.GetKey() == KEY_E || event.GetKey() == KEY_R)
+		Light::GraphicsContext::CreateContext(event.GetKey() == KEY_E ?
+		                                      Light::GraphicsAPI::Opengl : Light::GraphicsAPI::DirectX, { true });
 
-	return true;
-}
+	if (event.GetKey() == KEY_1)
+		Light::Window::SetDisplayMode(Light::DisplayMode::BorderlessWindowed);
 
-bool DemoLayer::OnMouseMove(Light::MouseMovedEvent& event)
-{
-	if (event.GetX() > 200 && event.GetX() < 600 && event.GetY() > 150 && event.GetY() < 450)
-		m_QuadLayer->Disable();
-	else
-		m_QuadLayer->Enable();
+	if (event.GetKey() == KEY_2)
+		Light::Window::SetDisplayMode(Light::DisplayMode::Windowed);
+
+	if (event.GetKey() == KEY_3)
+		Light::Window::SetDisplayMode(Light::DisplayMode::Fullscreen);
 
 	return true;
 }

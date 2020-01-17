@@ -5,6 +5,33 @@
 
 namespace Light {
 
+	// UniformBuffers //
+	glUniformBuffers::glUniformBuffers()
+	{
+		glCreateBuffers(1, &m_ViewProjBuffer);
+		glNamedBufferData(m_ViewProjBuffer, sizeof(glm::mat4) * 2, NULL, GL_DYNAMIC_DRAW);
+
+		glBindBufferBase(GL_UNIFORM_BUFFER, UBufferIndex_ViewProjection, m_ViewProjBuffer);
+	}
+
+	glUniformBuffers::~glUniformBuffers()
+	{
+		glDeleteBuffers(1, &m_ViewProjBuffer);
+	}
+
+	void glUniformBuffers::SetViewMatrixImpl(void* view)
+	{
+		memcpy(glMapNamedBuffer(m_ViewProjBuffer, GL_WRITE_ONLY), view, sizeof(glm::mat4));
+		glUnmapNamedBuffer(m_ViewProjBuffer);
+	}
+
+	void glUniformBuffers::SetProjMatrixImpl(void* proj)
+	{
+		memcpy((char*)glMapNamedBuffer(m_ViewProjBuffer, GL_WRITE_ONLY) + sizeof(glm::mat4), proj, sizeof(glm::mat4));
+		glUnmapNamedBuffer(m_ViewProjBuffer);
+	}
+
+	// VertexBuffer //
 	glVertexBuffer::glVertexBuffer(float* vertices, unsigned int size)
 	{
 		glCreateBuffers(1, &m_BufferID);
@@ -31,6 +58,7 @@ namespace Light {
 		glUnmapNamedBuffer(m_BufferID);
 	}
 
+	// IndexBuffer //
 	glIndexBuffer::glIndexBuffer(unsigned int* indices, unsigned int size)
 	{
 		glCreateBuffers(1, &m_BufferID);
