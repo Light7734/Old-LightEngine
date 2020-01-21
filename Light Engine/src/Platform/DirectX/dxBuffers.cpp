@@ -3,6 +3,8 @@
 
 #include "dxGraphicsContext.h"
 
+#include "Debug/Exceptions.h"
+
 namespace Light {
 	
 	// ConstantBuffers //
@@ -16,8 +18,9 @@ namespace Light {
 		bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		bd.ByteWidth = sizeof(glm::mat4);
 
-		dxGraphicsContext::GetDevice()->CreateBuffer(&bd, nullptr, &m_ViewMatrix);
-		dxGraphicsContext::GetDevice()->CreateBuffer(&bd, nullptr, &m_ProjectionMatrix);
+		HRESULT hr;
+		DXC(dxGraphicsContext::GetDevice()->CreateBuffer(&bd, nullptr, &m_ViewMatrix));
+		DXC(dxGraphicsContext::GetDevice()->CreateBuffer(&bd, nullptr, &m_ProjectionMatrix));
 
 		// Bind constant buffers
 		dxGraphicsContext::GetDeviceContext()->VSSetConstantBuffers(CBufferIndex_ViewMatrix, 1u, m_ViewMatrix.GetAddressOf());
@@ -53,7 +56,8 @@ namespace Light {
 
 		sd.pSysMem = vertices;
 
-		dxGraphicsContext::GetDevice()->CreateBuffer(&bd, sd.pSysMem ? &sd : nullptr, &m_Buffer);
+		HRESULT hr;
+		DXC(dxGraphicsContext::GetDevice()->CreateBuffer(&bd, sd.pSysMem ? &sd : nullptr, &m_Buffer));
 	}
 
 	void* dxVertexBuffer::Map()
@@ -85,7 +89,8 @@ namespace Light {
 
 		sd.pSysMem = indices;
 
-		dxGraphicsContext::GetDevice()->CreateBuffer(&bd, &sd, &m_Buffer);
+		HRESULT hr;
+		DXC(dxGraphicsContext::GetDevice()->CreateBuffer(&bd, &sd, &m_Buffer));
 	}
 
 	void dxIndexBuffer::Bind()

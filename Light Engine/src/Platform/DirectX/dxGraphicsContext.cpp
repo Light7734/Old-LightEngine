@@ -1,10 +1,14 @@
-#include "ltpch.h"
+	#include "ltpch.h"
 #include "dxGraphicsContext.h"
 	
 #include "Core/Window.h"
 
+#include "Debug/Exceptions.h"
+
 #include "Events/Event.h"
 #include "Events/WindowEvents.h"
+
+#include <glfw/glfw3.h>
 
 namespace Light {
 
@@ -12,12 +16,12 @@ namespace Light {
 
 	dxGraphicsContext::dxGraphicsContext(const GraphicsConfigurations& configurations) 
 	{
+		HRESULT hr;
+
 		m_Configurations = configurations;
 		s_Instance = this;
 
-		bool windowed = Window::GetDisplayMode() != DisplayMode::Fullscreen;
-
-		// Create and set swap chain's description
+		// Create swap chain's description
 		DXGI_SWAP_CHAIN_DESC sd = { 0 };
 
 		sd.OutputWindow = static_cast<HWND>(Window::GetNativeHandle());
@@ -38,12 +42,12 @@ namespace Light {
 		sd.SampleDesc.Count   = 1u;
 		sd.SampleDesc.Quality = 0u;
 
-		sd.Windowed = windowed;
+		sd.Windowed = Window::GetDisplayMode() != DisplayMode::Fullscreen;
 		sd.Flags    = NULL;
 
 
 		// Create device and swap chain
-		D3D11CreateDeviceAndSwapChain
+		DXC( D3D11CreateDeviceAndSwapChain
 		(   nullptr,
 			D3D_DRIVER_TYPE_HARDWARE,
 			nullptr,
@@ -55,14 +59,13 @@ namespace Light {
 			&m_SwapChain,
 			&m_Device,
 			nullptr,
-			&m_DeviceContext   );
-		m_SwapChain->SetFullscreenState(!windowed, nullptr);
-		
+			&m_DeviceContext   ));
+
 
 		// Access the back buffer and create a render target view
 		Microsoft::WRL::ComPtr<ID3D11Resource> backBuffer = nullptr;
-		m_SwapChain->GetBuffer(0u, __uuidof(ID3D11Resource), &backBuffer);
-		m_Device->CreateRenderTargetView(backBuffer.Get(), nullptr, &m_RenderTargetView);
+		DXC(m_SwapChain->GetBuffer(0u, __uuidof(ID3D11Resource), &backBuffer));
+		DXC(m_Device->CreateRenderTargetView(backBuffer.Get(), nullptr, &m_RenderTargetView));
 
 		// Bind render target view and set primitive topology
 		m_DeviceContext->OMSetRenderTargets(1u, m_RenderTargetView.GetAddressOf(), nullptr);
@@ -71,43 +74,44 @@ namespace Light {
 
 		// Set rasterizer viewport
 		D3D11_VIEWPORT viewPort;
-		viewPort.Width = static_cast<float>(Window::GetWidth());
+		viewPort.Width  = static_cast<float>(Window::GetWidth ());
 		viewPort.Height = static_cast<float>(Window::GetHeight());
-		viewPort.MinDepth = 0;
-		viewPort.MaxDepth = 1;
-		viewPort.TopLeftX =  0;
-		viewPort.TopLeftY =  0;
+		viewPort.MinDepth = 0.0f;
+		viewPort.MaxDepth = 1.0f;
+		viewPort.TopLeftX = 0.0f;
+		viewPort.TopLeftY = 0.0f;
 		m_DeviceContext->RSSetViewports(1u, &viewPort);
 
 		
-		// Get the IDXGIAdapter trough IDXGIDevice
-		IDXGIDevice*  DXGIDevice;
-		IDXGIAdapter* adapter;
+		// Locals 
+		IDXGIDevice*      DXGIDevice;
+		IDXGIAdapter*     DXGIAdapter;
+		DXGI_ADAPTER_DESC DXGIAdapterDesc;
 
-		m_Device->QueryInterface(__uuidof(IDXGIDevice), (void**)&DXGIDevice);
-		DXGIDevice->GetAdapter(&adapter);
-		
-		// Get the adapter desc
-		DXGI_ADAPTER_DESC desc;
+		// Initialize Locals
+		DXC(m_Device->QueryInterface(__uuidof(IDXGIDevice), (void**)&DXGIDevice));
+		DXC(DXGIDevice->GetAdapter(&DXGIAdapter));
+		DXC(DXGIAdapter->GetDesc(&DXGIAdapterDesc));
 
-		adapter->GetDesc(&desc);
+		// Get the Adapter's Description
 		char DefChar = ' ';
 		char ch[180];
-		WideCharToMultiByte(CP_ACP, 0, desc.Description, -1, ch, 180, &DefChar, NULL);
-		std::string renderer(ch);
+		WideCharToMultiByte(CP_ACP, 0, DXGIAdapterDesc.Description, -1, ch, 180, &DefChar, NULL);
+		std::string adapterDesc(ch);
 		
 		// Release memory
 		DXGIDevice->Release();
-		adapter->Release();
+		DXGIAdapter->Release();
 
-		// Log info
+		// Log info // #todo: Log more information
 		LT_CORE_INFO("dxGraphicsContext:");
-		LT_CORE_INFO("        Renderer: {}", renderer);
+		LT_CORE_INFO("        Renderer: {}", adapterDesc);
 	}
 
 	dxGraphicsContext::~dxGraphicsContext()
 	{
-		m_SwapChain->SetFullscreenState(false, nullptr);
+		HRESULT hr;
+		DXC(m_SwapChain->SetFullscreenState(false, nullptr));
 	}
 
 	void dxGraphicsContext::HandleWindowEvents(Event& event)
@@ -157,12 +161,12 @@ namespace Light {
 	bool dxGraphicsContext::OnWindowResize(WindowResizedEvent& event)
 	{
 		D3D11_VIEWPORT viewPort;
-		viewPort.Width = static_cast<float>(event.GetWidth());
+		viewPort.Width  = static_cast<float>(event.GetWidth());
 		viewPort.Height = static_cast<float>(event.GetHeight());
-		viewPort.MinDepth = 0;
-		viewPort.MaxDepth = 1;
-		viewPort.TopLeftX = 0;
-		viewPort.TopLeftY = 0;
+		viewPort.MinDepth = 0.0f;
+		viewPort.MaxDepth = 1.0f;
+		viewPort.TopLeftX = 0.0f;
+		viewPort.TopLeftY = 0.0f;
 		m_DeviceContext->RSSetViewports(1u, &viewPort);
 
 		return false;
@@ -170,19 +174,22 @@ namespace Light {
 
 	bool dxGraphicsContext::OnWindowMaximize(WindowMaximizedEvent& event)
 	{
-		m_SwapChain->SetFullscreenState(true, nullptr);
+		HRESULT hr;
+		DXC(m_SwapChain->SetFullscreenState(true, nullptr));
 		return false;
 	}
 
 	bool dxGraphicsContext::OnWindowMinimize(WindowMinimizedEvent& event)
 	{
-		m_SwapChain->SetFullscreenState(false, nullptr);
+		HRESULT hr;
+		DXC(m_SwapChain->SetFullscreenState(false, nullptr));
 		return false;
 	}
 
 	bool dxGraphicsContext::OnWindowRestore(WindowRestoredEvent& event)
 	{
-		m_SwapChain->SetFullscreenState(false, nullptr);
+		HRESULT hr;
+		DXC(m_SwapChain->SetFullscreenState(false, nullptr));
 		return false;
 	}
 

@@ -31,19 +31,22 @@
 #define LT_EVENT_FN_STATIC(fn) std::bind(&##fn,       std::placeholders::_1)
 
 #ifndef LIGHT_DIST
-	#define LT_ASSERT(x, ...)      if(!(x)) { LT_FATAL(__VA_ARGS__)     ; __debugbreak(); throw Light::TerminationReq(); }
-	#define LT_CORE_ASSERT(x, ...) if(!(x)) { LT_CORE_FATAL(__VA_ARGS__); __debugbreak(); throw Light::TerminationReq(); }
+	#define LT_DBREAK __debugbreak()
 #else
-	#define LT_ASSERT(x, code, ...)      if(!(x)) { LT_FATAL(__VA_ARGS__)     ; LT_TERMINATE(code); }
-	#define LT_CORE_ASSERT(x, code, ...) if(!(x)) { LT_CORE_FATAL(__VA_ARGS__); LT_TERMINATE(code); }
+	#define LT_BREAK
 #endif
 
+#define LT_ASSERT(x, ...)      if(!(x)) { LT_FATAL(__VA_ARGS__)     ; LT_DBREAK; throw ::Light::FailedAssertion(__FILE__, __LINE__); }
+#define LT_CORE_ASSERT(x, ...) if(!(x)) { LT_CORE_FATAL(__VA_ARGS__); LT_DBREAK; throw ::Light::FailedAssertion(__FILE__, __LINE__); }
 
 namespace Light {
 
-	struct TerminationReq : public std::exception 
+	struct FailedAssertion : public std::exception 
 	{
-		TerminationReq() = default; 
+		FailedAssertion(const char* file, int line)		
+		{
+			LT_CORE_ASSERT("Assertion failed, File: {}, Line: {}", file, line);
+		}
 	};
 
 }

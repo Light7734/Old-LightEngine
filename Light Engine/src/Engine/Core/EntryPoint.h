@@ -4,6 +4,8 @@
 
 #include "Core/Core.h"
 
+#include "Debug/Exceptions.h"
+
 int main()
 {
 // Hide the command line if we are in distribution build
@@ -20,6 +22,7 @@ int main()
 #endif
 
 	Light::Application* app = nullptr;
+	int exitCode = 0;
 
 	try
 	{
@@ -28,12 +31,22 @@ int main()
 
 		app->GameLoop();
 	}
-	catch (Light::TerminationReq req)
+	catch (Light::FailedAssertion fa)
 	{
-		delete app;
-		return -1;
+		LT_CORE_FATAL("Application exited due FailedAssertion");
+		exitCode = -1;
+	}
+	catch (Light::glException gle) 
+	{
+		LT_CORE_FATAL("Application exited due glException");
+		exitCode = -2;
+	}
+	catch (Light::dxException dxe)
+	{
+		LT_CORE_FATAL("Application exited due dxException");
+		exitCode = -3;
 	}
 
 	delete app;
-	return 0;
+	return exitCode;
 }

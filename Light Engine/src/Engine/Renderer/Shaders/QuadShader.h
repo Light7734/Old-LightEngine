@@ -6,7 +6,7 @@ R"(
 layout(location = 0) in vec2 InPosition;
 layout(location = 1) in vec4 InColor;
 
-layout(std140, binding = 0) uniform ViewProjectionUniform
+layout(std140, binding = 0) uniform ViewProjectionVSUniform
 {
 	mat4 ViewMatrix;
 	mat4 ProjectionMatrix;

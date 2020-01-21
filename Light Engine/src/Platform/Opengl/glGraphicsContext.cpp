@@ -3,11 +3,15 @@
 
 #include "Core/Window.h"
 
+#include "Debug/Exceptions.h"
+
 #include "Events/Event.h"
 #include "Events/WindowEvents.h"
 
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
+
+#include "glDebug/glToString.h"
 
 namespace Light {
 
@@ -24,22 +28,51 @@ namespace Light {
 		Window::SetDisplayMode(Window::GetDisplayMode());
 		glViewport(0, 0, Window::GetWidth(), Window::GetHeight());
 
-#ifndef LIGHT_DIST
-		glEnable(GL_DEBUG_OUTPUT);
-		glDebugMessageCallback([](GLenum src, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* msg, const void* prm)
-		{
-			// #todo: improve:
-			fprintf(stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
-				(type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""),
-				type, severity, msg);
-		}, NULL);
+#if   defined LIGHT_DIST
+		// Disable all messages except GL_DEBUG_HIGH_SEVERITY
+		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_FALSE);
+		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_HIGH, 0, nullptr, GL_TRUE);
+#elif defined LIGHT_DEBUG 
+		// Synchronous output will affect performance, enabled only in debug cfg
+		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 #endif
 
+		glEnable(GL_DEBUG_OUTPUT);
+		glDebugMessageCallback([](GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length,
+		                          const GLchar* msg, const void* userParam)
+		{
+			switch (severity)
+			{
+			case GL_DEBUG_SEVERITY_HIGH: 
+				LT_DBREAK; // Break here so we can see where we are in the Call stack
+				// #todo: determine if we should actually throw glException or not
+				throw glException(source, type, id, msg);
+
+			case GL_DEBUG_SEVERITY_MEDIUM: case GL_DEBUG_SEVERITY_LOW:
+				LT_CORE_WARN("GLMessage :: Severity: {} :: Source: {} :: Type: {} :: ID: {}",
+				             glToString::DebugMsgSeverity(severity),
+				             glToString::DebugMsgSource  (source  ),
+				             glToString::DebugMsgType    (type    ), id);
+				LT_CORE_WARN("        {}", msg);
+				return;
+
+			default:
+				LT_CORE_TRACE("GLMessage :: Severity: {} :: Source: {} :: Type: {} :: ID: {}",
+				              glToString::DebugMsgSeverity(severity),
+				              glToString::DebugMsgSource  (source  ),
+				              glToString::DebugMsgType    (type    ), id);
+				LT_CORE_TRACE("        {}", msg);
+				return;
+			}
+		}, nullptr);
+
+
+		// #todo: Log more information
 		LT_CORE_INFO("glGraphicsContext:");
 		LT_CORE_INFO("        Renderer: {}", glGetString(GL_RENDERER));
 		LT_CORE_INFO("        Version : {}", glGetString(GL_VERSION ));
 	}
-
+	
 	void glGraphicsContext::HandleWindowEvents(Event& event)
 	{
 		Dispatcher dispatcher(event);

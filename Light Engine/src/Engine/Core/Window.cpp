@@ -83,11 +83,6 @@ namespace Light {
 		glfwSetWindowSize(s_GlfwHandle, width, height);
 	}
 
-	void Window::Reposition(int x, int y)
-	{
-		glfwSetWindowPos(s_GlfwHandle, x, y);
-	}
-
 	void Window::SetTitle(const std::string& title)
 	{
 		glfwSetWindowTitle(s_GlfwHandle, title.c_str());
@@ -129,8 +124,9 @@ namespace Light {
 
 			s_Data.eventCallback(WindowRestoredEvent());
 
-			glfwSetWindowMonitor(s_GlfwHandle, nullptr, s_Data.x, s_Data.y, s_Data.width, s_Data.height, 0);
+			glfwSetWindowMonitor(s_GlfwHandle, nullptr, 0, 0, s_Data.width, s_Data.height, 0);
 			glfwSetWindowAttrib(s_GlfwHandle, GLFW_DECORATED, mode == DisplayMode::Windowed);
+			Center();
 
 			break;
 		}
@@ -148,6 +144,8 @@ namespace Light {
 			glfwShowWindow(s_GlfwHandle);
 		else
 			glfwHideWindow(s_GlfwHandle);
+
+		s_Data.visible = visible;
 	}
 
 	void Window::Center()	
@@ -161,10 +159,8 @@ namespace Light {
 		glfwGetMonitorPos(monitor,      &monitorX   , &monitorY    );
 		glfwGetWindowSize(s_GlfwHandle, &windowWidth, &windowHeight);
 
-		s_Data.x = monitorX + (mode->width  - windowWidth ) / 2;
-		s_Data.y = monitorY + (mode->height - windowHeight) / 2;
-
-		glfwSetWindowPos(s_GlfwHandle, s_Data.x, s_Data.y);
+		glfwSetWindowPos(s_GlfwHandle, monitorX + (mode->width  - windowWidth ) / 2,
+		                               monitorY + (mode->height - windowHeight) / 2);
 	}
 
 	void Window::Close()
@@ -217,11 +213,7 @@ namespace Light {
 
 		glfwSetWindowPosCallback(s_GlfwHandle, [](GLFWwindow* window, int xpos, int ypos)
 		{
-			auto data = (WindowData*)glfwGetWindowUserPointer(window);
-
-			data->x = xpos;
-			data->y = ypos;
-			data->eventCallback(WindowMovedEvent(xpos, ypos));
+			((WindowData*)glfwGetWindowUserPointer(window))->eventCallback(WindowMovedEvent(xpos, ypos));
 		});
 
 		glfwSetWindowFocusCallback(s_GlfwHandle, [](GLFWwindow* window, int focused)
@@ -260,7 +252,6 @@ namespace Light {
 		{
 			((WindowData*)glfwGetWindowUserPointer(window))->eventCallback(WindowClosedEvent());
 		});
-
 	}
 
 }

@@ -5,6 +5,8 @@
 #include "dxShader.h"
 #include "dxVertexLayout.h"
 
+#include "Debug/Exceptions.h"
+
 namespace Light {
 
 	dxBufferLayout::dxBufferLayout(std::shared_ptr<Shader> shader, std::shared_ptr<VertexLayout> layout)
@@ -15,9 +17,10 @@ namespace Light {
 		LT_CORE_ASSERT(dxpLayout, "Failed to cast VertexLayout to dxVertexLayout");
 		LT_CORE_ASSERT(dxpShader, "Failed to cast Shader to dxShader");
 
-		dxGraphicsContext::GetDevice()->CreateInputLayout(dxpLayout->GetElements(), dxpLayout->GetElementsCount(),
-		                                                  dxpShader->GetVertexBlob().Get()->GetBufferPointer(),
-		                                                  dxpShader->GetVertexBlob().Get()->GetBufferSize(), &m_InputLayout);
+		HRESULT hr;
+		DXC(dxGraphicsContext::GetDevice()->CreateInputLayout(dxpLayout->GetElements(), dxpLayout->GetElementsCount(),
+		                                                      dxpShader->GetVertexBlob().Get()->GetBufferPointer(),
+		                                                      dxpShader->GetVertexBlob().Get()->GetBufferSize(), &m_InputLayout));
 	}
 
 	void dxBufferLayout::Bind()

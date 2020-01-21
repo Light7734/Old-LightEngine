@@ -3,6 +3,8 @@
 
 #include "dxGraphicsContext.h"
 
+#include "Debug/Exceptions.h"
+
 #include <d3dcompiler.h>
 
 namespace Light {
@@ -17,8 +19,9 @@ namespace Light {
 		LT_CORE_ASSERT(!vsErr.Get(), "Vertex shader compile error: {}", (char*)vsErr->GetBufferPointer());
 		LT_CORE_ASSERT(!psErr.Get(), "Pixel shader compile error: {}", (char*)psErr->GetBufferPointer());
 
-		dxGraphicsContext::GetDevice()->CreateVertexShader(m_VertexBlob->GetBufferPointer(), m_VertexBlob->GetBufferSize(), NULL, &m_VertexShader);
-		dxGraphicsContext::GetDevice()->CreatePixelShader(ps->GetBufferPointer(), ps->GetBufferSize(), NULL, &m_PixelShader);
+		HRESULT hr;
+		DXC(dxGraphicsContext::GetDevice()->CreateVertexShader(m_VertexBlob->GetBufferPointer(), m_VertexBlob->GetBufferSize(), NULL, &m_VertexShader));
+		DXC(dxGraphicsContext::GetDevice()->CreatePixelShader(ps->GetBufferPointer(), ps->GetBufferSize(), NULL, &m_PixelShader));
 	}
 
 	void dxShader::Bind()

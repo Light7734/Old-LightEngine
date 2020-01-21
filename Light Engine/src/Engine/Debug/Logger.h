@@ -2,27 +2,27 @@
 
 #include <spdlog/spdlog.h>
 
-#define LT_FILE_TRACE(...) if(::Light::Logger::isInitialized()) ::Light::Logger::GetFileLogger()->trace   (__VA_ARGS__)
-#define LT_FILE_DEBUG(...) if(::Light::Logger::isInitialized()) ::Light::Logger::GetFileLogger()->debug   (__VA_ARGS__)
-#define LT_FILE_INFO(...)  if(::Light::Logger::isInitialized()) ::Light::Logger::GetFileLogger()->info    (__VA_ARGS__)
-#define LT_FILE_WARN(...)  if(::Light::Logger::isInitialized()) ::Light::Logger::GetFileLogger()->warn    (__VA_ARGS__)
-#define LT_FILE_ERROR(...) if(::Light::Logger::isInitialized()) ::Light::Logger::GetFileLogger()->error   (__VA_ARGS__)
-#define LT_FILE_FATAL(...) if(::Light::Logger::isInitialized()) ::Light::Logger::GetFileLogger()->critical(__VA_ARGS__)
+#define LT_FILE_TRACE(...) if(::Light::Logger::IsInitialized()) ::Light::Logger::GetFileLogger()->trace   (__VA_ARGS__)
+#define LT_FILE_DEBUG(...) if(::Light::Logger::IsInitialized()) ::Light::Logger::GetFileLogger()->debug   (__VA_ARGS__)
+#define LT_FILE_INFO(...)  if(::Light::Logger::IsInitialized()) ::Light::Logger::GetFileLogger()->info    (__VA_ARGS__)
+#define LT_FILE_WARN(...)  if(::Light::Logger::IsInitialized()) ::Light::Logger::GetFileLogger()->warn    (__VA_ARGS__)
+#define LT_FILE_ERROR(...) if(::Light::Logger::IsInitialized()) ::Light::Logger::GetFileLogger()->error   (__VA_ARGS__)
+#define LT_FILE_FATAL(...) if(::Light::Logger::IsInitialized()) ::Light::Logger::GetFileLogger()->critical(__VA_ARGS__)
 
 #ifndef LIGHT_DIST
-	#define LT_TRACE(...) if(::Light::Logger::isInitialized()) ::Light::Logger::GetGameLogger()->trace   (__VA_ARGS__)
-	#define LT_DEBUG(...) if(::Light::Logger::isInitialized()) ::Light::Logger::GetGameLogger()->debug   (__VA_ARGS__)
-	#define LT_INFO(...)  if(::Light::Logger::isInitialized()) ::Light::Logger::GetGameLogger()->info    (__VA_ARGS__)
-	#define LT_WARN(...)  if(::Light::Logger::isInitialized()) ::Light::Logger::GetGameLogger()->warn    (__VA_ARGS__)
-	#define LT_ERROR(...) if(::Light::Logger::isInitialized()) ::Light::Logger::GetGameLogger()->error   (__VA_ARGS__)
-	#define LT_FATAL(...) if(::Light::Logger::isInitialized()) ::Light::Logger::GetGameLogger()->critical(__VA_ARGS__)
+	#define LT_TRACE(...) if(::Light::Logger::IsInitialized()) ::Light::Logger::GetGameLogger()->trace   (__VA_ARGS__)
+	#define LT_DEBUG(...) if(::Light::Logger::IsInitialized()) ::Light::Logger::GetGameLogger()->debug   (__VA_ARGS__)
+	#define LT_INFO(...)  if(::Light::Logger::IsInitialized()) ::Light::Logger::GetGameLogger()->info    (__VA_ARGS__)
+	#define LT_WARN(...)  if(::Light::Logger::IsInitialized()) ::Light::Logger::GetGameLogger()->warn    (__VA_ARGS__)
+	#define LT_ERROR(...) if(::Light::Logger::IsInitialized()) ::Light::Logger::GetGameLogger()->error   (__VA_ARGS__)
+	#define LT_FATAL(...) if(::Light::Logger::IsInitialized()) ::Light::Logger::GetGameLogger()->critical(__VA_ARGS__)
 	
-	#define LT_CORE_TRACE(...) if(::Light::Logger::isInitialized()) ::Light::Logger::GetCoreLogger()->trace   (__VA_ARGS__)
-	#define LT_CORE_DEBUG(...) if(::Light::Logger::isInitialized()) ::Light::Logger::GetCoreLogger()->debug   (__VA_ARGS__)
-	#define LT_CORE_INFO(...)  if(::Light::Logger::isInitialized()) ::Light::Logger::GetCoreLogger()->info    (__VA_ARGS__)
-	#define LT_CORE_WARN(...)  if(::Light::Logger::isInitialized()) ::Light::Logger::GetCoreLogger()->warn    (__VA_ARGS__)
-	#define LT_CORE_ERROR(...) if(::Light::Logger::isInitialized()) ::Light::Logger::GetCoreLogger()->error   (__VA_ARGS__)
-	#define LT_CORE_FATAL(...) if(::Light::Logger::isInitialized()) ::Light::Logger::GetCoreLogger()->critical(__VA_ARGS__)
+	#define LT_CORE_TRACE(...) if(::Light::Logger::IsInitialized()) ::Light::Logger::GetCoreLogger()->trace   (__VA_ARGS__)
+	#define LT_CORE_DEBUG(...) if(::Light::Logger::IsInitialized()) ::Light::Logger::GetCoreLogger()->debug   (__VA_ARGS__)
+	#define LT_CORE_INFO(...)  if(::Light::Logger::IsInitialized()) ::Light::Logger::GetCoreLogger()->info    (__VA_ARGS__)
+	#define LT_CORE_WARN(...)  if(::Light::Logger::IsInitialized()) ::Light::Logger::GetCoreLogger()->warn    (__VA_ARGS__)
+	#define LT_CORE_ERROR(...) if(::Light::Logger::IsInitialized()) ::Light::Logger::GetCoreLogger()->error   (__VA_ARGS__)
+	#define LT_CORE_FATAL(...) if(::Light::Logger::IsInitialized()) ::Light::Logger::GetCoreLogger()->critical(__VA_ARGS__)
 #else
 	#define LT_TRACE(...)
 	#define LT_DEBUG(...)
@@ -66,7 +66,7 @@ namespace Light {
 		static inline std::shared_ptr<spdlog::logger> GetGameLogger() { return s_GameLogger; }
 		static inline std::shared_ptr<spdlog::logger> GetFileLogger() { return s_FileLogger; }
 
-		static inline bool isInitialized() { return s_Initialized; }
+		static inline bool IsInitialized() { return s_Initialized; }
 	private:
 		static void InitLogFileOutputDir();
 	};

@@ -22,7 +22,6 @@ namespace Light {
 		DisplayMode displayMode = DisplayMode::Windowed;
 
 		unsigned int width = 800, height = 600;
-		int          x     = 0, y      = 0;
 
 		bool visible = true;
 		bool active  = true; // input focus
@@ -51,7 +50,6 @@ namespace Light {
 		void SetEventCallbackFunction(std::function<void(Event&)> event_callback_func);
 
 		static void Resize    (unsigned int width, unsigned int height);
-		static void Reposition(int          x    , int          y     );
 
 		static void SetTitle(const std::string& title);
 
@@ -69,9 +67,6 @@ namespace Light {
 
 		static inline unsigned int GetWidth () { return s_Data.width ; }
 		static inline unsigned int GetHeight() { return s_Data.height; }
-
-		static inline int GetPosX() { return s_Data.x; }
-		static inline int GetPosY() { return s_Data.y; }
 
 		static inline const std::string& GetTitle() { return s_Data.title; }
 
