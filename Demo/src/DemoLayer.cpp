@@ -52,7 +52,7 @@ void DemoLayer::OnEvent(Light::Event& event)
 	// uncomment to log every event
 	// LT_TRACE(event.GetLogInfo());
 
-	if (event.isInCategory(Light::EventCategory_Window)) // log all window events
+	if (event.IsInCategory(Light::EventCategory_Window)) // log all window events
 		LT_WARN(event.GetLogInfo());
 
 	Light::Dispatcher dispatcher(event); 
@@ -65,8 +65,12 @@ bool DemoLayer::OnKeyPress(Light::KeyboardKeyPressedEvent& event)
 		Light::Window::Close();
 
 	if (event.GetKey() == KEY_E || event.GetKey() == KEY_R)
+	{
 		Light::GraphicsContext::CreateContext(event.GetKey() == KEY_E ?
 		                                      Light::GraphicsAPI::Opengl : Light::GraphicsAPI::DirectX, { true });
+		Light::LayerStack::DetatchLayer(m_Quad);
+		Light::LayerStack::AttachLayer(m_Quad);
+	}
 
 	if (event.GetKey() == KEY_1)
 		Light::Window::SetDisplayMode(Light::DisplayMode::BorderlessWindowed);

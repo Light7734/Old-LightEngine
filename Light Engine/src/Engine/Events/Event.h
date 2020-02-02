@@ -29,7 +29,7 @@ namespace Light {
 #define EVENT_TYPE(type) EventType GetEventType  () const override { return EventType::##type; } \
                   static EventType GetStaticType ()                { return EventType::##type; } \
 
-#define EVENT_CATEGORY(Category) inline bool isInCategory(EventCategory category) const override { return (Category) & category; }
+#define EVENT_CATEGORY(Category) inline bool IsInCategory(EventCategory category) const override { return (Category) & category; }
 
 	class Event
 	{
@@ -41,7 +41,7 @@ namespace Light {
 		virtual inline EventType   GetEventType() const = 0;
 		virtual        std::string GetLogInfo  () const = 0;
 
-		virtual inline bool isInCategory(EventCategory category) const = 0;
+		virtual inline bool IsInCategory(EventCategory category) const = 0;
 
 		friend inline std::ostream& operator<<(std::ostream& os, const Event& event)
 		{

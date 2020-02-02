@@ -20,12 +20,11 @@ namespace Light {
 
 		unsigned int index = 0;
 		for (glVertexAttributes attribute : glpLayout->GetAttribtues())
-		{   // #todo: make a proper separator
-			if(attribute.type <= GL_UNSIGNED_INT)
+		{
+			if (attribute.type <= GL_UNSIGNED_INT)
 				glVertexAttribIPointer(index, attribute.count, attribute.type, glpLayout->GetStride(), (const void*)attribute.offset);
 			else
 				glVertexAttribPointer(index, attribute.count, attribute.type, false, glpLayout->GetStride(), (const void*)attribute.offset);
-			
 			glEnableVertexAttribArray(index++);
 		}
 	}

@@ -17,8 +17,8 @@ namespace Light {
 		bool vsSourceInFile = vertex.find('\n') == std::string::npos;
 		bool fsSourceInFile = fragment.find('\n') == std::string::npos;
 
-		std::string vertex_source = vsSourceInFile ? FileManager::ReadTxtFile(vertex) : vertex;
-		std::string fragment_source = fsSourceInFile ? FileManager::ReadTxtFile(fragment) : fragment;
+		std::string vertex_source = vsSourceInFile ? FileManager::LoadTextFile(vertex) : vertex;
+		std::string fragment_source = fsSourceInFile ? FileManager::LoadTextFile(fragment) : fragment;
 
 		LT_CORE_ASSERT(!vertex_source.empty(), "Empty vertex shader source");
 		LT_CORE_ASSERT(!fragment_source.empty(), "Empty fragment shader source");

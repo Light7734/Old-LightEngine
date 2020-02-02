@@ -71,10 +71,10 @@ namespace Light {
 
 	void Application::OnEvent(Event& event)
 	{
-		if(event.isInCategory(EventCategory_Input))
+		if(event.IsInCategory(EventCategory_Input))
 			Input::OnEvent(event);
 
-		if (event.isInCategory(EventCategory_Window))
+		if (event.IsInCategory(EventCategory_Window))
 			RenderCommand::HandleWindowEvents(event);
 
 		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)

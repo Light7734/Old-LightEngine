@@ -47,11 +47,12 @@
 #include "Renderer/BufferLayout.h"
 #include "Renderer/Buffers.h"
 #include "Renderer/Camera.h"
-#include "Renderer/Shader.h"
-#include "Renderer/VertexLayout.h"
 #include "Renderer/GraphicsContext.h"
 #include "Renderer/RenderCommand.h"
 #include "Renderer/Renderer.h"
+#include "Renderer/Shader.h"
+#include "Renderer/Texture.h"
+#include "Renderer/VertexLayout.h"
 // --------------------------
 
 // Layers --------------------

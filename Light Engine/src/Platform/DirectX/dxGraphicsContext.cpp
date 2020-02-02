@@ -45,13 +45,16 @@ namespace Light {
 		sd.Windowed = Window::GetDisplayMode() != DisplayMode::Fullscreen;
 		sd.Flags    = NULL;
 
-
+		UINT flags = NULL;
+#ifdef LIGHT_DEBUG
+		flags |= D3D11_CREATE_DEVICE_DEBUG;
+#endif
 		// Create device and swap chain
 		DXC( D3D11CreateDeviceAndSwapChain
 		(   nullptr,
 			D3D_DRIVER_TYPE_HARDWARE,
 			nullptr,
-			NULL,
+			flags,
 			nullptr,
 			NULL,
 			D3D11_SDK_VERSION,

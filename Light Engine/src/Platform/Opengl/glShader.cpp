@@ -7,12 +7,12 @@
 
 namespace Light {
 
-	glShader::glShader(const std::string& vertex_source, const std::string& pixel_source)
+	glShader::glShader(const std::string& vertex_source, const std::string& fragment_source)
 	{
 		m_ShaderID = glCreateProgram();
 
 		const char* lvs_source = vertex_source.c_str();
-		const char* lfs_source = pixel_source.c_str();
+		const char* lfs_source = fragment_source.c_str();
 
 		unsigned int vs = glCreateShader(GL_VERTEX_SHADER);
 		glShaderSource(vs, 1, &lvs_source, nullptr);
@@ -29,15 +29,13 @@ namespace Light {
 		glDeleteShader(vs);
 		glDeleteShader(fs);
 
-		// #todo: log what's wrong
 		int linkStatus;
 		glGetProgramiv(m_ShaderID, GL_LINK_STATUS, &linkStatus);
-		if (linkStatus == GL_FALSE)
-		{
-			LT_CORE_ERROR("Failed to link glShaders:");
-			LT_CORE_ERROR("vs:\n{}", vertex_source);
-			LT_CORE_ERROR("fs:\n{}", pixel_source);
-		}
+		LT_CORE_ASSERT(linkStatus, "Failed to link glShader:\nVERTEX_SOURCE:\n{}\nFRAGMENT_SOURCE:\n{}",
+		               vertex_source, fragment_source);
+
+
+		BindTextures(fragment_source);
 	}
 
 	glShader::~glShader()
@@ -48,6 +46,41 @@ namespace Light {
 	void glShader::Bind()
 	{
 		glUseProgram(m_ShaderID);
+	}
+
+	void glShader::BindTextures(const std::string& fragment_source)
+	{
+		int index = 0;
+		std::stringstream stream(fragment_source);
+		std::string line;
+		Bind();
+
+		while (std::getline(stream, line))
+		{
+			if (line.find("sampler2D") != std::string::npos)
+			{
+				line = line.substr(line.find("sampler2D"));
+				if (line.find('[') != std::string::npos)
+				{
+					unsigned int count = std::stoi(line.substr(line.find('[') + 1, line.find(']') - line.find('[')));
+					int test = line.find("u_") - line.find(";") - 1;
+					std::string name = line.substr(line.find("u_"), line.find(";") - line.find("u_"));
+					for (int i = 0; i < count; i++)
+					{
+						int loc = glGetUniformLocation(m_ShaderID, (name + '[' + std::to_string(i) + ']').c_str());
+						LT_CORE_ASSERT(index < 16, "Too many sampler2D uniforms");
+						glUniform1iv(loc, 1, &index);
+						index++;
+					}
+				}
+				else
+				{
+					std::string name = line.substr(line.find("u_"), line.find("u_") - line.find(";"));
+					LT_CORE_ASSERT(index < 15, "Too many sampler2D uniforms");
+					glUniform1i(glGetUniformLocation(m_ShaderID, name.c_str()), index++);
+				}
+			}
+		}
 	}
 
 }

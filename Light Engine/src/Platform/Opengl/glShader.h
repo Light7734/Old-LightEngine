@@ -11,10 +11,12 @@ namespace Light {
 	private:
 		unsigned int m_ShaderID;
 	public:
-		glShader(const std::string& vertex_source, const std::string& pixel_source);
+		glShader(const std::string& vertex_source, const std::string& fragment_source);
 		~glShader();
 
 		void Bind() override;
+	private:
+		void BindTextures(const std::string& fragment_source);
 	};
 
 }
