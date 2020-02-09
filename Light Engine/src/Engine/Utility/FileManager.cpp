@@ -22,20 +22,13 @@ namespace Light {
 		return ss.str();
 	}
 
-	std::shared_ptr<TextureData> FileManager::LoadTextureFile(const std::string& path, bool flipped)
+	unsigned char* FileManager::LoadTextureFile(const std::string& path, int* x, int* y, int* channels)
 	{
-		unsigned char* pixels = nullptr;
-		int width = 0, height = 0, channels = 0;
 
-		stbi_set_flip_vertically_on_load(flipped);
-		pixels = stbi_load(path.c_str(), &width, &height, &channels, NULL);
-
-		std::shared_ptr<TextureData> data = TextureData::Create(pixels, width, height, channels);
-
+		unsigned char* pixels = stbi_load(path.c_str(), x, y, channels, 4);
 		if (!pixels)
-			LT_CORE_ERROR("Failed to load image file: {}", path);
-
-		return data;
+			LT_CORE_ERROR("Failed to load texture file: {}", path);
+		return pixels;
 	}
 
 }

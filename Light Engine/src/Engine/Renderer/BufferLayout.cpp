@@ -17,7 +17,7 @@ namespace Light {
 		{
 		case GraphicsAPI::Opengl:
 			return std::make_shared<glBufferLayout>(buffer, layout);
-		case GraphicsAPI::DirectX: LT_DX(
+		case GraphicsAPI::Directx: LT_DX(
 			return std::make_shared<dxBufferLayout>(shader, layout); )
 		default:
 			LT_CORE_ASSERT(false, "Invalid GraphicsAPI");

@@ -21,7 +21,7 @@ namespace Light {
 		m_Configurations = configurations;
 		s_Instance = this;
 
-		// Create swap chain's description
+		// Create swap chain's descriptor
 		DXGI_SWAP_CHAIN_DESC sd = { 0 };
 
 		sd.OutputWindow = static_cast<HWND>(Window::GetNativeHandle());
@@ -75,6 +75,22 @@ namespace Light {
 		m_DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 
+		// Set blend state
+		Microsoft::WRL::ComPtr<ID3D11BlendState> d3dBlendState;
+		D3D11_BLEND_DESC bd = {};
+		bd.RenderTarget[0].BlendEnable = true;
+		bd.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+		bd.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+		bd.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+		bd.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+		bd.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+		bd.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+		bd.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+		DXC(m_Device->CreateBlendState(&bd, &d3dBlendState));
+		m_DeviceContext->OMSetBlendState(d3dBlendState.Get(), 0, 0xffffffff);
+
+
 		// Set rasterizer viewport
 		D3D11_VIEWPORT viewPort;
 		viewPort.Width  = static_cast<float>(Window::GetWidth ());
@@ -83,6 +99,7 @@ namespace Light {
 		viewPort.MaxDepth = 1.0f;
 		viewPort.TopLeftX = 0.0f;
 		viewPort.TopLeftY = 0.0f;
+
 		m_DeviceContext->RSSetViewports(1u, &viewPort);
 
 		
@@ -98,8 +115,8 @@ namespace Light {
 
 		// Get the Adapter's Description
 		char DefChar = ' ';
-		char ch[180];
-		WideCharToMultiByte(CP_ACP, 0, DXGIAdapterDesc.Description, -1, ch, 180, &DefChar, NULL);
+		char ch[128];
+		WideCharToMultiByte(CP_ACP, 0, DXGIAdapterDesc.Description, -1, ch, 128, &DefChar, NULL);
 		std::string adapterDesc(ch);
 		
 		// Release memory

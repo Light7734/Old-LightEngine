@@ -67,7 +67,7 @@ bool DemoLayer::OnKeyPress(Light::KeyboardKeyPressedEvent& event)
 	if (event.GetKey() == KEY_E || event.GetKey() == KEY_R)
 	{
 		Light::GraphicsContext::CreateContext(event.GetKey() == KEY_E ?
-		                                      Light::GraphicsAPI::Opengl : Light::GraphicsAPI::DirectX, { true });
+		                                      Light::GraphicsAPI::Opengl : Light::GraphicsAPI::Directx, { true });
 		Light::LayerStack::DetatchLayer(m_Quad);
 		Light::LayerStack::AttachLayer(m_Quad);
 	}

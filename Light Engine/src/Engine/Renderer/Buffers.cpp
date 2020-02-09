@@ -20,7 +20,7 @@ namespace Light {
 		case GraphicsAPI::Opengl:
 			s_Instance = std::make_unique<glUniformBuffers>();
 			break;
-		case GraphicsAPI::DirectX: LT_DX(
+		case GraphicsAPI::Directx: LT_DX(
 			s_Instance = std::make_unique<dxConstantBuffers>();
 			break; )
 		default:
@@ -34,7 +34,7 @@ namespace Light {
 		{
 		case GraphicsAPI::Opengl:
 			return std::make_shared<glVertexBuffer>(vertices, size);
-		case GraphicsAPI::DirectX: LT_DX(
+		case GraphicsAPI::Directx: LT_DX(
 			return std::make_shared<dxVertexBuffer>(vertices, size, stride); )
 		default:
 			LT_CORE_ASSERT(false, "Invalid GraphicsAPI");
@@ -47,7 +47,7 @@ namespace Light {
 		{
 		case GraphicsAPI::Opengl:
 			return std::make_shared<glIndexBuffer>(indices, size);
-		case GraphicsAPI::DirectX: LT_DX(
+		case GraphicsAPI::Directx: LT_DX(
 			return std::make_shared<dxIndexBuffer>(indices, size); )
 		default:
 			LT_CORE_ASSERT(false, "Invalid GraphicsAPI");

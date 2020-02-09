@@ -16,13 +16,6 @@ namespace Light {
 
 	Renderer::BasicQuadRenderer Renderer::s_QuadRenderer;
 
-	std::vector<std::shared_ptr<Texture>> Renderer::s_Textures;
-
-	std::map<std::shared_ptr<Texture>, unsigned int> Renderer::s_AttachmentCount;
-
-	std::shared_ptr<Texture>              Renderer::s_WhiteTexture;
-	unsigned int                          Renderer::s_CurrentTextureIndex = 0;
-
 	void Renderer::Init()
 	{
 		//=============== BASIC QUAD RENDERER ===============//
@@ -34,8 +27,7 @@ namespace Light {
 		                                                   s_QuadRenderer.vertexBuffer,
 		                                                   VertexLayout::Create({ {"POSITION" , VertexType::Float2},
 		                                                                          {"COLOR"    , VertexType::Float4},
-		                                                                          {"TEXCOORDS", VertexType::Float2},
-		                                                                          {"TEXINDEX" , VertexType::UInt  }, }));
+		                                                                          {"TEXCOORDS", VertexType::Float3}, }));
 
 		// Indices for index buffer
 		unsigned int* indices = new unsigned int [LT_MAX_BASIC_SPRITES * 6];
@@ -58,12 +50,6 @@ namespace Light {
 		s_QuadRenderer.indexBuffer = IndexBuffer::Create(indices, LT_MAX_BASIC_SPRITES * sizeof(unsigned int) * 6);
 		delete[] indices;
 		//=============== BASIC QUAD RENDERER ===============//
-
-
-		// White texture
-		unsigned char whiteTextureData[] = { 255, 255, 255, 255 };
-		s_WhiteTexture = Texture::Create(whiteTextureData, 1, 1, 4);
-		AttachTexture(s_WhiteTexture);
 	}
 
 	void Renderer::Start()
@@ -73,8 +59,7 @@ namespace Light {
 	}
 	
 	void Renderer::DrawQuad(const glm::vec2& position, const glm::vec2& size,
-	                        const std::shared_ptr<Texture>& texture, const TextureCoordinates& textureCoordinates,
-	                        const glm::vec4& tint)
+	                        const TextureCoordinates* textureCoordinates, const glm::vec4& tint)
 	{
 		// #todo: make VertexBuffer size dynamic
 		if (s_QuadRenderer.mapCurrent == s_QuadRenderer.mapEnd)
@@ -84,29 +69,13 @@ namespace Light {
 			Start();
 		}
 
-		// Bind texture
-		if (!texture->IsBonud())
-		{
-			if (s_CurrentTextureIndex > 15)
-			{
-				LT_CORE_WARN("Too many textures for a rendering stage!");
-				End();
-				Start();
-			}
-
-			texture->Bind(s_CurrentTextureIndex++);
-		}
-
 		// Locals
-		unsigned int* const uintMap = (unsigned int*)s_QuadRenderer.mapCurrent;
-
 		const float xMin = position.x;
 		const float yMin = position.y;
 		const float xMax = position.x + size.x;
 		const float yMax = position.y + size.y;
 
-		const unsigned int textureIndex = texture->GetIndex();
-
+		const TextureCoordinates str = *textureCoordinates;
 
 		// TOP_LEFT
 		s_QuadRenderer.mapCurrent[0 + 0] = xMin;
@@ -117,10 +86,9 @@ namespace Light {
 		s_QuadRenderer.mapCurrent[4 + 0] = tint.b;
 		s_QuadRenderer.mapCurrent[5 + 0] = tint.a;
 
-		s_QuadRenderer.mapCurrent[6 + 0] = textureCoordinates.xMin;
-		s_QuadRenderer.mapCurrent[7 + 0] = textureCoordinates.yMin;
-
-		uintMap[8 + 0] = textureIndex;
+		s_QuadRenderer.mapCurrent[6 + 0] = str.xMin;
+		s_QuadRenderer.mapCurrent[7 + 0] = str.yMin;
+		s_QuadRenderer.mapCurrent[8 + 0] = str.atlasIndex;
 
 		// TOP_RIGHT
 		s_QuadRenderer.mapCurrent[0 + 9] = xMax;
@@ -131,10 +99,9 @@ namespace Light {
 		s_QuadRenderer.mapCurrent[4 + 9] = tint.b;
 		s_QuadRenderer.mapCurrent[5 + 9] = tint.a;
 
-		s_QuadRenderer.mapCurrent[6 + 9] = textureCoordinates.xMax;
-		s_QuadRenderer.mapCurrent[7 + 9] = textureCoordinates.yMin;
-
-		uintMap[8 + 9] = textureIndex;
+		s_QuadRenderer.mapCurrent[6 + 9] = str.xMax;
+		s_QuadRenderer.mapCurrent[7 + 9] = str.yMin;
+		s_QuadRenderer.mapCurrent[8 + 9] = str.atlasIndex;
 
 		// BOTTOM_RIGHT
 		s_QuadRenderer.mapCurrent[0 + 18] = xMax;
@@ -145,10 +112,9 @@ namespace Light {
 		s_QuadRenderer.mapCurrent[4 + 18] = tint.b;
 		s_QuadRenderer.mapCurrent[5 + 18] = tint.a;
 
-		s_QuadRenderer.mapCurrent[6 + 18] = textureCoordinates.xMax;
-		s_QuadRenderer.mapCurrent[7 + 18] = textureCoordinates.yMax;
-
-		uintMap[8 + 18] = textureIndex;
+		s_QuadRenderer.mapCurrent[6 + 18] = str.xMax;
+		s_QuadRenderer.mapCurrent[7 + 18] = str.yMax;
+		s_QuadRenderer.mapCurrent[8 + 18] = str.atlasIndex;
 
 		// BOTTOM_LEFT
 		s_QuadRenderer.mapCurrent[0 + 27] = xMin;
@@ -159,27 +125,14 @@ namespace Light {
 		s_QuadRenderer.mapCurrent[4 + 27] = tint.b;
 		s_QuadRenderer.mapCurrent[5 + 27] = tint.a;
 
-		s_QuadRenderer.mapCurrent[6 + 27] = textureCoordinates.xMin;
-		s_QuadRenderer.mapCurrent[7 + 27] = textureCoordinates.yMax;
-
-		uintMap[8 + 27] = textureIndex;
+		s_QuadRenderer.mapCurrent[6 + 27] = str.xMin;
+		s_QuadRenderer.mapCurrent[7 + 27] = str.yMax;
+		s_QuadRenderer.mapCurrent[8 + 27] = str.atlasIndex;
 
 
 		// Increase buffer map and quad count
 		s_QuadRenderer.mapCurrent += 36;
 		s_QuadRenderer.quadCount++;
-	}
-
-	void Renderer::DrawQuad(const glm::vec2& position, const glm::vec2& size,
-	                        const glm::vec4& color)
-	{
-		DrawQuad(position, size, s_WhiteTexture, { 0.0f, 0.0f, 1.0f, 1.0f }, color);
-	}
-
-	void Renderer::DrawQuad(const glm::vec2& position, const glm::vec2& size,
-	                        const std::shared_ptr<Texture>& texture, const TextureCoordinates& textureCoordinates)
-	{
-		DrawQuad(position, size, texture, textureCoordinates, {1.0f, 1.0f, 1.0f, 1.0f});
 	}
 
 	void Renderer::End()
@@ -201,41 +154,6 @@ namespace Light {
 			s_QuadRenderer.quadCount = 0;
 		}
 		//=============== BASIC QUAD RENDERER ===============//
-
-		// Reset textures binding status
-		for (auto texture : s_Textures)
-			texture->UnBind();
-		s_CurrentTextureIndex = 0;
-	}
-
-	void Renderer::AttachTexture(std::shared_ptr<Texture> texture)
-	{
-		auto it = std::find(s_Textures.begin(), s_Textures.end(), texture);
-
-		if (it != s_Textures.end())
-			s_AttachmentCount[texture]++;
-		else
-		{
-			s_AttachmentCount[texture] = 1u;
-			s_Textures.push_back(texture);
-		}
-	}
-
-	void Renderer::DetatchTexture(std::shared_ptr<Texture> texture)
-	{
-		// #todo: make sure DetatchTexture is called after AttachTexture 
-		auto it = std::find(s_Textures.begin(), s_Textures.end(), texture);
-
-		if (it != s_Textures.end())
-		{
-			if (--s_AttachmentCount[texture] == 0)
-			{
-				s_Textures.erase(it);
-				s_AttachmentCount.erase(texture);
-			}
-		}
-		else
-			LT_CORE_ERROR("Failed to find specified texture (Renderer::DetatchTexture)");
 	}
 
 }

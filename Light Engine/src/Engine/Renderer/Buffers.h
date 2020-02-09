@@ -23,9 +23,8 @@ namespace Light {
 	class VertexBuffer
 	{
 	public:
-		virtual ~VertexBuffer() = default;
-
 		static std::shared_ptr<VertexBuffer> Create(float* vertices, unsigned int size, unsigned int stride);
+		virtual ~VertexBuffer() = default;
 
 		virtual void Bind() = 0;
 
@@ -36,9 +35,8 @@ namespace Light {
 	class IndexBuffer
 	{
 	public:
-		virtual ~IndexBuffer() = default;
-
 		static std::shared_ptr<IndexBuffer> Create(unsigned int* indices, unsigned int size);
+		virtual ~IndexBuffer() = default;
 
 		virtual void Bind() = 0;
 	};

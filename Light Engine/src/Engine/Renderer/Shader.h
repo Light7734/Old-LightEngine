@@ -7,9 +7,8 @@ namespace Light {
 	class Shader
 	{
 	public:
-		virtual ~Shader() = default;
-
 		static std::shared_ptr<Shader> Create(const std::string& vertex, const std::string& fragment);
+		virtual ~Shader() = default;
 
 		virtual void Bind() = 0;
 	private:

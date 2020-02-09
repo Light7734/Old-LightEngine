@@ -7,19 +7,20 @@
 #include <d3d11.h>
 #include <wrl.h>
 
-#include <glm/glm.hpp>
-
 namespace Light {
 
-	class dxTexture : public Texture
+	class dxTextureAtlas : public TextureAtlas
 	{
 	private:
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_TextureView;
-		Microsoft::WRL::ComPtr<ID3D11SamplerState> m_SamplerState;
+		static Microsoft::WRL::ComPtr<ID3D11Texture2D> s_Texture;
+		static Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> s_SRV;
+		static Microsoft::WRL::ComPtr<ID3D11SamplerState> s_SamplerState;
 	public:
-		dxTexture(unsigned char* data, unsigned int width, unsigned int height, unsigned int channels);
+		dxTextureAtlas(const TextureData& data);
 
-		void Bind(unsigned int index = 0) override;
+		static void DestroyTextureArray();
+	private:
+		void Init(unsigned int width, unsigned int height);
 	};
 
-}
+};

@@ -28,6 +28,10 @@ namespace Light {
 		Window::SetDisplayMode(Window::GetDisplayMode());
 		glViewport(0, 0, Window::GetWidth(), Window::GetHeight());
 
+		glEnable(GL_DEBUG_OUTPUT);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 #if   defined LIGHT_DIST
 		// Disable all messages except GL_DEBUG_HIGH_SEVERITY
 		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_FALSE);
@@ -37,7 +41,6 @@ namespace Light {
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 #endif
 
-		glEnable(GL_DEBUG_OUTPUT);
 		glDebugMessageCallback([](GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length,
 		                          const GLchar* msg, const void* userParam)
 		{
@@ -65,7 +68,6 @@ namespace Light {
 				return;
 			}
 		}, nullptr);
-
 
 		// #todo: Log more information
 		LT_CORE_INFO("glGraphicsContext:");

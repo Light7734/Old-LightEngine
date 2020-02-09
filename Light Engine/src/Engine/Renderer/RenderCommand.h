@@ -15,7 +15,7 @@ namespace Light {
 	public:
 		static void SetGraphicsContext(std::unique_ptr<GraphicsContext> context);
 
-		static bool IsInitialized() { return s_GraphicsContext.get() != nullptr; }
+		static bool HasContext() { return s_GraphicsContext.get() != nullptr; }
 
 		static void HandleWindowEvents(Event& event);
 

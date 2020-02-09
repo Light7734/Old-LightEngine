@@ -33,12 +33,6 @@ namespace Light {
 		};
 		static BasicQuadRenderer s_QuadRenderer;
 
-		static std::vector<std::shared_ptr<Texture>> s_Textures;
-		static std::map<std::shared_ptr<Texture>, unsigned int> s_AttachmentCount; // #todo: maybe map uid of texture?
-
-		static std::shared_ptr<Texture> s_WhiteTexture;
-
-		static unsigned int s_CurrentTextureIndex;
 	public:
 		static void Init();
 
@@ -46,20 +40,10 @@ namespace Light {
 
 		//=============== BASIC QUAD RENDERER ===============//
 		static void DrawQuad(const glm::vec2& position, const glm::vec2& size,
-		                     const std::shared_ptr<Texture>& texture, const TextureCoordinates& textureCoordinates,
-		                     const glm::vec4& tint);
-
-		static void DrawQuad(const glm::vec2& position, const glm::vec2& size,
-		                     const std::shared_ptr<Texture>& texture, const TextureCoordinates& textureCoordinates);
-
-		static void DrawQuad(const glm::vec2& position, const glm::vec2& size,
-		                     const glm::vec4& color);
+		                     const TextureCoordinates* textureCoordinates, const glm::vec4& tint);
 		//=============== BASIC QUAD RENDERER ===============//
 
 		static void End();
-
-		static void AttachTexture(std::shared_ptr<Texture> texture);
-		static void DetatchTexture(std::shared_ptr<Texture> texture);
 	};
 
 }

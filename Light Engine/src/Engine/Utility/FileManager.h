@@ -13,7 +13,7 @@ namespace Light {
 
 		static std::string LoadTextFile(const std::string& path);
 
-		static std::shared_ptr<TextureData> LoadTextureFile(const std::string& path, bool flipped);
+		static unsigned char* LoadTextureFile(const std::string& path, int* x, int* y, int* channels);
 	};
 
 }

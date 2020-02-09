@@ -4,7 +4,7 @@
 
 #include <glm/glm.hpp>
 
-#define LT_MAXIMUM_TEXTURE_SLOTS 16 // #todo
+#include <map>
 
 namespace Light {
 
@@ -12,43 +12,36 @@ namespace Light {
 	{
 		unsigned char* pixels;
 		int width, height, channels;
-	public:
+
 		~TextureData();
-
-		template<class ...Args>
-		static std::unique_ptr<TextureData> Create(Args&& ...args)
-		{
-			return std::unique_ptr<TextureData>(new TextureData(std::forward<Args>(args)...));
-		}
-	private:
-		TextureData(unsigned char* _pixels, int _width, int _height, int _channels)
-			: pixels(_pixels), width(_width), height(_height), channels(_channels) {}
-
-		TextureData           (const TextureData&) = delete;
-		TextureData& operator=(const TextureData&) = delete;
-
 	};
 
 	struct TextureCoordinates
 	{
-		float xMin, yMin, xMax, yMax;
+		float xMin, yMin, xMax, yMax, atlasIndex;
 	};
 
-	class Texture
+	class TextureAtlas
 	{
+	private:
+		static std::vector<unsigned int> s_AvailableSlots;
 	protected:
-		unsigned unsigned int m_BoundSlot = 0;
-		bool b_Bound = false;
+		static unsigned int s_Width, s_Height;
+
+		unsigned int m_Index;
+
+		std::map<std::string, TextureCoordinates> m_Segments;
+
+		TextureAtlas();
 	public:
-		static std::shared_ptr<Texture> Create(const std::string& path);
-		static std::shared_ptr<Texture> Create(unsigned char* data, unsigned int width, unsigned int height, unsigned int channels);
-		
-		inline bool IsBonud() const { return b_Bound; }
+		static std::shared_ptr<TextureAtlas> Create(const std::string& atlasPath);
+		~TextureAtlas();
 
-		virtual void Bind(unsigned int = 0) = 0;
-		inline  void UnBind() { b_Bound = false; }
+		static void DestroyTextureArray();
 
-		inline unsigned int GetIndex() { return m_BoundSlot; }
+		TextureCoordinates* GetCoordinates(const std::string& name) { return &m_Segments[name]; }
+	protected:
+		void ParseSegments(const std::string& data);
 	};
 
 }

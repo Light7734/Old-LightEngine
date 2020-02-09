@@ -16,7 +16,7 @@ namespace Light {
 		{
 		case GraphicsAPI::Opengl:
 			return std::make_shared<glVertexLayout>(init_list);
-		case GraphicsAPI::DirectX: LT_DX(
+		case GraphicsAPI::Directx: LT_DX(
 			return std::make_shared<dxVertexLayout>(init_list); )
 		default:
 			LT_CORE_ASSERT(false, "Invalid GraphicsAPI");

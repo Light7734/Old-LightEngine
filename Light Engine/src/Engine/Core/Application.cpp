@@ -37,7 +37,7 @@ namespace Light {
 	void Application::GameLoop()
 	{
 		LT_CORE_ASSERT(m_Window, "Application::m_Window is not initialized");
-		LT_CORE_ASSERT(RenderCommand::IsInitialized(), "GraphicsContext::CreateContext() was never called");
+		LT_CORE_ASSERT(RenderCommand::HasContext(), "GraphicsContext::CreateContext() was never called");
 
 		while (!m_Window->IsClosed())
 		{
@@ -49,11 +49,9 @@ namespace Light {
 				if(layer->IsEnable()) 
 					layer->OnUpdate(Time::GetDeltaTime());
 
-			Renderer::Start();
 			for (Layer* layer : m_LayerStack)
 				if (layer->IsEnable())
 					layer->OnRender();
-			Renderer::End();
 
 			// UserInterface::Begin(); #todo: Add ImGui
 			for (Layer* layer : m_LayerStack)

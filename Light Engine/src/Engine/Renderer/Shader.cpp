@@ -32,7 +32,7 @@ namespace Light {
 
 			return std::make_shared<glShader>(vertex_source, fragment_source);
 
-		case GraphicsAPI::DirectX: LT_DX(
+		case GraphicsAPI::Directx: LT_DX(
 			ExtractShaderSource(vertex_source, "HLSL");
 			ExtractShaderSource(fragment_source, "HLSL");
 

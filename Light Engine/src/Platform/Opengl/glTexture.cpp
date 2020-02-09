@@ -7,51 +7,43 @@
 
 namespace Light {
 
-	glTexture::glTexture(unsigned char* data, unsigned int width, unsigned int height, unsigned int channels)
+	unsigned int glTextureAtlas::m_AtlasID = 0;
+
+	glTextureAtlas::glTextureAtlas(const TextureData& data)
 	{
-		unsigned int format =
-			channels == 4 ? GL_RGBA :
-			channels == 3 ? GL_RGB  :
-			channels == 2 ? GL_RG   :
-			channels == 1 ? GL_RED  : GL_NONE;
-		
-		unsigned int internalFormat =
-			format == GL_RGBA ? GL_RGBA8 :
-			format == GL_RGB  ? GL_RGB8  :
-			format == GL_RG   ? GL_RG8   :
-			format == GL_RED  ? GL_R8    : GL_NONE;
+		if (!s_Width && !s_Height)
+			Init(data.width, data.height);
 
+		LT_CORE_ASSERT(data.width == s_Width && data.height == s_Height,
+		               "Texture slice dimensions does not match the array: slice[{}, {}] != array[{}, {}] ",
+		               data.width, data.height, s_Width, s_Height);
 
-		LT_CORE_ASSERT(data, "Texture data is null");
-		LT_CORE_ASSERT(width && height, "Width or height cannot be 0, [{}, {}]", width, height);
-		LT_CORE_ASSERT(format, "Invalid texture format: {}, channels: {}", format, channels);
-		LT_CORE_ASSERT(internalFormat, "Invalid texture internalFormat: {}, channels: {}", internalFormat, channels);
-
-		
-		glCreateTextures(GL_TEXTURE_2D, 1, &m_TextureID);
-		glBindTexture(GL_TEXTURE_2D, m_TextureID);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat,  width, height, 0, format, GL_UNSIGNED_BYTE, data);
-		glGenerateTextureMipmap(m_TextureID);
+		glTextureSubImage3D(m_AtlasID, 0, 0, 0, m_Index, data.width, data.height, 1, GL_RGBA, GL_UNSIGNED_BYTE, data.pixels);
+		glGenerateTextureMipmap(m_AtlasID);
 	}
 
-	glTexture::~glTexture()
+	void glTextureAtlas::Init(unsigned int width, unsigned int height)
 	{
-		glDeleteTextures(1, &m_TextureID);
+		s_Width = width;
+		s_Height = height;
+
+		glCreateTextures(GL_TEXTURE_2D_ARRAY, 1, &m_AtlasID);
+		glTextureStorage3D(m_AtlasID, std::log(std::max(width, height)) + 1, GL_RGBA8, width, height, 16);
+
+		glTextureParameteri(m_AtlasID, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTextureParameteri(m_AtlasID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTextureParameteri(m_AtlasID, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTextureParameteri(m_AtlasID, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+		glBindTexture(GL_TEXTURE_2D_ARRAY, m_AtlasID);
 	}
 
-	void glTexture::Bind(unsigned int index/* = 0 */)
+	void glTextureAtlas::DestroyTextureArray()
 	{
-		glActiveTexture(GL_TEXTURE0 + index);
-		glBindTexture(GL_TEXTURE_2D, m_TextureID);
+		glDeleteTextures(1, &m_AtlasID);
 
-		m_BoundSlot = index;
-		b_Bound = true;
+		s_Width = 0;
+		s_Height = 0;
 	}
 
 }

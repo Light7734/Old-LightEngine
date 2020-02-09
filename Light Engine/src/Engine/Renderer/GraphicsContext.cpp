@@ -7,6 +7,8 @@
 
 #include "Core/Window.h"
 
+#include "Texture.h"
+
 #ifdef LIGHT_PLATFORM_WINDOWS
 	#include "Platform/DirectX/dxGraphicsContext.h"
 #endif
@@ -20,10 +22,13 @@ namespace Light {
 	{
 		LT_CORE_ASSERT(Window::IsInitialized(), "Window is not initialized");
 
+		if (s_Api == api && s_Api != GraphicsAPI::Default)
+			{ LT_CORE_ERROR("Cannot recreate context with same api"); return; }
+
 		if (api == GraphicsAPI::Default)
 		{
 #ifdef LIGHT_PLATFORM_WINDOWS
-			s_Api = GraphicsAPI::DirectX;
+			s_Api = GraphicsAPI::Directx;
 #else
 			s_Api = GraphicsAPI::Opengl;
 #endif
@@ -32,13 +37,12 @@ namespace Light {
 			s_Api = api;
 		
 
-		RenderCommand::SetGraphicsContext(nullptr); // To make the gl/dx GraphicsContext dtor get called before ctor
 		switch (s_Api)
 		{
 		case GraphicsAPI::Opengl:
 			RenderCommand::SetGraphicsContext(std::make_unique<glGraphicsContext>(configurations));
 			break;
-		case GraphicsAPI::DirectX: LT_DX(
+		case GraphicsAPI::Directx: LT_DX(
 			RenderCommand::SetGraphicsContext(std::make_unique<dxGraphicsContext>(configurations));
 			break; )
 		default:
@@ -48,6 +52,8 @@ namespace Light {
 		Renderer::Init();
 		ConstantBuffers::Init();
 		Camera::UpdateConstants();
+
+		TextureAtlas::DestroyTextureArray();
 	}
 
 }

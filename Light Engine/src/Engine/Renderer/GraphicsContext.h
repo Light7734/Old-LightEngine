@@ -8,7 +8,7 @@ namespace Light {
 
 	enum class GraphicsAPI
 	{
-		Default, Opengl, DirectX
+		Default, Opengl, Directx
 	};
 
 	struct GraphicsConfigurations

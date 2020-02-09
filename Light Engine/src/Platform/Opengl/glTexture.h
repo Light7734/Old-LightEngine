@@ -8,15 +8,16 @@
 
 namespace Light {
 
-	class glTexture : public Texture
+	class glTextureAtlas : public TextureAtlas
 	{
 	private:
-		unsigned int m_TextureID = 0;
+		static unsigned int m_AtlasID;
 	public:
-		glTexture(unsigned char* data, unsigned int width, unsigned int height, unsigned int channels);
-		~glTexture();
+		glTextureAtlas(const TextureData& data);
 
-		void Bind(unsigned int index = 0) override;
+		static void DestroyTextureArray();
+	private:
+		void Init(unsigned int width, unsigned int height);
 	};
 
 }
