@@ -11,7 +11,7 @@ namespace Light {
 	glBufferLayout::glBufferLayout(std::shared_ptr<VertexBuffer> buffer, std::shared_ptr<VertexLayout> layout)
 	{
 		std::shared_ptr<glVertexLayout> glpLayout = std::dynamic_pointer_cast<glVertexLayout>(layout);
-		LT_CORE_ASSERT(glpLayout, "Failed to cast VertexBuffer to glVertexBuffer");
+		LT_CORE_ASSERT(glpLayout, "glBufferLayout::glBufferLayout: Failed to cast VertexBuffer to glVertexBuffer");
 
 		glCreateVertexArrays(1, &m_ArrayID);
 

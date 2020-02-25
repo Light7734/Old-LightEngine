@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Core/Core.h"
-
 #include "Layer.h"
+
+#include "Core/Core.h"
 
 #include <vector>
 
@@ -14,9 +14,10 @@ namespace Light {
 		static std::vector<Layer*> s_Layers;
 		static std::vector<Layer*> s_PushedLayers;
 		static std::vector<Layer*> s_PoppedLayers;
+
 		static bool b_LayersQueued;
 	private:
-		friend class Application; // Only Application can create LayerStack, making it a Singleton
+		friend class Application;
 		LayerStack() = default;
 		~LayerStack();
 	public:

@@ -1,8 +1,9 @@
 #pragma once
 
-#include "Core/Core.h"
-
+#include "Camera.h"
 #include "Texture.h"
+
+#include "Core/Core.h"
 
 #include <glm/glm.hpp>
 
@@ -32,11 +33,12 @@ namespace Light {
 			unsigned int quadCount = 0;
 		};
 		static BasicQuadRenderer s_QuadRenderer;
-
-	public:
+	private:
+		friend class GraphicsContext;
 		static void Init();
+	public:
 
-		static void Start();
+		static void Start(Camera& camera);
 
 		//=============== BASIC QUAD RENDERER ===============//
 		static void DrawQuad(const glm::vec2& position, const glm::vec2& size,

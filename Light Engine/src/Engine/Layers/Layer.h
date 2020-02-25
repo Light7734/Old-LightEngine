@@ -28,7 +28,7 @@ namespace Light {
 
 		virtual void OnEvent(Event& event) {}
 
-		inline bool IsEnable() const { return b_Enabled; }
+		inline bool IsEnabled() const { return b_Enabled; }
 	};
 
 }

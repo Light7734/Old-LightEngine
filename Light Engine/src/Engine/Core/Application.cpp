@@ -22,7 +22,7 @@ namespace Light {
 	{
 		Logger::Init();
 
-		LT_CORE_ASSERT(!s_Instance, "Multiple Application instances");
+		LT_CORE_ASSERT(!s_Instance, "Application::Application: Multiple Application instances");
 		s_Instance = this;
 	}
 
@@ -30,34 +30,37 @@ namespace Light {
 	{
 		s_Instance = nullptr;
 
-		LT_FILE_INFO("Total application runtime: {}s", Time::ElapsedTime());
+		LT_FILE_INFO("Application::~Application: Total application runtime: {}s", Time::ElapsedTime());
 		Logger::Terminate();
 	}
 
 	void Application::GameLoop()
 	{
-		LT_CORE_ASSERT(m_Window, "Application::m_Window is not initialized");
-		LT_CORE_ASSERT(RenderCommand::HasContext(), "GraphicsContext::CreateContext() was never called");
+		LT_CORE_ASSERT(m_Window, "Application::GameLoop: Application::m_Window is not initialized");
+		LT_CORE_ASSERT(RenderCommand::HasContext(), "Application::GameLoop: GraphicsContext::CreateContext() was never called");
 
 		while (!m_Window->IsClosed())
 		{
-			Time::Update();
-			RenderCommand::Clear();
+			Time::CalculateDeltaTime();
+			RenderCommand::ClearBackbuffer();
 
 
 			for (Layer* layer : m_LayerStack)
-				if(layer->IsEnable()) 
+				if(layer->IsEnabled()) 
 					layer->OnUpdate(Time::GetDeltaTime());
 
-			for (Layer* layer : m_LayerStack)
-				if (layer->IsEnable())
-					layer->OnRender();
+			if (!m_Window->IsMinimized())
+			{
+				for (Layer* layer : m_LayerStack)
+					if (layer->IsEnabled())
+						layer->OnRender();
 
-			// UserInterface::Begin(); #todo: Add ImGui
-			for (Layer* layer : m_LayerStack)
-				if (layer->IsEnable())
-					layer->OnUserInterfaceUpdate();
-			// UserInterface::End  (); #todo: Add ImGui
+				// UserInterface::Begin(); #todo: Add ImGui
+				for (Layer* layer : m_LayerStack)
+					if (layer->IsEnabled())
+						layer->OnUserInterfaceUpdate();
+				// UserInterface::End  (); #todo: Add ImGui
+			}
 
 
 			m_LayerStack.HandleQueuedLayers();
@@ -70,17 +73,14 @@ namespace Light {
 	void Application::OnEvent(Event& event)
 	{
 		if(event.IsInCategory(EventCategory_Input))
-			Input::OnEvent(event);
-
-		if (event.IsInCategory(EventCategory_Window))
-			RenderCommand::HandleWindowEvents(event);
+			Input::OnInputEvent(event);
 
 		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)
 		{
-			if((*it)->IsEnable())
+			if((*it)->IsEnabled())
 				(*it)->OnEvent(event);
 
-			if (event.b_Dispatched)
+			if (event.IsDispatched())
 				return;
 		}
 	

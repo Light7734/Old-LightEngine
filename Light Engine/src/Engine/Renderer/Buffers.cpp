@@ -10,21 +10,20 @@
 
 namespace Light {
 
-	std::unique_ptr<ConstantBuffers> ConstantBuffers::s_Instance;
+	std::unique_ptr<ConstantBuffers> ConstantBuffers::s_Context;
 
 	void ConstantBuffers::Init()
 	{
-		s_Instance.reset();
 		switch (GraphicsContext::GetAPI())
 		{
 		case GraphicsAPI::Opengl:
-			s_Instance = std::make_unique<glUniformBuffers>();
-			break;
+			s_Context = std::make_unique<glUniformBuffers>();
+			return;
 		case GraphicsAPI::Directx: LT_DX(
-			s_Instance = std::make_unique<dxConstantBuffers>();
-			break; )
+			s_Context = std::make_unique<dxConstantBuffers>();
+			return; )
 		default:
-			LT_CORE_ASSERT(false, "Invalid GraphicsAPI");
+			LT_CORE_ASSERT(false, "ConstantBuffers::Init: Invalid GraphicsAPI");
 		}
 	}
 
@@ -37,7 +36,7 @@ namespace Light {
 		case GraphicsAPI::Directx: LT_DX(
 			return std::make_shared<dxVertexBuffer>(vertices, size, stride); )
 		default:
-			LT_CORE_ASSERT(false, "Invalid GraphicsAPI");
+			LT_CORE_ASSERT(false, "VertexBuffer::Create: Invalid GraphicsAPI");
 		}
 	}
 
@@ -50,7 +49,7 @@ namespace Light {
 		case GraphicsAPI::Directx: LT_DX(
 			return std::make_shared<dxIndexBuffer>(indices, size); )
 		default:
-			LT_CORE_ASSERT(false, "Invalid GraphicsAPI");
+			LT_CORE_ASSERT(false, "IndexBuffer::Create: Invalid GraphicsAPI");
 		}
 	}
 

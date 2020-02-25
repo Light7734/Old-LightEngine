@@ -1,10 +1,19 @@
 #include "DemoLayer.h"
 
+DemoLayer::DemoLayer()
+{
+	m_QuadsLayer = new QuadsLayer;
+}
+
+DemoLayer::~DemoLayer()
+{
+}
+
 void DemoLayer::OnAttach()
 {
 	LT_TRACE("Attached DemoLayer");
 
-	LT_INFO("------------------------------------");
+	LT_INFO(" __________________________________");
 	LT_INFO("|    KEY    |        ACTION        |");
 	LT_INFO("|-----------|----------------------|");
 	LT_INFO("|    ESC    |         Exit         |");
@@ -12,20 +21,25 @@ void DemoLayer::OnAttach()
 	LT_INFO("|     2     |       Windowed       |");
 	LT_INFO("|     3     |      Fullscreen      |");
 	LT_INFO("|-----------|----------------------|");
+	LT_INFO("|     W     |     Camera: Up       |");
+	LT_INFO("|     A     |     Camera: Left     |");
+	LT_INFO("|     S     |     Camera: Down     |");
+	LT_INFO("|     D     |     Camera: Right    |");
+	LT_INFO("|-----------|----------------------|");
 	LT_INFO("|     E     |    GraphicsAPI:GL    |");
 	LT_INFO("|     R     |    GraphicsAPI:DX    |");
 	LT_INFO("|-----------|----------------------|");
-	LT_INFO("|     W     |      Move: Up        |");
-	LT_INFO("|     A     |      Move: Left      |");
-	LT_INFO("|     S     |      Move: Down      |");
-	LT_INFO("|     D     |      Move: Right     |");
-	LT_INFO("------------------------------------");
+	LT_INFO("|     Z     |  Resolution (4:3)    |");
+	LT_INFO("|     X     |  Resolution (16:9)   |");
+	LT_INFO("|     C     |  Resolution (16:10)  |");
+	LT_INFO("|___________|______________________|");
+	LT_INFO("Note: A legendary pepe will follow wherever the mouse goes");
 
-	m_Quad = new QuadLayer;
-	Light::LayerStack::AttachLayer(m_Quad);
 
-	Light::Camera::SetPosition(glm::vec2(0.0f, 0.0f));
-	Light::Camera::SetProjection(Light::Window::GetWidth(), Light::Window::GetHeight());
+	float colors[4] = { 0.2f, 0.45f, 0.81f, 1.0f };
+	Light::RenderCommand::SetClearBackbufferColor(colors);
+
+	Light::LayerStack::AttachLayer(m_QuadsLayer);
 }
 
 void DemoLayer::OnDetatch()
@@ -33,27 +47,10 @@ void DemoLayer::OnDetatch()
 	LT_TRACE("Detatched DemoLayer");
 }
 
-void DemoLayer::OnUpdate(float deltaTime)
-{
-	static Light::Timer timer;
-	Light::RenderCommand::ClearBuffer(0.0f, 0.0, abs(sin(timer.ElapsedTime())), 1.0f);
-
-	if (Light::Input::GetMouseX() > m_Quad->GetPosition().x&&
-		Light::Input::GetMouseX() < m_Quad->GetPosition().x + m_Quad->GetSize().x &&
-		Light::Input::GetMouseY() > m_Quad->GetPosition().y&&
-		Light::Input::GetMouseY() < m_Quad->GetPosition().y + m_Quad->GetSize().y)
-		m_Quad->Disable();
-	else
-		m_Quad->Enable();
-}
-
 void DemoLayer::OnEvent(Light::Event& event)
 {
 	// uncomment to log every event
 	// LT_TRACE(event.GetLogInfo());
-
-	if (event.IsInCategory(Light::EventCategory_Window)) // log all window events
-		LT_WARN(event.GetLogInfo());
 
 	Light::Dispatcher dispatcher(event); 
 	dispatcher.Dispatch<Light::KeyboardKeyPressedEvent>(LT_EVENT_FN(DemoLayer::OnKeyPress));
@@ -66,10 +63,52 @@ bool DemoLayer::OnKeyPress(Light::KeyboardKeyPressedEvent& event)
 
 	if (event.GetKey() == KEY_E || event.GetKey() == KEY_R)
 	{
-		Light::GraphicsContext::CreateContext(event.GetKey() == KEY_E ?
-		                                      Light::GraphicsAPI::Opengl : Light::GraphicsAPI::Directx, { true });
-		Light::LayerStack::DetatchLayer(m_Quad);
-		Light::LayerStack::AttachLayer(m_Quad);
+		Light::Window::GfxSetApi(event.GetKey() == KEY_E ? Light::GraphicsAPI::Opengl : Light::GraphicsAPI::Directx,
+		                         Light::GraphicsContext::GetConfigurations());
+
+		Light::LayerStack::DetatchLayer(m_QuadsLayer);
+		Light::LayerStack::AttachLayer(m_QuadsLayer);
+	}
+
+	if (event.GetKey() == KEY_Z)
+	{
+		static int index = 0;
+		static const Light::Resolution res[] =
+		{
+			{ 640 , 480 , Light::AspectRatio::AR_4_3 },
+			{ 800 , 600 , Light::AspectRatio::AR_4_3 },
+			{ 960 , 720 , Light::AspectRatio::AR_4_3 },
+			{ 1400, 1050, Light::AspectRatio::AR_4_3 },
+		};
+
+		Light::Window::GfxSetResolution(res[++index % std::size(res)]);
+	}
+
+	if (event.GetKey() == KEY_X)
+	{
+		static int index = 0;
+		static const Light::Resolution res[] =
+		{
+			{ 1280, 720  , Light::AspectRatio::AR_16_9 },
+			{ 1600, 900  , Light::AspectRatio::AR_16_9 },
+			{ 1920, 1080 , Light::AspectRatio::AR_16_9 },
+		};
+
+		Light::Window::GfxSetResolution(res[++index % std::size(res)]);
+	}
+
+	if (event.GetKey() == KEY_C)
+	{
+		static int index = 0;
+		static const Light::Resolution res[] =
+		{
+			{ 1280, 800  ,Light::AspectRatio::AR_16_10 },
+			{ 1440, 900  ,Light::AspectRatio::AR_16_10 },
+			{ 1920, 1200 ,Light::AspectRatio::AR_16_10 },
+			{ 1680, 1050 ,Light::AspectRatio::AR_16_10 },
+		};
+
+		Light::Window::GfxSetResolution(res[++index % std::size(res)]);
 	}
 
 	if (event.GetKey() == KEY_1)

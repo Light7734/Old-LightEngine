@@ -20,7 +20,7 @@ namespace Light {
 		case GraphicsAPI::Directx: LT_DX(
 			return std::make_shared<dxBufferLayout>(shader, layout); )
 		default:
-			LT_CORE_ASSERT(false, "Invalid GraphicsAPI");
+			LT_CORE_ASSERT(false, "BufferLayout::Create: Invalid GraphicsAPI");
 		}
 	}
 

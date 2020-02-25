@@ -15,6 +15,8 @@ namespace Light {
 		static Microsoft::WRL::ComPtr<ID3D11Texture2D> s_Texture;
 		static Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> s_SRV;
 		static Microsoft::WRL::ComPtr<ID3D11SamplerState> s_SamplerState;
+
+		static unsigned int s_MipLevels;
 	public:
 		dxTextureAtlas(const TextureData& data);
 

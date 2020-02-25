@@ -4,6 +4,8 @@
 
 #include "Core/Core.h"
 
+#include <glm/glm.hpp>
+
 #include <sstream>
 
 namespace Light {
@@ -11,19 +13,19 @@ namespace Light {
 	class WindowResizedEvent : public Event
 	{
 	private:
-		int m_Width, m_Height;
+		const glm::ivec2 m_Size;
 	public:
-		WindowResizedEvent(uint16_t  width, uint16_t  height): m_Width(width), m_Height(height) {}
+		WindowResizedEvent(const glm::ivec2& size): m_Size(size) {}
 
-		inline int GetWidth () const { return m_Width;  }
-		inline int GetHeight() const { return m_Height; }
+		inline int GetWidth () const { return m_Size.x; }
+		inline int GetHeight() const { return m_Size.y; }
 
-		inline std::pair<int, int> GetSize() const { return { m_Width, m_Height }; }
+		inline const glm::ivec2& GetSize() const { return m_Size; }
 
 		std::string GetLogInfo() const override
 		{
 			std::stringstream ss;
-			ss << "Window resized: [ " << m_Width << 'x' << m_Height << " ]";
+			ss << "Window resized: [ " << m_Size.x << 'x' << m_Size.y << " ]";
 			return ss.str();
 		}
 
@@ -34,19 +36,19 @@ namespace Light {
 	class WindowMovedEvent : public Event
 	{
 	private:
-		int m_PositionX, m_PositionY;
+		const glm::ivec2 m_WindowPos;
 	public:
-		WindowMovedEvent(int xpos, int ypos): m_PositionX(xpos), m_PositionY(ypos) {}
+		WindowMovedEvent(const glm::ivec2& position): m_WindowPos(position) {}
 
-		inline int GetX() const { return m_PositionX; }
-		inline int GetY() const { return m_PositionY; }
+		inline int GetX() const { return m_WindowPos.x; }
+		inline int GetY() const { return m_WindowPos.y; }
 
-		inline std::pair<int, int> GetPosition() const { return { m_PositionX, m_PositionY }; }
+		inline const glm::ivec2& GetPosition() const { return m_WindowPos; }
 
 		std::string GetLogInfo() const override
 		{ 
 			std::stringstream ss;
-			ss << "Window moved: [ " << m_PositionX << ", " << m_PositionY << " ]";
+			ss << "Window moved: [ " << m_WindowPos.x << ", " << m_WindowPos.y << " ]";
 			return ss.str();
 		}
 

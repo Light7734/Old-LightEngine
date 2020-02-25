@@ -24,6 +24,8 @@
 	#define LT_DX(x)
 #endif
 
+#define LT_MAP_MACRO_TO_NAME(macro) { macro, #macro }
+
 
 #define BIT(x) 1 << x
 
@@ -45,7 +47,7 @@ namespace Light {
 	{
 		FailedAssertion(const char* file, int line)		
 		{
-			LT_CORE_ASSERT("Assertion failed, File: {}, Line: {}", file, line);
+			LT_CORE_FATAL("Assertion failed, File: {}, Line: {}", file, line);
 		}
 	};
 

@@ -35,10 +35,6 @@ struct VertexOut
 cbuffer	ViewVSConstant : register(b0)
 {
 	row_major matrix ViewMatrix;
-}
-
-cbuffer ProjectionVSConstant : register(b1)
-{
 	row_major matrix ProjectionMatrix;
 }
 

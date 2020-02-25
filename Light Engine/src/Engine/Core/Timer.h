@@ -19,7 +19,7 @@ namespace Light {
 	public:
 		Time() = delete;
 
-		static void Update();
+		static void CalculateDeltaTime();
 
 		static inline float GetDeltaTime() { return s_DeltaTime; }
 		static inline float ElapsedTime () { return ((chrono::duration<float>)(chrono::steady_clock::now() - s_AppStartPoint)).count(); }

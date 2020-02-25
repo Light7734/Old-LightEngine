@@ -1,8 +1,6 @@
 #include "ltpch.h"
 #include "glTexture.h"
 
-#include "Utility/FileManager.h"
-
 #include <glad/glad.h>
 
 namespace Light {
@@ -15,7 +13,7 @@ namespace Light {
 			Init(data.width, data.height);
 
 		LT_CORE_ASSERT(data.width == s_Width && data.height == s_Height,
-		               "Texture slice dimensions does not match the array: slice[{}, {}] != array[{}, {}] ",
+		               "glTextureAtlas::glTextureAtlas: Texture slice dimensions do not match the array: slice[{}, {}] != array[{}, {}] ",
 		               data.width, data.height, s_Width, s_Height);
 
 		glTextureSubImage3D(m_AtlasID, 0, 0, 0, m_Index, data.width, data.height, 1, GL_RGBA, GL_UNSIGNED_BYTE, data.pixels);

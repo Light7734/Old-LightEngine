@@ -19,7 +19,7 @@ namespace Light {
 	void Logger::Init()
 	{
 		if (s_Initialized)
-			{ LT_CORE_WARN("Logger::Init() called multiple times"); return; }
+			{ LT_CORE_WARN("Logger::Init: recalled before calling Logger::Terminate()"); return; }
 
 
 		// spdlog doesn't create a folder, so we need to make sure it exists
@@ -47,19 +47,19 @@ namespace Light {
 		if (!s_Initialized)
 		{ 
 #ifndef LIGHT_DIST
-			printf("WARNING: Logger::Terminate() called (without a call to Logger::Init() / multiple times)\n");
+			printf("WARNING: Logger::Terminate: called without a call to Logger::Init() / multiple times\n");
 #else
 			if (s_FileLogPath.empty())
 				InitLogFileOutputDir();
 
 			std::ofstream out;
 			out.open(s_FileLogPath, std::ios::app);
-			out << "WARNING: Logger::Terminate() called (without a call to Logger::Init() / multiple times)\n";
+			out << "WARNING: Logger::Terminate: called without a call to Logger::Init() / multiple times\n";
 #endif
 			return; 
 		}
 
-		LT_CORE_DEBUG("Terminating Logger");
+		LT_CORE_DEBUG("Logger::Terminate: called");
 
 		s_CoreLogger.reset();
 		s_GameLogger.reset();
@@ -78,7 +78,6 @@ namespace Light {
 		s_FileLogPath = s_FileLogPath.substr(3, s_FileLogPath.size() - 4);
 		std::replace(s_FileLogPath.begin(), s_FileLogPath.end(), ':', '_');
 		s_FileLogPath = "Logs/" + s_FileLogPath + ".log";
-
 	}
 
 }

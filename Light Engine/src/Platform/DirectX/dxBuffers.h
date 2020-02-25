@@ -13,23 +13,18 @@ namespace Light {
 
 	enum ConstantBufferIndex
 	{
-		CBufferIndex_ViewMatrix = 0,
-		CBufferIndex_ProjectionMatrix = 1,
+		CBufferIndex_ViewProjection = 0,
 		// ...
 	};
 
 	class dxConstantBuffers : public ConstantBuffers
 	{
 	private:
-		Microsoft::WRL::ComPtr<ID3D11Buffer> m_ViewMatrix;
-		Microsoft::WRL::ComPtr<ID3D11Buffer> m_ProjectionMatrix;
-
-		D3D11_MAPPED_SUBRESOURCE m_Map;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> m_ViewProjBuffer;
 	public:
 		dxConstantBuffers();
 
-		void SetViewMatrixImpl(void* view) override;
-		void SetProjMatrixImpl(void* proj) override;
+		void SetViewProjMatrixImpl(const glm::f32* view, const glm::f32* proj) override;
 	};
 
 	class dxVertexBuffer : public VertexBuffer

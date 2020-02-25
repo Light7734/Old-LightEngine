@@ -33,7 +33,8 @@ namespace Light {
 
 	class Event
 	{
-	public:
+	private:
+		friend class Dispatcher;
 		bool b_Dispatched = false;
 	public:
 		Event() = default;
@@ -43,7 +44,9 @@ namespace Light {
 
 		virtual inline bool IsInCategory(EventCategory category) const = 0;
 
-		friend inline std::ostream& operator<<(std::ostream& os, const Event& event)
+		inline bool IsDispatched() const { return b_Dispatched; }
+
+		friend inline std::ostream& operator<<(std::ostream& os, const Event& event) // why can't I use this on spdlog????
 		{
 			return os << event.GetLogInfo();
 		}

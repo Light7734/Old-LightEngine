@@ -1,10 +1,17 @@
 #include "ltpch.h"
 #include "Window.h"
 
+#include "Monitor.h"
+
 #include "Events/Event.h"
 #include "Events/KeyboardEvents.h"
 #include "Events/MouseEvents.h"
 #include "Events/WindowEvents.h"
+
+#include "Renderer/Buffers.h"
+#include "Renderer/Camera.h"
+#include "Renderer/Renderer.h"
+#include "Renderer/RenderCommand.h"
 
 #if   defined(LIGHT_PLATFORM_WINDOWS)
 	#define GLFW_EXPOSE_NATIVE_WIN32
@@ -22,48 +29,50 @@
 
 namespace Light {
 
-	Window* Window::s_Instance = nullptr;
-	WindowData Window::s_Data = {};
+	Window* Window::s_Context = nullptr;
 
-	GLFWwindow* Window::s_GlfwHandle = nullptr;
-	void*       Window::s_NativeHandle = nullptr;
-
-	Window::Window(const WindowData& data)
+	Window::Window(const WindowData& data, const GraphicsConfigurations& configurations, GraphicsAPI api)
+		: m_Data(data)
 	{
-		LT_CORE_ASSERT(!s_Instance, "Multiple Window instances");
-		LT_CORE_ASSERT(glfwInit(), "Failed to intialize glfw");
-
-		s_Instance = this;
-		s_Data = data;
-
+		LT_CORE_ASSERT(!s_Context, "Window::Window: Multiple Window instances");
+		LT_CORE_ASSERT(glfwInit(), "Window::Window: glfwInit() failed");
+		s_Context = this;
 
 		// Window hints
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 		glfwWindowHint(GLFW_VISIBLE  , data.visible);
 		glfwWindowHint(GLFW_DECORATED, data.displayMode != DisplayMode::BorderlessWindowed);
-
-
+		
 		// Create and check glfw window
-		s_GlfwHandle = glfwCreateWindow(data.width, data.height, data.title.c_str(), 
+		m_GlfwHandle = glfwCreateWindow(configurations.resolution.width, configurations.resolution.height,
+		                                data.title.c_str(),	
 		                                data.displayMode == DisplayMode::Fullscreen ? glfwGetPrimaryMonitor() : nullptr,
 		                                nullptr);
-		LT_CORE_ASSERT(s_GlfwHandle, "Failed to create glfw window");
+		LT_CORE_ASSERT(m_GlfwHandle, "Window::Window: glfwCreateWindow() failed");
 
-
-		glfwSetWindowUserPointer(s_GlfwHandle, &s_Data);
 		Center();
+		if(data.minimized)
+			glfwIconifyWindow(m_GlfwHandle);
+
+		glfwSetWindowUserPointer(m_GlfwHandle, &m_Data);
+
 
 		// Set native window handle
 #		ifdef GLFW_EXPOSE_NATIVE_WIN32
-			s_NativeHandle = glfwGetWin32Window(s_GlfwHandle);
+			m_NativeHandle = glfwGetWin32Window(m_GlfwHandle);
 #		else
-			#error "Light engine only supports Windows for now"
+			#error Light engine only supports Windows for now
 #		endif
+
+
+		// Init stuff
+		Monitor::Init();
+		GfxSetApi(api, configurations);
 	}
 
 	Window::~Window()
 	{
-		glfwDestroyWindow(s_GlfwHandle);
+		glfwDestroyWindow(m_GlfwHandle);
 		glfwTerminate();
 	}
 
@@ -72,80 +81,69 @@ namespace Light {
 		glfwPollEvents();
 	}
 
-	void Window::SetEventCallbackFunction(std::function<void(Event&)> event_callback_func)
+	void Window::GfxSetApi(GraphicsAPI api, const GraphicsConfigurations& configurations)
 	{
-		s_Data.eventCallback = event_callback_func;
-		s_Instance->SetGlfwCallbacks();
+		s_Context->m_GraphicsContext = GraphicsContext::Create(api, configurations);
 	}
 
-	void Window::Resize(unsigned int width, unsigned int height)
+	void Window::SetEventCallbackFunction(std::function<void(Event&)> event_callback_func)
 	{
-		glfwSetWindowSize(s_GlfwHandle, width, height);
+		s_Context->m_Data.eventCallback = event_callback_func;
+		s_Context->SetGlfwCallbacks();
 	}
 
 	void Window::SetTitle(const std::string& title)
 	{
-		glfwSetWindowTitle(s_GlfwHandle, title.c_str());
-		s_Data.title = title;
+		glfwSetWindowTitle(s_Context->m_GlfwHandle, title.c_str());
+		s_Context->m_Data.title = title;
 	}
 
 	void Window::SetDisplayMode(DisplayMode mode)
 	{
-		static unsigned int backupWidth, backupHeight;
-
 		switch (mode)
 		{
 		case DisplayMode::Fullscreen:
 		{
-			if (s_Data.displayMode != DisplayMode::Fullscreen)
-			{
-				backupWidth = s_Data.width;
-				backupHeight = s_Data.height;
-			}
+			glfwSetWindowAttrib(s_Context->m_GlfwHandle, GLFW_DECORATED, true);
 
-			s_Data.eventCallback(WindowMaximizedEvent());
+			glfwSetWindowMonitor(s_Context->m_GlfwHandle, glfwGetPrimaryMonitor(), 0, 0,
+			                     GraphicsContext::GetConfigurations().resolution.width,
+			                     GraphicsContext::GetConfigurations().resolution.height, 0);
 
-			const GLFWvidmode* vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-			glfwSetWindowMonitor(s_GlfwHandle, glfwGetPrimaryMonitor(), 0, 0, vidMode->width, vidMode->height, 0);
-
-			s_Data.width = vidMode->width;
-			s_Data.height = vidMode->height;
-
+			s_Context->m_Data.eventCallback(WindowRestoredEvent());
 			break;
 		}
 
 		case DisplayMode::Windowed: case DisplayMode::BorderlessWindowed:
 		{
-			if (s_Data.displayMode == DisplayMode::Fullscreen)
-			{
-				s_Data.width = backupWidth;
-				s_Data.height = backupHeight;
-			}
 
-			s_Data.eventCallback(WindowRestoredEvent());
+			glfwSetWindowAttrib(s_Context->m_GlfwHandle, GLFW_DECORATED, mode == DisplayMode::Windowed);
 
-			glfwSetWindowMonitor(s_GlfwHandle, nullptr, 0, 0, s_Data.width, s_Data.height, 0);
-			glfwSetWindowAttrib(s_GlfwHandle, GLFW_DECORATED, mode == DisplayMode::Windowed);
-			Center();
+			glfwSetWindowMonitor(s_Context->m_GlfwHandle,
+			                     mode == DisplayMode::Fullscreen ? glfwGetPrimaryMonitor() : nullptr,
+			                     0, 0,
+			                     GraphicsContext::GetConfigurations().resolution.width,
+			                     GraphicsContext::GetConfigurations().resolution.height, 0);
 
+			s_Context->m_Data.eventCallback(WindowRestoredEvent());
 			break;
 		}
 		default:
-			LT_CORE_ERROR("Invalid display mode");
+			LT_CORE_ERROR("Window::SetDisplayMode: Invalid display mode: {}", mode);
 		}
 
-		s_Data.displayMode = mode;
 		Center();
+		s_Context->m_Data.displayMode = mode;
 	}
 
 	void Window::SetVisibility(bool visible)
 	{
 		if (visible)
-			glfwShowWindow(s_GlfwHandle);
+			glfwShowWindow(s_Context->m_GlfwHandle);
 		else
-			glfwHideWindow(s_GlfwHandle);
+			glfwHideWindow(s_Context->m_GlfwHandle);
 
-		s_Data.visible = visible;
+		s_Context->m_Data.visible = visible;
 	}
 
 	void Window::Center()	
@@ -156,16 +154,16 @@ namespace Light {
 		int monitorX, monitorY;
 		int windowWidth, windowHeight;
 
-		glfwGetMonitorPos(monitor,      &monitorX   , &monitorY    );
-		glfwGetWindowSize(s_GlfwHandle, &windowWidth, &windowHeight);
+		glfwGetMonitorPos(monitor,                  &monitorX   , &monitorY    );
+		glfwGetWindowSize(s_Context->m_GlfwHandle, &windowWidth, &windowHeight);
 
-		glfwSetWindowPos(s_GlfwHandle, monitorX + (mode->width  - windowWidth ) / 2,
-		                               monitorY + (mode->height - windowHeight) / 2);
+		glfwSetWindowPos(s_Context->m_GlfwHandle, monitorX + (mode->width  - windowWidth ) / 2,
+		                                           monitorY + (mode->height - windowHeight) / 2);
 	}
 
 	void Window::Close()
 	{
-		s_Data.closed = true;
+		s_Context->m_Data.closed = true;
 	}
 
 	void Window::SetGlfwCallbacks()
@@ -173,10 +171,10 @@ namespace Light {
 		glfwSetErrorCallback([](int code, const char* error) 
 		{
 			// #todo: Improve:
-			LT_CORE_ERROR(error);
+			LT_CORE_ERROR("glfwErrorCallback: code: {}, desc: {}", code, error);
 		});
 
-		glfwSetMouseButtonCallback(s_GlfwHandle, [](GLFWwindow* window, int button, int action, int mods)
+		glfwSetMouseButtonCallback(m_GlfwHandle, [](GLFWwindow* window, int button, int action, int mods)
 		{
 			if (action == GLFW_PRESS)
 				((WindowData*)glfwGetWindowUserPointer(window))->eventCallback(MouseButtonPressedEvent(button));
@@ -184,17 +182,17 @@ namespace Light {
 				((WindowData*)glfwGetWindowUserPointer(window))->eventCallback(MouseButtonReleasedEvent(button));
 		});
 
-		glfwSetCursorPosCallback(s_GlfwHandle, [](GLFWwindow* window, double xpos, double ypos)
+		glfwSetCursorPosCallback(m_GlfwHandle, [](GLFWwindow* window, double xpos, double ypos)
 		{
-			((WindowData*)glfwGetWindowUserPointer(window))->eventCallback(MouseMovedEvent(static_cast<int>(xpos), static_cast<int>(ypos)));
+			((WindowData*)glfwGetWindowUserPointer(window))->eventCallback(MouseMovedEvent(glm::ivec2(xpos, ypos)));
 		});
 
-		glfwSetScrollCallback(s_GlfwHandle, [](GLFWwindow* window, double xoffset, double yoffset)
+		glfwSetScrollCallback(m_GlfwHandle, [](GLFWwindow* window, double xoffset, double yoffset)
 		{
 			((WindowData*)glfwGetWindowUserPointer(window))->eventCallback(MouseScrolledEvent(static_cast<int>(yoffset)));
 		});
 
-		glfwSetKeyCallback(s_GlfwHandle, [](GLFWwindow* window, int key, int scancode, int action, int mods)
+		glfwSetKeyCallback(m_GlfwHandle, [](GLFWwindow* window, int key, int scancode, int action, int mods)
 		{
 			if (action == GLFW_PRESS)
 				((WindowData*)glfwGetWindowUserPointer(window))->eventCallback(KeyboardKeyPressedEvent(key));
@@ -202,21 +200,18 @@ namespace Light {
 				((WindowData*)glfwGetWindowUserPointer(window))->eventCallback(KeyboardKeyReleasedEvent(key));
 		});
 
-		glfwSetWindowSizeCallback(s_GlfwHandle, [](GLFWwindow* window, int width, int height)
+		glfwSetWindowSizeCallback(m_GlfwHandle, [](GLFWwindow* window, int width, int height)
 		{
-			auto data = ((WindowData*)glfwGetWindowUserPointer(window));
-
-			data->width = width;
-			data->height = height;
-			data->eventCallback(WindowResizedEvent(width, height));
+			auto data = (WindowData*)glfwGetWindowUserPointer(window);
+			((WindowData*)glfwGetWindowUserPointer(window))->eventCallback(WindowResizedEvent(glm::ivec2(width, height)));
 		});
 
-		glfwSetWindowPosCallback(s_GlfwHandle, [](GLFWwindow* window, int xpos, int ypos)
+		glfwSetWindowPosCallback(m_GlfwHandle, [](GLFWwindow* window, int xpos, int ypos)
 		{
-			((WindowData*)glfwGetWindowUserPointer(window))->eventCallback(WindowMovedEvent(xpos, ypos));
+			((WindowData*)glfwGetWindowUserPointer(window))->eventCallback(WindowMovedEvent(glm::ivec2(xpos, ypos)));
 		});
 
-		glfwSetWindowFocusCallback(s_GlfwHandle, [](GLFWwindow* window, int focused)
+		glfwSetWindowFocusCallback(m_GlfwHandle, [](GLFWwindow* window, int focused)
 		{
 			auto data = (WindowData*)glfwGetWindowUserPointer(window);
 
@@ -232,15 +227,18 @@ namespace Light {
 			}
 		});
 
-		glfwSetWindowIconifyCallback(s_GlfwHandle, [](GLFWwindow* window, int iconify)
+		glfwSetWindowIconifyCallback(m_GlfwHandle, [](GLFWwindow* window, int iconify)
 		{
+			auto data = (WindowData*)glfwGetWindowUserPointer(window);
+			data->minimized = iconify;
+
 			if (iconify)
-				((WindowData*)glfwGetWindowUserPointer(window))->eventCallback(WindowMinimizedEvent());
+				data->eventCallback(WindowMinimizedEvent());
 			else
-				((WindowData*)glfwGetWindowUserPointer(window))->eventCallback(WindowRestoredEvent());
+				data->eventCallback(WindowRestoredEvent());
 		});
 
-		glfwSetWindowMaximizeCallback(s_GlfwHandle, [](GLFWwindow* window, int maximize)
+		glfwSetWindowMaximizeCallback(m_GlfwHandle, [](GLFWwindow* window, int maximize)
 		{
 			if (maximize)
 				((WindowData*)glfwGetWindowUserPointer(window))->eventCallback(WindowMaximizedEvent());
@@ -248,7 +246,7 @@ namespace Light {
 				((WindowData*)glfwGetWindowUserPointer(window))->eventCallback(WindowRestoredEvent());
 		});
 
-		glfwSetWindowCloseCallback(s_GlfwHandle, [](GLFWwindow* window)
+		glfwSetWindowCloseCallback(m_GlfwHandle, [](GLFWwindow* window)
 		{
 			((WindowData*)glfwGetWindowUserPointer(window))->eventCallback(WindowClosedEvent());
 		});

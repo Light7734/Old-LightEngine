@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Core/Core.h"
-
 #include "Renderer/Texture.h"
+
+#include "Core/Core.h"
 
 namespace Light {
 

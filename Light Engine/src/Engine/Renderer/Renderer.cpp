@@ -1,4 +1,4 @@
-#include <ltpch.h>
+#include "ltpch.h"
 #include "Renderer.h"
 
 #include "BufferLayout.h"
@@ -52,8 +52,10 @@ namespace Light {
 		//=============== BASIC QUAD RENDERER ===============//
 	}
 
-	void Renderer::Start()
+	void Renderer::Start(Camera& camera)
 	{
+		ConstantBuffers::SetViewProjMatrix(camera.GetView(), camera.GetProjection());
+
 		s_QuadRenderer.mapCurrent = (float*)s_QuadRenderer.vertexBuffer->Map();
 		s_QuadRenderer.mapEnd = s_QuadRenderer.mapCurrent + LT_MAX_BASIC_SPRITES * 9 * 4;
 	}
@@ -64,9 +66,11 @@ namespace Light {
 		// #todo: make VertexBuffer size dynamic
 		if (s_QuadRenderer.mapCurrent == s_QuadRenderer.mapEnd)
 		{
-			LT_CORE_WARN("Too many Render::DrawQuad calls!");
+			LT_CORE_WARN("Renderer::DrawQuad: calls to this function exceeded its limit: {}", LT_MAX_BASIC_SPRITES);
+
 			End();
-			Start();
+			s_QuadRenderer.mapCurrent = (float*)s_QuadRenderer.vertexBuffer->Map();
+			s_QuadRenderer.mapEnd = s_QuadRenderer.mapCurrent + LT_MAX_BASIC_SPRITES * 9 * 4;
 		}
 
 		// Locals

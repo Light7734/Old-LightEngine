@@ -18,21 +18,20 @@ namespace Light {
 	public:
 		glGraphicsContext(const GraphicsConfigurations& configurations);
 
-		void HandleWindowEvents(Event& event) override;
-
-		void EnableVSync () override;
-		void DisableVSync() override;
-
 		void SwapBuffers() override;
 
-		void Clear() override;
-		void ClearBuffer(float r, float g, float b, float a) override;
+		void ClearBackbuffer(float colors[4]) override;
 
 		void Draw(unsigned int count) override;
 		void DrawIndexed(unsigned int count) override;
 
+		// Setters
+		void SetConfigurations(const GraphicsConfigurations& configurations) override;
+		void SetResolution(const Resolution& resolution) override;
+		void SetVSync(bool vSync) override;
+
 	private:
-		bool OnWindowResize(WindowResizedEvent& event);
+		void SetDebugMessageCallback();
 	};
 
 }

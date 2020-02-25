@@ -4,6 +4,10 @@
 
 #include "Core/Core.h"
 
+#include "Renderer/Camera.h"
+
+#include <glm/glm.hpp>
+
 #define LIGHT_MAX_KEYS       348
 #define LIGHT_MAX_BUTTONS    8
 
@@ -21,8 +25,8 @@ namespace Light {
 	class Input
 	{
 	private:
-		static int s_MouseOffX, s_MouseOffY;
-		static int s_MousePosX, s_MousePosY;
+		static glm::ivec2 s_MouseOff;
+		static glm::ivec2 s_MousePos;
 
 		static int s_MouseWheelOff;
 
@@ -31,25 +35,32 @@ namespace Light {
 	public:
 		Input() = delete;
 
-		static void OnEvent(Event& event);
+		static void OnInputEvent(Event& event);
 
-		static bool GetKey   (int key   ) { return s_Keys   [key   ]; }
+		static bool GetKey   (int  key   ) { return s_Keys   [key   ]; }
 		static bool GetButton(int  button) { return s_Buttons[button]; }
 
 
-		static inline int GetMouseX() { return s_MousePosX; }
-		static inline int GetMouseY() { return s_MousePosY; }
+		static inline int GetMouseX() { return s_MousePos.x; }
+		static inline int GetMouseY() { return s_MousePos.y; }
 
-		static inline std::pair<int, int>GetMousePos() { return { s_MousePosX, s_MousePosY }; }
+		static inline const glm::ivec2& GetMousePos() { return s_MousePos; }
 
 
-		static inline int GetMouseOffX() { return s_MouseOffX; }
-		static inline int GetMouseOffY() { return s_MouseOffY; }
+		static inline int GetMouseOffX() { return s_MouseOff.x; }
+		static inline int GetMouseOffY() { return s_MouseOff.y; }
 
-		static inline std::pair<int, int> GetMouseOff() { return { s_MouseOffX, s_MouseOffY }; }
+		static inline const glm::ivec2& GetMouseOff() { s_MouseOff; }
 
 
 		static inline int GetWheelOff() { return s_MouseWheelOff; }
+
+
+		static glm::vec2 MousePosToCameraView(const Camera& camera);
+
+
+		static std::string GetKeyName(int key);
+		static std::string GetButtonName(int button);
 	private:
 		static bool OnKeyPress     (KeyboardKeyPressedEvent&  event);
 		static bool OnKeyRelease   (KeyboardKeyReleasedEvent& event);

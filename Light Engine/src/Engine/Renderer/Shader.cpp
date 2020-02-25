@@ -3,12 +3,12 @@
 
 #include "GraphicsContext.h"
 
+#include "Utility/FileManager.h"
+
 #ifdef LIGHT_PLATFORM_WINDOWS
 	#include "Platform/DirectX/dxShader.h"
 #endif
 #include "Platform/Opengl/glShader.h"
-
-#include "Utility/FileManager.h"
 
 namespace Light {
 
@@ -20,8 +20,8 @@ namespace Light {
 		std::string vertex_source = vsSourceInFile ? FileManager::LoadTextFile(vertex) : vertex;
 		std::string fragment_source = fsSourceInFile ? FileManager::LoadTextFile(fragment) : fragment;
 
-		LT_CORE_ASSERT(!vertex_source.empty(), "Empty vertex shader source");
-		LT_CORE_ASSERT(!fragment_source.empty(), "Empty fragment shader source");
+		LT_CORE_ASSERT(!vertex_source.empty(), "Shader::Create: Empty vertex shader source");
+		LT_CORE_ASSERT(!fragment_source.empty(), "Shader::Create: Empty fragment shader source");
 
 
 		switch (GraphicsContext::GetAPI())
@@ -39,7 +39,7 @@ namespace Light {
 			return std::make_shared<dxShader>(vertex_source, fragment_source); )
 
 		default:
-			LT_CORE_ASSERT(false, "Invalid GraphicsAPI");
+			LT_CORE_ASSERT(false, "Shader::Create: Invalid GraphicsAPI");
 		}
 	}
 
@@ -51,9 +51,12 @@ namespace Light {
 		endDelimPos = src.find("-" + delim);
 
 		LT_CORE_ASSERT(begDelimPos != std::string::npos + 5, 
-		               "Failed to find start delimiter in shader source, delim: {}, shader:\n{}", delim, src);
+		               "Shader::ExtractShaderSource: Failed to find start delimiter in shader source, delim: {}, shader:\n{}",
+		                delim, src);
+
 		LT_CORE_ASSERT(endDelimPos != std::string::npos,
-		               "Failed to find end delimiter in shader source, delim: {}, shader:\n{}", delim, src);
+		               "Shader::ExtractShaderSource: Failed to find end delimiter in shader source, delim: {}, shader:\n{}",
+		                delim, src);
 
 		src = src.substr(begDelimPos, endDelimPos - begDelimPos);
 	}

@@ -1,31 +1,30 @@
 #pragma once
 
+#include "GraphicsContext.h"
+
 #include "Core/Core.h"
 
 namespace Light {
 
-	class GraphicsContext;
-
 	class Event;
+
+	class GraphicsContext;
 
 	class RenderCommand
 	{
 	private:
-		static std::unique_ptr<GraphicsContext> s_GraphicsContext;
+		static GraphicsContext* s_pToGraphicsContext;
+		static float s_backBuffercolor[4];
+	private:
+		friend class GraphicsContext;
+		static inline void SetGraphicsContext(GraphicsContext* context) { s_pToGraphicsContext = context; }
 	public:
-		static void SetGraphicsContext(std::unique_ptr<GraphicsContext> context);
-
-		static bool HasContext() { return s_GraphicsContext.get() != nullptr; }
-
-		static void HandleWindowEvents(Event& event);
-
-		static void EnableVSync ();
-		static void DisableVSync();
+		static bool HasContext() { return s_pToGraphicsContext; }
 
 		static void SwapBuffers();
 
-		static void Clear();
-		static void ClearBuffer(float r, float g, float b, float a);
+		static void ClearBackbuffer();
+		static void SetClearBackbufferColor(float colors[4]);
 
 		static void Draw(unsigned int count);
 		static void DrawIndexed(unsigned int count);

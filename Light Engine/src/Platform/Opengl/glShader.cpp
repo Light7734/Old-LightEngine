@@ -1,8 +1,6 @@
 #include "ltpch.h"
 #include "glShader.h"
 
-#include "Utility/FileManager.h"
-
 #include <glad/glad.h>
 
 namespace Light {
@@ -31,7 +29,7 @@ namespace Light {
 
 		int linkStatus;
 		glGetProgramiv(m_ShaderID, GL_LINK_STATUS, &linkStatus);
-		LT_CORE_ASSERT(linkStatus, "Failed to link glShader:\nVERTEX_SOURCE:\n{}\nFRAGMENT_SOURCE:\n{}",
+		LT_CORE_ASSERT(linkStatus, "glShader::glShader: Failed to link glShader:\nVERTEX_SOURCE:\n{}\nFRAGMENT_SOURCE:\n{}",
 		               vertex_source, fragment_source);
 
 
@@ -68,7 +66,7 @@ namespace Light {
 					for (int i = 0; i < count; i++)
 					{
 						int loc = glGetUniformLocation(m_ShaderID, (name + '[' + std::to_string(i) + ']').c_str());
-						LT_CORE_ASSERT(index < 16, "Too many sampler2D uniforms");
+						LT_CORE_ASSERT(index < 15, "glShader::BindTextures: Too many sampler2D uniforms");
 						glUniform1iv(loc, 1, &index);
 						index++;
 					}
@@ -76,7 +74,7 @@ namespace Light {
 				else
 				{
 					std::string name = line.substr(line.find("u_"), line.find("u_") - line.find(";"));
-					LT_CORE_ASSERT(index < 15, "Too many sampler2D uniforms");
+					LT_CORE_ASSERT(index < 15, "glShader::BindTextures: Too many sampler2D uniforms");
 					glUniform1i(glGetUniformLocation(m_ShaderID, name.c_str()), index++);
 				}
 			}

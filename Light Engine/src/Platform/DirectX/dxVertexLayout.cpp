@@ -41,7 +41,7 @@ namespace Light {
 		case Light::VertexType::Double3:
 		case Light::VertexType::Double4:
 
-		default: LT_CORE_ASSERT(false, "Invalid vertex type");
+		default: LT_CORE_ASSERT(false, "dxVertexLayout::GetDxgiFormat: Invalid vertex type");
 		}
 	}
 

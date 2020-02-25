@@ -1,4 +1,4 @@
-	#include "ltpch.h"
+#include "ltpch.h"
 #include "dxGraphicsContext.h"
 	
 #include "Core/Window.h"
@@ -14,12 +14,11 @@ namespace Light {
 
 	dxGraphicsContext* dxGraphicsContext::s_Instance = nullptr;
 
-	dxGraphicsContext::dxGraphicsContext(const GraphicsConfigurations& configurations) 
+	dxGraphicsContext::dxGraphicsContext(const GraphicsConfigurations& configurations)
 	{
 		HRESULT hr;
-
-		m_Configurations = configurations;
 		s_Instance = this;
+		s_Configurations = configurations;
 
 		// Create swap chain's descriptor
 		DXGI_SWAP_CHAIN_DESC sd = { 0 };
@@ -29,8 +28,8 @@ namespace Light {
 		sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 		sd.BufferCount = 1u;
 
-		sd.BufferDesc.Width  = NULL;
-		sd.BufferDesc.Height = NULL;
+		sd.BufferDesc.Width  = s_Configurations.resolution.width;
+		sd.BufferDesc.Height = s_Configurations.resolution.height;
 		sd.BufferDesc.RefreshRate.Denominator = NULL;
 		sd.BufferDesc.RefreshRate.Numerator   = NULL;
 		sd.BufferDesc.Format           = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -42,7 +41,7 @@ namespace Light {
 		sd.SampleDesc.Count   = 1u;
 		sd.SampleDesc.Quality = 0u;
 
-		sd.Windowed = Window::GetDisplayMode() != DisplayMode::Fullscreen;
+		sd.Windowed = true;
 		sd.Flags    = NULL;
 
 		UINT flags = NULL;
@@ -65,44 +64,38 @@ namespace Light {
 			&m_DeviceContext   ));
 
 
-		// Access the back buffer and create a render target view
-		Microsoft::WRL::ComPtr<ID3D11Resource> backBuffer = nullptr;
-		DXC(m_SwapChain->GetBuffer(0u, __uuidof(ID3D11Resource), &backBuffer));
-		DXC(m_Device->CreateRenderTargetView(backBuffer.Get(), nullptr, &m_RenderTargetView));
+		// Set blend state
+		Microsoft::WRL::ComPtr<ID3D11BlendState> blendState;
+		D3D11_BLEND_DESC blendDesc = {};
+		blendDesc.RenderTarget[0].BlendEnable = true;
+		blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+		blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+		blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+		blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+		blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+		blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+		blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
-		// Bind render target view and set primitive topology
-		m_DeviceContext->OMSetRenderTargets(1u, m_RenderTargetView.GetAddressOf(), nullptr);
+		DXC(m_Device->CreateBlendState(&blendDesc, &blendState));
+		m_DeviceContext->OMSetBlendState(blendState.Get(), 0, 0xffffffff);
+
+
+		// Set topology
 		m_DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 
-		// Set blend state
-		Microsoft::WRL::ComPtr<ID3D11BlendState> d3dBlendState;
-		D3D11_BLEND_DESC bd = {};
-		bd.RenderTarget[0].BlendEnable = true;
-		bd.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-		bd.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-		bd.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-		bd.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-		bd.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-		bd.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-		bd.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+		// Set graphics configurations ( resolution, vsync, etc... )
+		SetConfigurations(configurations);
 
-		DXC(m_Device->CreateBlendState(&bd, &d3dBlendState));
-		m_DeviceContext->OMSetBlendState(d3dBlendState.Get(), 0, 0xffffffff);
+		// If we are in fullscreen mode, we go windowed and back to fullscreen
+		//     because DirectX is a dick
+		if (Window::GetDisplayMode() == DisplayMode::Fullscreen)
+		{
+			Window::SetDisplayMode(DisplayMode::Windowed);
+			Window::SetDisplayMode(DisplayMode::Fullscreen);
+		}
 
-
-		// Set rasterizer viewport
-		D3D11_VIEWPORT viewPort;
-		viewPort.Width  = static_cast<float>(Window::GetWidth ());
-		viewPort.Height = static_cast<float>(Window::GetHeight());
-		viewPort.MinDepth = 0.0f;
-		viewPort.MaxDepth = 1.0f;
-		viewPort.TopLeftX = 0.0f;
-		viewPort.TopLeftY = 0.0f;
-
-		m_DeviceContext->RSSetViewports(1u, &viewPort);
-
-		
+		// Log some information //
 		// Locals 
 		IDXGIDevice*      DXGIDevice;
 		IDXGIAdapter*     DXGIAdapter;
@@ -113,10 +106,10 @@ namespace Light {
 		DXC(DXGIDevice->GetAdapter(&DXGIAdapter));
 		DXC(DXGIAdapter->GetDesc(&DXGIAdapterDesc));
 
-		// Get the Adapter's Description
+		// Get the Adapter's description
 		char DefChar = ' ';
-		char ch[128];
-		WideCharToMultiByte(CP_ACP, 0, DXGIAdapterDesc.Description, -1, ch, 128, &DefChar, NULL);
+		char ch[180];
+		WideCharToMultiByte(CP_ACP, 0, DXGIAdapterDesc.Description, -1, ch, 180, &DefChar, NULL);
 		std::string adapterDesc(ch);
 		
 		// Release memory
@@ -128,44 +121,14 @@ namespace Light {
 		LT_CORE_INFO("        Renderer: {}", adapterDesc);
 	}
 
-	dxGraphicsContext::~dxGraphicsContext()
-	{
-		HRESULT hr;
-		DXC(m_SwapChain->SetFullscreenState(false, nullptr));
-	}
-
-	void dxGraphicsContext::HandleWindowEvents(Event& event)
-	{
-		Dispatcher dispatcher(event);
-
-		dispatcher.Dispatch<WindowMaximizedEvent>(LT_EVENT_FN(dxGraphicsContext::OnWindowMaximize));
-		dispatcher.Dispatch<WindowMinimizedEvent>(LT_EVENT_FN(dxGraphicsContext::OnWindowMinimize));
-		dispatcher.Dispatch<WindowRestoredEvent> (LT_EVENT_FN(dxGraphicsContext::OnWindowRestore ));
-	}
-
-	void dxGraphicsContext::EnableVSync()
-	{
-		m_Configurations.vSync = true;
-	}
-
-	void dxGraphicsContext::DisableVSync()
-	{
-		m_Configurations.vSync = false;
-	}
-
 	void dxGraphicsContext::SwapBuffers()
 	{
-		m_SwapChain->Present(m_Configurations.vSync, NULL);
+		m_SwapChain->Present(s_Configurations.vSync, NULL);
 	}
 
-	void dxGraphicsContext::Clear()
+	void dxGraphicsContext::ClearBackbuffer(float colors[4])
 	{
-	}
-
-	void dxGraphicsContext::ClearBuffer(float r, float g, float b, float a)
-	{
-		const float channels[] = { r, g, b, a };
-		m_DeviceContext->ClearRenderTargetView(m_RenderTargetView.Get(), channels);
+		m_DeviceContext->ClearRenderTargetView(m_RenderTargetView.Get(), colors);
 	}
 
 	void dxGraphicsContext::Draw(unsigned int count)
@@ -178,39 +141,65 @@ namespace Light {
 		m_DeviceContext->DrawIndexed(count, 0u, 0u);
 	}
 
-	bool dxGraphicsContext::OnWindowResize(WindowResizedEvent& event)
+	void dxGraphicsContext::SetConfigurations(const GraphicsConfigurations& configurations)
 	{
+		SetResolution(configurations.resolution);
+		SetVSync(configurations.vSync);
+	}
+
+	void dxGraphicsContext::SetResolution(const Resolution& resolution)
+	{
+		if (resolution.width > s_Properties.primaryMonitorRes.width || resolution.height > s_Properties.primaryMonitorRes.height)
+		{
+			LT_CORE_ERROR("GraphicsContext::SetResolution: Window's resolution cannot be higher than monitor's: [{}x{}] > [{}x{}]",
+			              resolution.width, resolution.height,
+			              s_Properties.primaryMonitorRes.width, s_Properties.primaryMonitorRes.height);
+			return;
+		}
+
+		s_Configurations.resolution = resolution;
+
+		glfwSetWindowSize(Window::GetGlfwHandle(), resolution.width, resolution.height);
+		Window::Center();
+
+		HRESULT hr;
+
+		// Remove render target
+		ID3D11RenderTargetView* nullViews[] = { nullptr };
+		m_DeviceContext->OMSetRenderTargets(1, nullViews, nullptr);
+		m_RenderTargetView.Reset();
+
+		// Flush
+		m_DeviceContext->Flush();
+
+		// Resize buffer
+		DXC(m_SwapChain->ResizeBuffers(0, resolution.width, resolution.height,
+		                               DXGI_FORMAT_R8G8B8A8_UNORM, NULL));
+
+		// Create render target
+		Microsoft::WRL::ComPtr<ID3D11Resource> backBuffer = nullptr;
+		DXC(m_SwapChain->GetBuffer(0u, __uuidof(ID3D11Resource), &backBuffer));
+		DXC(m_Device->CreateRenderTargetView(backBuffer.Get(), nullptr, &m_RenderTargetView));
+
+		// Set new render target
+		m_DeviceContext->OMSetRenderTargets(1, m_RenderTargetView.GetAddressOf(), nullptr);
+
+		// Create and set new viewport
 		D3D11_VIEWPORT viewPort;
-		viewPort.Width  = static_cast<float>(event.GetWidth());
-		viewPort.Height = static_cast<float>(event.GetHeight());
+		viewPort.Width = static_cast<float>(resolution.width);
+		viewPort.Height = static_cast<float>(resolution.height);
 		viewPort.MinDepth = 0.0f;
 		viewPort.MaxDepth = 1.0f;
 		viewPort.TopLeftX = 0.0f;
 		viewPort.TopLeftY = 0.0f;
+
+
 		m_DeviceContext->RSSetViewports(1u, &viewPort);
-
-		return false;
 	}
 
-	bool dxGraphicsContext::OnWindowMaximize(WindowMaximizedEvent& event)
+	void dxGraphicsContext::SetVSync(bool vSync)
 	{
-		HRESULT hr;
-		DXC(m_SwapChain->SetFullscreenState(true, nullptr));
-		return false;
-	}
-
-	bool dxGraphicsContext::OnWindowMinimize(WindowMinimizedEvent& event)
-	{
-		HRESULT hr;
-		DXC(m_SwapChain->SetFullscreenState(false, nullptr));
-		return false;
-	}
-
-	bool dxGraphicsContext::OnWindowRestore(WindowRestoredEvent& event)
-	{
-		HRESULT hr;
-		DXC(m_SwapChain->SetFullscreenState(false, nullptr));
-		return false;
+		s_Configurations.vSync = vSync;
 	}
 
 }

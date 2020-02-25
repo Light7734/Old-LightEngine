@@ -3,12 +3,12 @@
 
 #include "GraphicsContext.h"
 
+#include "Utility/FileManager.h"
+
 #ifdef LIGHT_PLATFORM_WINDOWS
 	#include "Platform/DirectX/dxTexture.h"
 #endif
 #include "Platform/Opengl/glTexture.h"
-
-#include "Utility/stb_image.h"
 
 namespace Light {
 
@@ -17,14 +17,9 @@ namespace Light {
 	unsigned int TextureAtlas::s_Height = 0;
 	unsigned int TextureAtlas::s_Width = 0;
 
-	TextureData::~TextureData()
-	{
-		stbi_image_free(pixels);
-	}
-
 	TextureAtlas::TextureAtlas()
 	{
-		LT_CORE_ASSERT(!s_AvailableSlots.empty(), "Texture atlas count exceeds the limit: {}", 16);
+		LT_CORE_ASSERT(!s_AvailableSlots.empty(), "TextureAtlas::TextureAtlas: Texture atlas count exceeds the limit: {}", 16);
 
 		m_Index = s_AvailableSlots.back();
 		s_AvailableSlots.pop_back();
@@ -83,7 +78,7 @@ namespace Light {
 			return dxAtlas;
 		} )
 		default:
-			LT_CORE_ASSERT(false, "Invalid GraphicsAPI");
+			LT_CORE_ASSERT(false, "TextureAtlas::Create: Invalid GraphicsAPI");
 		}
 	}
 	
@@ -102,7 +97,7 @@ namespace Light {
 			break;
 		})
 		default:
-			LT_CORE_ASSERT(false, "Invalid GraphicsAPI");
+			LT_CORE_ASSERT(false, "TextureAtlas::DestroyTextureArray: Invalid GraphicsAPI");
 		}
 	}
 

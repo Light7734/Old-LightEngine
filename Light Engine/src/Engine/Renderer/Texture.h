@@ -13,7 +13,16 @@ namespace Light {
 		unsigned char* pixels;
 		int width, height, channels;
 
-		~TextureData();
+		TextureData(): pixels(nullptr), width(0), height(0), channels(0) {}
+		TextureData(const TextureData&) = delete;
+		TextureData& operator=(const TextureData&) = delete;
+
+		~TextureData() { free(pixels); }
+
+		operator bool() const
+		{
+			return pixels && width && height && channels;
+		}
 	};
 
 	struct TextureCoordinates
@@ -27,19 +36,18 @@ namespace Light {
 		static std::vector<unsigned int> s_AvailableSlots;
 	protected:
 		static unsigned int s_Width, s_Height;
-
-		unsigned int m_Index;
-
+	protected:
 		std::map<std::string, TextureCoordinates> m_Segments;
-
+		unsigned int m_Index;
+	protected:
 		TextureAtlas();
 	public:
 		static std::shared_ptr<TextureAtlas> Create(const std::string& atlasPath);
-		~TextureAtlas();
-
-		static void DestroyTextureArray();
+		virtual ~TextureAtlas();
 
 		TextureCoordinates* GetCoordinates(const std::string& name) { return &m_Segments[name]; }
+
+		static void DestroyTextureArray();
 	protected:
 		void ParseSegments(const std::string& data);
 	};

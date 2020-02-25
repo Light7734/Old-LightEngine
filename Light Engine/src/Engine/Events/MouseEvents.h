@@ -2,9 +2,11 @@
 
 #include "Event.h"
 
-#include "Debug/InputcodeToString.h"
+#include "Input/Input.h"
 
 #include "Core/Core.h"
+
+#include <glm/glm.hpp>
 
 #include <sstream>
 
@@ -13,19 +15,19 @@ namespace Light {
 	class MouseMovedEvent : public Event
 	{
 	private:
-		int m_MouseX, m_MouseY;
+		const glm::ivec2 m_MousePos;
 	public:
-		MouseMovedEvent(int x, int y): m_MouseX(x), m_MouseY(y) {}
+		MouseMovedEvent(const glm::ivec2& position): m_MousePos(position){}
 
-		inline int GetX() { return m_MouseX; }
-		inline int GetY() { return m_MouseY; }
+		inline int GetX() { return m_MousePos.x; }
+		inline int GetY() { return m_MousePos.y; }
 
-		inline std::pair<int, int> GetPos() { return { m_MouseX, m_MouseY }; }
+		inline const glm::ivec2& GetPos() { return m_MousePos; }
 
 		std::string GetLogInfo() const override
 		{
 			std::stringstream ss;
-			ss << "Mouse moved: [ " << m_MouseX << ", " << m_MouseY << " ]";
+			ss << "Mouse moved: [ " << m_MousePos.x << ", " << m_MousePos.y << " ]";
 			return ss.str();
 		}
 
@@ -36,7 +38,7 @@ namespace Light {
 	class MouseButtonPressedEvent : public Event
 	{
 	private:
-		int m_Button;
+		const int m_Button;
 	public:
 		MouseButtonPressedEvent(int button): m_Button(button) {}
 
@@ -46,7 +48,7 @@ namespace Light {
 		{
 			// #todo: convert button's code to button's name
 			std::stringstream ss;
-			ss << "Mouse button pressed: " << ButtonToString(m_Button);
+			ss << "Mouse button pressed: " << Input::GetButtonName(m_Button);
 			return ss.str();
 		}
 
@@ -57,7 +59,7 @@ namespace Light {
 	class MouseButtonReleasedEvent : public Event
 	{
 	private:
-		int m_Button;
+		const int m_Button;
 	public:
 		MouseButtonReleasedEvent(uint8_t button): m_Button(button) {}
 
@@ -67,7 +69,7 @@ namespace Light {
 		{ 
 			// #todo: convert button's code to button's name
 			std::stringstream ss;
-			ss << "Mouse button released: " << ButtonToString(m_Button);
+			ss << "Mouse button released: " << Input::GetButtonName(m_Button);
 			return  ss.str();
 		}
 
@@ -78,7 +80,7 @@ namespace Light {
 	class MouseScrolledEvent : public Event
 	{
 	private:
-		int m_XOffset;
+		const int m_XOffset;
 	public:
 		MouseScrolledEvent(int xOffset): m_XOffset(xOffset) {}
 

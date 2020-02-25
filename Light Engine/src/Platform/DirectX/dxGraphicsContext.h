@@ -27,21 +27,19 @@ namespace Light {
 		Microsoft::WRL::ComPtr<IDXGISwapChain> m_SwapChain;
 		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_RenderTargetView;
 	public:
-		dxGraphicsContext(const GraphicsConfigurations& data);
-		~dxGraphicsContext();
-
-		void HandleWindowEvents(Event& event) override;
-
-		void EnableVSync () override;
-		void DisableVSync() override;
+		dxGraphicsContext(const GraphicsConfigurations& configurations);
 
 		void SwapBuffers() override;
 
-		void Clear() override;
-		void ClearBuffer(float r, float g, float b, float a) override;
+		void ClearBackbuffer(float colors[4]) override;
 
 		void Draw(unsigned int count) override;
 		void DrawIndexed(unsigned int count) override;
+
+		// Setters
+		void SetConfigurations(const GraphicsConfigurations& configurations) override;
+		void SetResolution(const Resolution& resolution) override;
+		void SetVSync(bool vSync) override;
 
 		// Getters
 		static ID3D11Device*        GetDevice       () { return s_Instance->m_Device.Get()       ; }

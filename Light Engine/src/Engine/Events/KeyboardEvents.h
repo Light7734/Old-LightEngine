@@ -2,7 +2,7 @@
 
 #include "Event.h"
 
-#include "Debug/InputcodeToString.h"
+#include "Input/Input.h"
 
 #include "Core/Core.h"
 
@@ -13,7 +13,7 @@ namespace Light {
 	class KeyboardKeyPressedEvent : public Event
 	{
 	private:
-		int m_Key;
+		const int m_Key;
 	public:
 		KeyboardKeyPressedEvent(int16_t key): m_Key(key) {}
 
@@ -22,7 +22,7 @@ namespace Light {
 		std::string GetLogInfo() const 
 		{ 
 			std::stringstream ss;
-			ss << "KeyboardKeyPressed: " << KeyToString(m_Key);
+			ss << "KeyboardKeyPressed: " << Input::GetKeyName(m_Key);
 			return ss.str();
 		}
 
@@ -33,7 +33,7 @@ namespace Light {
 	class KeyboardKeyReleasedEvent : public Event
 	{
 	private:
-		int m_Key;
+		const int m_Key;
 	public:
 		KeyboardKeyReleasedEvent(int key): m_Key(key) {}
 
@@ -42,7 +42,7 @@ namespace Light {
 		std::string GetLogInfo() const
 		{ 
 			std::stringstream ss;
-			ss << "KeyboardkeyReleased: " << KeyToString(m_Key);
+			ss << "KeyboardkeyReleased: " << Input::GetKeyName(m_Key);
 			return ss.str();
 		}
 

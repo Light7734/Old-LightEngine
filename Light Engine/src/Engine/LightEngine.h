@@ -15,17 +15,21 @@
 
 // 3rd Party libraries =======
 #include <glm/glm.hpp>
+#include <glm/matrix.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 // ===========================
 
 // Core ----------------------
 #include "Core/Application.h"
+#include "Core/Monitor.h"
 #include "Core/Timer.h"
 #include "Core/Window.h"
 // ---------------------------
 
 // Debug ---------------------
+#include "Debug/Exceptions.h"
 #include "Debug/Logger.h"
-#include "Debug/InputcodeToString.h"
 // ---------------------------
 
 // Events --------------------
@@ -40,8 +44,10 @@
 #include "Input/InputCodes.h"
 // ---------------------------
 
-// Physics ------------------
-// --------------------------
+// Layers --------------------
+#include "Layers/Layer.h"
+#include "Layers/LayerStack.h"
+// ---------------------------
 
 // Renderer -----------------
 #include "Renderer/BufferLayout.h"
@@ -55,7 +61,6 @@
 #include "Renderer/VertexLayout.h"
 // --------------------------
 
-// Layers --------------------
-#include "Layers/Layer.h"
-#include "Layers/LayerStack.h"
-// ---------------------------
+// Utility ------------------
+#include "Utility/FileManager.h"
+// --------------------------

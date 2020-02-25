@@ -4,8 +4,6 @@
 
 #include <glm/glm.hpp>
 
-#include "Utility/FileManager.h"
-
 namespace Light {
 
 	class glTextureAtlas : public TextureAtlas

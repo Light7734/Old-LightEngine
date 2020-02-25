@@ -6,23 +6,19 @@ class Sandbox : public Light::Application
 public:
 	Sandbox()
 	{
-		// Create Window
+		// Create window data
 		Light::WindowData wd;
-		wd.title = "Sandbox";
-		wd.width = 800;
-		wd.height = 600;
+		wd.title = "Demo";
 		wd.displayMode = Light::DisplayMode::Windowed;
 
-		m_Window = std::make_unique<Light::Window>(wd);
-		m_Window->SetEventCallbackFunction(LT_EVENT_FN(Light::Application::OnEvent));
-
-		// Initialize Graphics
+		// Create graphics configurations
 		Light::GraphicsConfigurations gc;
+		gc.resolution = Light::Resolution(800.0f, 600.0f, Light::AspectRatio::AR_4_3);
 		gc.vSync = true;
 
-		Light::GraphicsContext::CreateContext(Light::GraphicsAPI::Opengl, gc);
-		Light::Camera::SetProjection(wd.width, wd.height);
-		Light::Camera::SetPosition(glm::vec2(0.0f, 0.0f));
+		// Create window and set callback function
+		m_Window = std::make_unique<Light::Window>(wd, gc, Light::GraphicsAPI::Default);
+		m_Window->SetEventCallbackFunction(LT_EVENT_FN(Light::Application::OnEvent));
 	}
 	};
 

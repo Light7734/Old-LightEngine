@@ -2,9 +2,9 @@
 
 #include "Application.h"
 
-#include "Core/Core.h"
-
 #include "Debug/Exceptions.h"
+
+#include "Core/Core.h"
 
 int main()
 {
@@ -27,7 +27,7 @@ int main()
 	try
 	{
 		app = Light::CreateApplication();
-		LT_CORE_ASSERT(app, "Light::Application is not initialized!");
+		LT_CORE_ASSERT(app, "main: Light::Application is not initialized!");
 
 		app->GameLoop();
 	}

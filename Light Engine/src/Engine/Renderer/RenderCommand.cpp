@@ -1,60 +1,42 @@
 #include "ltpch.h"
 #include "RenderCommand.h"
 
-#include "GraphicsContext.h"
-
 #include "Events/Event.h"
 
 #include <glad/glad.h>
 
 namespace Light {
 
-	std::unique_ptr<GraphicsContext> RenderCommand::s_GraphicsContext;
+	GraphicsContext* RenderCommand::s_pToGraphicsContext = nullptr;
 
-	void RenderCommand::SetGraphicsContext(std::unique_ptr<GraphicsContext> context)
-	{
-		s_GraphicsContext = std::move(context);
-	}
-
-	void RenderCommand::HandleWindowEvents(Event& event)
-	{
-		if(s_GraphicsContext)
-			s_GraphicsContext->HandleWindowEvents(event);
-	}
-
-	void RenderCommand::EnableVSync()
-	{
-		s_GraphicsContext->EnableVSync();
-	}
-
-	void RenderCommand::DisableVSync()
-	{
-		s_GraphicsContext->DisableVSync();
-	}
+	float RenderCommand::s_backBuffercolor[4] = { 0.0f, 0.0f, 0.0f, 0.0f};
 
 	void RenderCommand::SwapBuffers()
 	{
-		s_GraphicsContext->SwapBuffers();
+		s_pToGraphicsContext->SwapBuffers();
 	}
 
-	void RenderCommand::Clear()
+	void RenderCommand::ClearBackbuffer()
 	{
-		s_GraphicsContext->Clear();
+		s_pToGraphicsContext->ClearBackbuffer(s_backBuffercolor);
 	}
 
-	void RenderCommand::ClearBuffer(float r, float g, float b, float a)
+	void RenderCommand::SetClearBackbufferColor(float colors[4])
 	{
-		s_GraphicsContext->ClearBuffer(r, g, b, a);
+		s_backBuffercolor[0] = colors[0];
+		s_backBuffercolor[1] = colors[1];
+		s_backBuffercolor[2] = colors[2];
+		s_backBuffercolor[3] = colors[3];
 	}
 
 	void RenderCommand::Draw(unsigned int count)
 	{
-		s_GraphicsContext->Draw(count);
+		s_pToGraphicsContext->Draw(count);
 	}
 
 	void RenderCommand::DrawIndexed(unsigned int count)
 	{
-		s_GraphicsContext->DrawIndexed(count);
+		s_pToGraphicsContext->DrawIndexed(count);
 	}
 
 }

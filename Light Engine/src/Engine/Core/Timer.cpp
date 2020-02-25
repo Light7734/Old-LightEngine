@@ -9,7 +9,7 @@ namespace Light {
 	float Time::s_CurrentFrame = 0.0f;
 	float Time::s_PrevFrame    = 0.0f;
 
-	void Time::Update()
+	void Time::CalculateDeltaTime()
 	{
 		s_CurrentFrame = ElapsedTime();
 		s_DeltaTime = s_CurrentFrame - s_PrevFrame;

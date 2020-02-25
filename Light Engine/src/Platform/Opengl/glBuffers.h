@@ -22,8 +22,7 @@ namespace Light {
 		glUniformBuffers();
 		~glUniformBuffers();
 
-		void SetViewMatrixImpl(void* view) override;
-		void SetProjMatrixImpl(void* proj) override;
+		void SetViewProjMatrixImpl(const glm::f32* view, const glm::f32* proj) override;
 	};
 
 	class glVertexBuffer : public VertexBuffer

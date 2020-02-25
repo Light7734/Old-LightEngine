@@ -38,7 +38,7 @@ namespace Light {
 		case Light::VertexType::Double3:    return { GL_DOUBLE      , 3, sizeof(double), m_Stride };
 		case Light::VertexType::Double4:    return { GL_DOUBLE      , 4, sizeof(double), m_Stride };
 
-		default: LT_CORE_ASSERT(false, "Invalid vertex type");
+		default: LT_CORE_ASSERT(false, "glVertexLayout::GetTypeAttributes: Invalid vertex type");
 		}
 	}
 
