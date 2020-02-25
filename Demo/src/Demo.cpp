@@ -8,7 +8,7 @@ Demo::Demo()
 	// Create window data
 	Light::WindowData wd;
 	wd.title       = "Demo";
-	wd.displayMode = Light::DisplayMode::Fullscreen;
+	wd.displayMode = Light::DisplayMode::Windowed;
 
 	// Create graphics configurations
 	Light::GraphicsConfigurations gc;

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Renderer/GraphicsContext.h"
+
 #include "Core/Core.h"
 
 struct GLFWwindow;
