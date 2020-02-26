@@ -8,6 +8,9 @@
 #include <dxgi.h>
 #include <wrl.h>
 
+#include <glfw/glfw3.h>
+#include "Core/Window.h"
+
 namespace Light {
 
 	class Event;
@@ -39,16 +42,12 @@ namespace Light {
 		// Setters
 		void SetConfigurations(const GraphicsConfigurations& configurations) override;
 		void SetResolution(const Resolution& resolution) override;
-		void SetVSync(bool vSync) override;
+		void SetVSync(bool vSync) override; 
 
+		void MakeContextCurrent() { glfwMakeContextCurrent(Window::GetGlfwHandle()); }
 		// Getters
 		static ID3D11Device*        GetDevice       () { return s_Instance->m_Device.Get()       ; }
 		static ID3D11DeviceContext* GetDeviceContext() { return s_Instance->m_DeviceContext.Get(); }
-	private:
-		bool OnWindowResize  (WindowResizedEvent&   event);
-		bool OnWindowMaximize(WindowMaximizedEvent& event);
-		bool OnWindowMinimize(WindowMinimizedEvent& event);
-		bool OnWindowRestore (WindowRestoredEvent&  event);
 	};
 
 }

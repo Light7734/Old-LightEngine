@@ -47,6 +47,12 @@ void DemoLayer::OnDetatch()
 	LT_TRACE("Detatched DemoLayer");
 }
 
+
+void DemoLayer::OnUserInterfaceUpdate()
+{
+	Light::UserInterface::ShowImGuiDemoWnidow();
+}
+
 void DemoLayer::OnEvent(Light::Event& event)
 {
 	// uncomment to log every event

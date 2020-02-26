@@ -61,6 +61,10 @@
 #include "Renderer/VertexLayout.h"
 // --------------------------
 
+// UserInterface ------------
+#include "UserInterface/Userinterface.h"
+// --------------------------
+
 // Utility ------------------
 #include "Utility/FileManager.h"
 // --------------------------

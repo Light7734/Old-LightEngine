@@ -128,6 +128,7 @@ namespace Light {
 
 	void dxGraphicsContext::ClearBackbuffer(float colors[4])
 	{
+		m_DeviceContext->OMSetRenderTargets(1, m_RenderTargetView.GetAddressOf(), nullptr);
 		m_DeviceContext->ClearRenderTargetView(m_RenderTargetView.Get(), colors);
 	}
 

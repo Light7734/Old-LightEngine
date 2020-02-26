@@ -93,6 +93,8 @@ namespace Light {
 		virtual void SetResolution    (const Resolution& resolution                ) = 0;
 		virtual void SetVSync         (bool vsync                                  ) = 0;
 
+		virtual void MakeContextCurrent() {}; // for opengl only
+
 		// Getters
 		static inline const GraphicsConfigurations& GetConfigurations() { return s_Configurations; }
 		static inline const GraphicsProperties&     GetProperties    () { return s_Properties;     }

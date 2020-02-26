@@ -89,6 +89,11 @@ namespace Light {
 		s_Configurations.vSync = vSync;
 	}
 
+	void glGraphicsContext::MakeContextCurrent()
+	{
+		glfwMakeContextCurrent(m_WindowHandle);
+	}
+
 	void glGraphicsContext::SetDebugMessageCallback()
 	{
 #if   defined LIGHT_DIST

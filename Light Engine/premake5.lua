@@ -19,9 +19,10 @@ project "Light Engine"
 
     links
     {
-        "spdlog"       ,
 		"glfw"         ,
 		"glad"         ,
+		"ImGui"        ,
+        "spdlog"       ,
         "opengl32.lib" ,
     }
 
@@ -29,9 +30,10 @@ project "Light Engine"
     {
 		"%{prj.location}/src/Engine/"       ,
 		"%{prj.location}/src/"              ,
-		"%{wks.location}/spdlog/"           ,
 		"%{wks.location}/glfw/include"      ,
 		"%{wks.location}/glad/"             ,
+		"%{wks.location}/ImGui/"             ,
+		"%{wks.location}/spdlog/"           ,
 		"%{wks.location}/Dependencies/glm/" ,
     }
 

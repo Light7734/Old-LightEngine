@@ -20,7 +20,7 @@ public:
 		m_Window = std::make_unique<Light::Window>(wd, gc, Light::GraphicsAPI::Default);
 		m_Window->SetEventCallbackFunction(LT_EVENT_FN(Light::Application::OnEvent));
 	}
-	};
+};
 
 Light::Application* Light::CreateApplication()
 {

@@ -8,6 +8,8 @@
 
 #include "Core/Window.h"
 
+#include "UserInterface/UserInterface.h"
+
 #ifdef LIGHT_PLATFORM_WINDOWS
 	#include "Platform/DirectX/dxGraphicsContext.h"
 #endif
@@ -62,7 +64,7 @@ namespace Light {
 			RenderCommand::SetGraphicsContext(context.get());
 			Renderer::Init();
 			ConstantBuffers::Init();
-
+			UserInterface::Init();
 
 			return std::move(context);
 		}
@@ -73,6 +75,7 @@ namespace Light {
 			RenderCommand::SetGraphicsContext(context.get());
 			Renderer::Init();
 			ConstantBuffers::Init();
+			UserInterface::Init();
 
 			return std::move(context);
 		})

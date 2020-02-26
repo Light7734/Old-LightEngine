@@ -19,7 +19,7 @@ namespace Light {
 	bool Input::s_Keys[LIGHT_MAX_KEYS];
 	bool Input::s_Buttons[LIGHT_MAX_BUTTONS];
 
-	void Input::OnInputEvent(Event& event)
+	void Input::OnEvent(Event& event)
 	{
 		Dispatcher disatcher(event);
 

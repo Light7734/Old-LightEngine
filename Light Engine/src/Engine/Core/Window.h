@@ -64,6 +64,9 @@ namespace Light {
 		static inline void GfxSetVSync            (bool vsync)
 		                   { s_Context->m_GraphicsContext->SetVSync(vsync); }
 
+		static inline void GfxMakeContextCurrent()
+		                   { s_Context->m_GraphicsContext->MakeContextCurrent(); }
+
 		// Setters
 		void SetEventCallbackFunction(std::function<void(Event&)> event_callback_func);
 

@@ -14,6 +14,8 @@
 #include "Renderer/RenderCommand.h"
 #include "Renderer/Renderer.h"
 
+#include "UserInterface/Userinterface.h"
+
 namespace Light {
 
 	Application* Application::s_Instance = nullptr;
@@ -55,16 +57,17 @@ namespace Light {
 					if (layer->IsEnabled())
 						layer->OnRender();
 
-				// UserInterface::Begin(); #todo: Add ImGui
+				UserInterface::Begin();
 				for (Layer* layer : m_LayerStack)
 					if (layer->IsEnabled())
 						layer->OnUserInterfaceUpdate();
-				// UserInterface::End  (); #todo: Add ImGui
+				UserInterface::End  ();
 			}
 
 
 			m_LayerStack.HandleQueuedLayers();
 			m_Window->HandleEvents();
+
 
 			RenderCommand::SwapBuffers();
 		}
@@ -72,8 +75,11 @@ namespace Light {
 
 	void Application::OnEvent(Event& event)
 	{
-		if(event.IsInCategory(EventCategory_Input))
-			Input::OnInputEvent(event);
+		if (event.IsInCategory(EventCategory_Input))
+		{
+			Input::OnEvent(event);
+			UserInterface::OnEvent(event); // maybe merge these 2 functions
+		}
 
 		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)
 		{

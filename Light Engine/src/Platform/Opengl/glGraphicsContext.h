@@ -30,6 +30,7 @@ namespace Light {
 		void SetResolution(const Resolution& resolution) override;
 		void SetVSync(bool vSync) override;
 
+		void MakeContextCurrent() override;
 	private:
 		void SetDebugMessageCallback();
 	};

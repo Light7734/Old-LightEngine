@@ -17,6 +17,7 @@ namespace Light {
 
 	class KeyboardKeyPressedEvent ;
 	class KeyboardKeyReleasedEvent;
+
 	class MouseButtonPressedEvent ;
 	class MouseButtonReleasedEvent;
 	class MouseMovedEvent         ;
@@ -35,7 +36,7 @@ namespace Light {
 	public:
 		Input() = delete;
 
-		static void OnInputEvent(Event& event);
+		static void OnEvent(Event& event);
 
 		static bool GetKey   (int  key   ) { return s_Keys   [key   ]; }
 		static bool GetButton(int  button) { return s_Buttons[button]; }
@@ -64,6 +65,7 @@ namespace Light {
 	private:
 		static bool OnKeyPress     (KeyboardKeyPressedEvent&  event);
 		static bool OnKeyRelease   (KeyboardKeyReleasedEvent& event);
+
 		static bool OnButtonPress  (MouseButtonPressedEvent&  event);
 		static bool OnButtonRelease(MouseButtonReleasedEvent& event);
 		static bool OnMouseMove    (MouseMovedEvent&          event);
