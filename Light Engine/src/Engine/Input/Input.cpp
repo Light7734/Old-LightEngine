@@ -251,10 +251,9 @@ namespace Light {
 
 	void Input::ShowDebugWindow()
 	{
-		ImGui::Begin("Light::Input");
 		if (ImGui::TreeNode(&s_Keys, "Keyboard"))
 		{
-			ImGui::Text("last key: %s", GetKeyName(s_LastKey).c_str());
+			ImGui::BulletText("last key: %s", GetKeyName(s_LastKey).c_str());
 
 			ImGui::Text("keys down:");
 			for (int i = 0; i < LIGHT_MAX_KEYS; i++)
@@ -263,22 +262,22 @@ namespace Light {
 
 			ImGui::TreePop();
 		}
+
 		if (ImGui::TreeNode(&s_Buttons, "Mouse"))
 		{
-			ImGui::Text("last button: %s", GetButtonName(s_LastButton).c_str());
+			ImGui::BulletText("last button: %s", GetButtonName(s_LastButton).c_str());
 
 			ImGui::Text("buttons down:");
 			for (int i = 0; i < LIGHT_MAX_BUTTONS; i++)
 				if (s_Buttons[i])
 					ImGui::BulletText("%s", GetButtonName(i).c_str());
 
-			ImGui::Text("position: [%d x %d]", s_MousePos.x, s_MousePos.y);
-			ImGui::Text("offset (updated per event): [%d x %d]", s_MouseOff.x, s_MouseOff.y);
-			ImGui::Text("wheel offset (updated per event): [%d]", s_MouseWheelOff);
+			ImGui::BulletText("position: [%d x %d]", s_MousePos.x, s_MousePos.y);
+			ImGui::BulletText("offset (updated per event): [%d x %d]", s_MouseOff.x, s_MouseOff.y);
+			ImGui::BulletText("wheel offset (updated per event): [%d]", s_MouseWheelOff);
 
 			ImGui::TreePop();
 		}
-		ImGui::End();
 	}
 
 }

@@ -51,11 +51,38 @@ void DemoLayer::OnDetatch()
 void DemoLayer::OnUserInterfaceUpdate()
 {
 	Light::UserInterface::ShowImGuiDemoWnidow();
-	
-	Light::Monitor::ShowDebugWindowAll();
-	Light::Input::ShowDebugWindow();
-	Light::LayerStack::ShowDebugWindow();
-	Light::GraphicsContext::ShowDebugWindow();
+
+
+	ImGui::Begin("DemoLayer");
+
+	if (ImGui::TreeNode("Monitors"))
+	{
+		Light::Monitor::ShowDebugWindowAll();
+		ImGui::TreePop();
+	}
+	ImGui::Separator();
+
+	if (ImGui::TreeNode("Input"))
+	{
+		Light::Input::ShowDebugWindow();
+		ImGui::TreePop();
+	}
+	ImGui::Separator();
+
+	if (ImGui::TreeNode("Layers"))
+	{
+		Light::LayerStack::ShowDebugWindow();
+		ImGui::TreePop();
+	}
+	ImGui::Separator();
+
+	if (ImGui::TreeNode("GraphicsContext"))
+	{
+		Light::GraphicsContext::ShowDebugWindow();
+		ImGui::TreePop();
+	}
+
+	ImGui::End();
 }
 
 void DemoLayer::OnEvent(Light::Event& event)

@@ -18,7 +18,7 @@ private:
 	float m_CameraSpeed = 250.0f;
 
 	std::shared_ptr<Light::TextureAtlas> m_TextureAtlas;
-	Sprite m_Sprites[128];
+	std::vector<Sprite> m_Sprites;
 	Sprite m_Border;
 public:
 	QuadsLayer()
@@ -31,17 +31,21 @@ public:
 
 		srand(time(NULL));
 
-		for (int i = 0; i < std::size(m_Sprites); i++)
+		for (int i = 0; i < 125; i++)
 		{
-			m_Sprites[i].size = glm::vec2(rand() % ((125 - 25) + 1) + 25);
-			m_Sprites[i].position.x = std::rand() % 1000 - (m_Sprites[i].size.x + 10.0f);
-			m_Sprites[i].position.y = std::rand() % 1000 - (m_Sprites[i].size.y + 10.0f);
+			Sprite sprite;
 
-			m_Sprites[i].velocity = glm::vec2(rand() % ((125 - 25) + 1) + 25);
+			sprite.size = glm::vec2(rand() % ((125 - 25) + 1) + 25);
+			sprite.position.x = std::rand() % 1000;
+			sprite.position.y = std::rand() % 1000;
+
+			sprite.velocity = glm::vec2(rand() % ((125 - 25) + 1) + 25);
+
+			m_Sprites.push_back(sprite);
 		}
 	}
 
-	void OnAttach() override
+	void OnAttach()
 	{
 		LT_TRACE("Attached QuadLayer");
 
@@ -54,23 +58,24 @@ public:
 		awesomeCoords = m_TextureAtlas->GetCoordinates("awesomeface");
 		m_Border.coordinates = m_TextureAtlas->GetCoordinates("border");
 
-		for (int i = 0; i < std::size(m_Sprites); i++)
+		for (int i = 0; i < m_Sprites.size(); i++)
 		{
-			if (i > std::size(m_Sprites) / 3)
+			if (i > m_Sprites.size() / 3)
 				m_Sprites[i].coordinates = awesomeCoords;
 			else
 				m_Sprites[i].coordinates = pepeCoords;
 		}
 	}
 
-	void OnDetatch() override	
+	void OnDetatch()
 	{
 		LT_TRACE("Detatched QuadLayer");
 	}
 	
-	void OnUpdate(float DeltaTime) override
+	void OnUpdate(float DeltaTime)
 	{
-		m_Sprites[0].position = Light::Input::MousePosToCameraView(m_Camera) - m_Sprites[0].size / 2.0f;
+		if(!m_Sprites.empty())
+			m_Sprites[0].position = Light::Input::MousePosToCameraView(m_Camera) - m_Sprites[0].size / 2.0f;
 
 		if (Light::Input::GetKey(KEY_A))
 			m_Camera.MoveX(-m_CameraSpeed * DeltaTime);
@@ -83,10 +88,8 @@ public:
 			m_Camera.MoveY(m_CameraSpeed * DeltaTime);
 
 
-		for (int i = 1; i < std::size(m_Sprites); i++)
+		for (auto& sprite : m_Sprites)
 		{
-			Sprite& sprite = m_Sprites[i];
-
 			sprite.position += sprite.velocity * DeltaTime;
 
 			if (sprite.position.x < 0.0f)
@@ -113,13 +116,13 @@ public:
 		}
 	}
 
-	void OnRender() override
+	void OnRender()
 	{
 		Light::Renderer::Start(m_Camera); // Start
 
 
-		for (int i = 0; i < std::size(m_Sprites); i++) // Draw ...
-			Light::Renderer::DrawQuad(m_Sprites[i].position, m_Sprites[i].size, m_Sprites[i].coordinates, glm::vec4(1.0f));
+		for (auto& sprite : m_Sprites) // Draw ...
+			Light::Renderer::DrawQuad(sprite.position, sprite.size, sprite.coordinates, glm::vec4(1.0f));
 
 		Light::Renderer::DrawQuad(m_Border.position, m_Border.size, m_Border.coordinates, glm::vec4(1.0f)); // ... Draw
 
@@ -127,9 +130,56 @@ public:
 		Light::Renderer::End(); // End
 	} 
 
-	void OnUserInterfaceUpdate()
+	void ShowDebugWindow()
 	{
-		m_Camera.ShowDebugLayer();
+		if (ImGui::TreeNode("Camera"))
+		{
+			m_Camera.ShowDebugLayer();
+			ImGui::Text("speed: %f", m_CameraSpeed);
+			ImGui::TreePop();
+		}
+
+		if(ImGui::TreeNode("Sprites"))
+		{
+			if (ImGui::Button("push 50"))
+			{
+				for (int i = 0; i < 50; i++)
+				{
+					Light::TextureCoordinates* pepeCoords, * awesomeCoords;
+					pepeCoords = m_TextureAtlas->GetCoordinates("pepe");
+					awesomeCoords = m_TextureAtlas->GetCoordinates("awesomeface");
+
+
+					Sprite sprite;
+
+					sprite.size = glm::vec2(rand() % ((125 - 25) + 1) + 25);
+					sprite.position.x = std::rand() % 1000;
+					sprite.position.y = std::rand() % 1000;
+
+					sprite.velocity = glm::vec2(rand() % ((125 - 25) + 1) + 25);
+
+					if (i > 50 / 20)
+						sprite.coordinates = awesomeCoords;
+					else
+						sprite.coordinates = pepeCoords;
+
+
+					m_Sprites.push_back(sprite);
+				}
+			} ImGui::SameLine();
+
+			if (ImGui::Button("pop 50"))
+			{
+				for (int i = 0; i < 50; i++)
+					if(m_Sprites.size() != 0)
+						m_Sprites.pop_back();
+			}
+
+
+			ImGui::Text("count: %d", m_Sprites.size());
+
+			ImGui::TreePop();
+		}
 	}
 
 	void OnEvent(Light::Event& event)

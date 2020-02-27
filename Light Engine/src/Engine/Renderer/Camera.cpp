@@ -28,12 +28,8 @@ namespace Light {
 
 	void Camera::ShowDebugLayer()
 	{
-		ImGui::Begin("Light::Camera");
-
-		ImGui::Text("Position: [%f x %f]", m_Position.x, m_Position.y);
-		ImGui::Text("Zoom level: %f", m_ZoomLevel);
-		ImGui::Text("Aspect ratio: %f", m_AspectRatio);
-
-		ImGui::End();
+		ImGui::BulletText("position: [%f x %f]", m_Position.x, m_Position.y);
+		ImGui::BulletText("zoom level: %f", m_ZoomLevel);
+		ImGui::BulletText("aspect ratio: %f", m_AspectRatio);
 	}
 }

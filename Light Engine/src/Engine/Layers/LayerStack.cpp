@@ -38,8 +38,6 @@ namespace Light {
 
 	void LayerStack::ShowDebugWindow()
 	{
-		ImGui::Begin("Light::LayerStack");
-
 		for (int i = 0; i < s_Layers.size(); i++)
 		{
 			if(ImGui::TreeNode(s_Layers[i], "%s [ %s ] (%d)",
@@ -51,8 +49,6 @@ namespace Light {
 				ImGui::TreePop();
 			}
 		}
-
-		ImGui::End();
 	}
 
 	void LayerStack::HandleQueuedLayers()
