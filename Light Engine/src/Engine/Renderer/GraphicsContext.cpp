@@ -18,6 +18,8 @@
 
 #include <glfw/glfw3.h>
 
+#include <imgui.h>
+
 namespace Light {
 
 	GraphicsProperties GraphicsContext::s_Properties;
@@ -82,6 +84,26 @@ namespace Light {
 		default:
 			LT_CORE_ASSERT(false, "GraphicsContext::Create: Invalid GraphicsAPI");
 		}
+	}
+
+	void GraphicsContext::ShowDebugWindow()
+	{
+		ImGui::Begin("Light::GraphicsContext");
+
+		ImGui::Text("graphics api: %s", s_Api == GraphicsAPI::Opengl  ? "opengl"  :
+		                                s_Api == GraphicsAPI::Directx ? "directx" : "");
+		if (ImGui::TreeNode("configurations"))
+		{
+			ImGui::Text("resolution:");
+			ImGui::BulletText("size: [%d x %d]", s_Configurations.resolution.width, s_Configurations.resolution.height);
+			ImGui::BulletText("aspect ratio: %f", s_Configurations.resolution.aspectRatio);
+			ImGui::BulletText("v-sync: %s", s_Configurations.vSync ? "on" : "off");
+
+			ImGui::TreePop();
+		}
+		// #todo: properties...
+
+		ImGui::End();
 	}
 
 }

@@ -31,6 +31,8 @@ namespace Light {
 
 		std::vector<Layer*>::reverse_iterator rbegin() { return s_Layers.rbegin(); }
 		std::vector<Layer*>::reverse_iterator rend() { return s_Layers.rend(); }
+
+		static void ShowDebugWindow();
 	private:
 		void HandleQueuedLayers();
 	};

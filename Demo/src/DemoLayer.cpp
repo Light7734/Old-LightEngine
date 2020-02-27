@@ -2,6 +2,7 @@
 
 DemoLayer::DemoLayer()
 {
+	m_LayerName = "DemoLayer";
 	m_QuadsLayer = new QuadsLayer;
 }
 
@@ -47,10 +48,14 @@ void DemoLayer::OnDetatch()
 	LT_TRACE("Detatched DemoLayer");
 }
 
-
 void DemoLayer::OnUserInterfaceUpdate()
 {
 	Light::UserInterface::ShowImGuiDemoWnidow();
+	
+	Light::Monitor::ShowDebugWindowAll();
+	Light::Input::ShowDebugWindow();
+	Light::LayerStack::ShowDebugWindow();
+	Light::GraphicsContext::ShowDebugWindow();
 }
 
 void DemoLayer::OnEvent(Light::Event& event)

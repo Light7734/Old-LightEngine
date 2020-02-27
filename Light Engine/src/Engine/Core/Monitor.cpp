@@ -3,6 +3,8 @@
 
 #include <glfw/glfw3.h>
 
+#include <imgui.h>
+
 namespace Light {
 
 	GLFWmonitor** Monitor::s_Monitors = nullptr;
@@ -94,9 +96,45 @@ namespace Light {
 		glfwSetMonitorUserPointer(s_Monitors[m_Index], userPointer);
 	}
 
+
 	void* Monitor::GetUserPointer() const
 	{
 		return glfwGetMonitorUserPointer(s_Monitors[m_Index]);
 	}
 
+	void Monitor::ShowDebugWindow()
+	{
+		ImGui::Begin("Light::Monitor");
+		if (ImGui::TreeNode(GetGlfwHandle(), "%s (%d):", GetName(), GetIndex())) // monitor handle is guaranteed to be unique
+		{
+			const glm::ivec2   physical = GetPhysicalSize();
+			const glm::vec2    scale    = GetContentScale();
+			const glm::ivec2   pos      = GetVirtualPosition();
+			const glm::ivec4   area     = GetWorkArea();
+			const GLFWvidmode* mode     = GetVideoMode();
+
+
+			ImGui::BulletText("physical size: [%dmm x %dmm]", physical.x, physical.y);
+			ImGui::BulletText("content scale: [%f x %f]", scale.x, scale.y);
+			ImGui::BulletText("virtual position: [%d x %d]", pos.x, pos.y);
+			ImGui::BulletText("work area: [xpos: %d, ypos: %d, width: %d, height: %d]", area.x, area.y, area.z, area.w);
+
+			if (ImGui::TreeNode(mode, "Video mode:")) // I don't know if video modes are unique #todo
+			{
+				ImGui::BulletText("size: [%d x %d]", mode->width, mode->height);
+				ImGui::BulletText("bits: [r: %d, g: %d, b: %d]", mode->redBits, mode->greenBits, mode->blueBits);
+				ImGui::BulletText("refresh rate: [%d]", mode->refreshRate);
+
+				ImGui::TreePop();
+			}
+			ImGui::TreePop();
+		}
+		ImGui::End();
+	}
+
+	void Monitor::ShowDebugWindowAll()
+	{
+		for (int i = 0; i < GetCount(); i++)
+			GetMonitor(i)->ShowDebugWindow();
+	}
 }

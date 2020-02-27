@@ -2,6 +2,8 @@
 
 #include "Core/Core.h"
 
+#include <imgui.h>
+
 namespace Light {
 
 	class Event;
@@ -10,6 +12,8 @@ namespace Light {
 	{
 	private:
 		bool b_Enabled = true;
+	protected:
+		std::string m_LayerName = "DefaultLayerName";
 	public:
 		Layer           (            ) = default;
 		Layer           (const Layer&) = delete ;
@@ -28,6 +32,9 @@ namespace Light {
 
 		virtual void OnEvent(Event& event) {}
 
+		virtual void ShowDebugWindow() { ImGui::Text("ShowDebugWindow function is not overridden!"); }
+
+		inline const std::string& GetName() const { return m_LayerName; }
 		inline bool IsEnabled() const { return b_Enabled; }
 	};
 

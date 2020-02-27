@@ -49,6 +49,10 @@ namespace Light {
 		void* GetUserPointer() const;
 		void SetUserePointer(void* userPointer);
 
+		void ShowDebugWindow();
+
+		static void ShowDebugWindowAll();
+
 		operator bool() const
 		{
 			return b_Valid && m_Index < s_Count;

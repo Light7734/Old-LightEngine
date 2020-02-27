@@ -9,6 +9,8 @@
 
 #include <glfw/glfw3.h>
 
+#include <imgui.h>
+
 namespace Light {
 
 	glm::ivec2 Input::s_MouseOff;
@@ -18,6 +20,9 @@ namespace Light {
 
 	bool Input::s_Keys[LIGHT_MAX_KEYS];
 	bool Input::s_Buttons[LIGHT_MAX_BUTTONS];
+
+	int Input::s_LastKey = -1;
+	int Input::s_LastButton = -1;
 
 	void Input::OnEvent(Event& event)
 	{
@@ -38,6 +43,7 @@ namespace Light {
 		if (event.GetKey() == GLFW_KEY_UNKNOWN)
 			return false;
 
+		s_LastKey = event.GetKey();
 		s_Keys[event.GetKey()] = true;
 		return false;
 	}
@@ -53,6 +59,7 @@ namespace Light {
 
 	bool Input::OnButtonPress(MouseButtonPressedEvent& event)
 	{
+		s_LastButton = event.GetButton();
 		s_Buttons[event.GetButton()] = true;
 		return false;
 	}
@@ -229,9 +236,9 @@ namespace Light {
 	{
 		static std::unordered_map<int, std::string> buttonMap =
 		{
-			LT_MAP_MACRO_TO_NAME(MOUSE_BUTTON_1), // 0
-			LT_MAP_MACRO_TO_NAME(MOUSE_BUTTON_2), // 1
-			LT_MAP_MACRO_TO_NAME(MOUSE_BUTTON_3), // 2 
+			LT_MAP_MACRO_TO_NAME(MOUSE_BUTTON_LEFT), // 0
+			LT_MAP_MACRO_TO_NAME(MOUSE_BUTTON_RIGHT), // 1
+			LT_MAP_MACRO_TO_NAME(MOUSE_BUTTON_MIDDLE), // 2 
 			LT_MAP_MACRO_TO_NAME(MOUSE_BUTTON_4), // 3
 			LT_MAP_MACRO_TO_NAME(MOUSE_BUTTON_5), // 4
 			LT_MAP_MACRO_TO_NAME(MOUSE_BUTTON_6), // 5
@@ -240,6 +247,38 @@ namespace Light {
 		};
 		
 		return buttonMap[button].empty() ? std::to_string(button) : buttonMap[button];
+	}
+
+	void Input::ShowDebugWindow()
+	{
+		ImGui::Begin("Light::Input");
+		if (ImGui::TreeNode(&s_Keys, "Keyboard"))
+		{
+			ImGui::Text("last key: %s", GetKeyName(s_LastKey).c_str());
+
+			ImGui::Text("keys down:");
+			for (int i = 0; i < LIGHT_MAX_KEYS; i++)
+				if (s_Keys[i])
+					ImGui::BulletText("%s", GetKeyName(i).c_str());
+
+			ImGui::TreePop();
+		}
+		if (ImGui::TreeNode(&s_Buttons, "Mouse"))
+		{
+			ImGui::Text("last button: %s", GetButtonName(s_LastButton).c_str());
+
+			ImGui::Text("buttons down:");
+			for (int i = 0; i < LIGHT_MAX_BUTTONS; i++)
+				if (s_Buttons[i])
+					ImGui::BulletText("%s", GetButtonName(i).c_str());
+
+			ImGui::Text("position: [%d x %d]", s_MousePos.x, s_MousePos.y);
+			ImGui::Text("offset (updated per event): [%d x %d]", s_MouseOff.x, s_MouseOff.y);
+			ImGui::Text("wheel offset (updated per event): [%d]", s_MouseWheelOff);
+
+			ImGui::TreePop();
+		}
+		ImGui::End();
 	}
 
 }

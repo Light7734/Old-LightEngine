@@ -7,7 +7,6 @@
 class DemoLayer : public Light::Layer
 {
 private:	
-	std::shared_ptr<Light::Window> m_GameWindow;
 	QuadsLayer* m_QuadsLayer;
 public:
 	DemoLayer();

@@ -24,6 +24,8 @@ public:
 	QuadsLayer()
 		: m_Camera(glm::vec2(500.0f, 500.0f), Light::GraphicsContext::GetAspectRatio(), 1000.0f)
 	{
+		m_LayerName = "QuadsLayer";
+
 		m_Border.position = glm::vec2(-28, -62);
 		m_Border.size = glm::vec2(1000.0f + 56, 1000.0f + 93);
 
@@ -124,6 +126,11 @@ public:
 
 		Light::Renderer::End(); // End
 	} 
+
+	void OnUserInterfaceUpdate()
+	{
+		m_Camera.ShowDebugLayer();
+	}
 
 	void OnEvent(Light::Event& event)
 	{

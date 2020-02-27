@@ -105,6 +105,8 @@ namespace Light {
 		static inline float GetAspectRatio() { return s_Configurations.resolution.aspectRatio; }
 
 		static inline bool IsVSync() { return s_Configurations.vSync; }
+
+		static void ShowDebugWindow();
 	protected:
 	};
 

@@ -1,6 +1,8 @@
 #include "ltpch.h"
 #include "LayerStack.h"
 
+#include <imgui.h>
+
 namespace Light {
 
 	std::vector<Layer*> LayerStack::s_Layers;
@@ -32,6 +34,25 @@ namespace Light {
 
 		s_PoppedLayers.push_back(layer);
 		layer->OnDetatch();
+	}
+
+	void LayerStack::ShowDebugWindow()
+	{
+		ImGui::Begin("Light::LayerStack");
+
+		for (int i = 0; i < s_Layers.size(); i++)
+		{
+			if(ImGui::TreeNode(s_Layers[i], "%s [ %s ] (%d)",
+			                                s_Layers[i]->GetName().c_str(),
+			                                s_Layers[i]->IsEnabled() ? "Enabled" : "Disabled",
+			                                i))
+			{
+				s_Layers[i]->ShowDebugWindow();
+				ImGui::TreePop();
+			}
+		}
+
+		ImGui::End();
 	}
 
 	void LayerStack::HandleQueuedLayers()

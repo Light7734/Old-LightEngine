@@ -33,6 +33,9 @@ namespace Light {
 
 		static bool s_Keys   [LIGHT_MAX_KEYS   ];
 		static bool s_Buttons[LIGHT_MAX_BUTTONS];
+
+		static int s_LastKey;
+		static int s_LastButton;
 	public:
 		Input() = delete;
 
@@ -62,6 +65,8 @@ namespace Light {
 
 		static std::string GetKeyName(int key);
 		static std::string GetButtonName(int button);
+
+		static void ShowDebugWindow();
 	private:
 		static bool OnKeyPress     (KeyboardKeyPressedEvent&  event);
 		static bool OnKeyRelease   (KeyboardKeyReleasedEvent& event);

@@ -23,7 +23,7 @@ namespace Light {
 
 		// Getters
 		const glm::f32* GetView();
-		const glm::f32* GetProjection();
+		const	 glm::f32* GetProjection();
 
 		inline const glm::vec2& GetPosition() const { return m_Position; }
 
@@ -46,6 +46,8 @@ namespace Light {
 		inline void SetZoomLevel(float zoom) { m_ZoomLevel = zoom; }
 
 		inline void SetAspectRatio(float ratio) { m_AspectRatio = ratio; }
+
+		void ShowDebugLayer();
 	};
 
 }
