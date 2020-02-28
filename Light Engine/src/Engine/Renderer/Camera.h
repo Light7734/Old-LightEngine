@@ -2,6 +2,8 @@
 
 #include "Buffers.h"
 
+#include "Core/Core.h"
+
 #include <glm/glm.hpp>
 
 namespace Light {
@@ -21,6 +23,10 @@ namespace Light {
 		Camera(const glm::vec2& position, float aspectRatio, float zoomLevel)
 			: m_Position(position), m_AspectRatio(aspectRatio), m_ZoomLevel(zoomLevel) {}
 
+
+		void ShowDebugLayer();
+
+
 		// Getters
 		const glm::f32* GetView();
 		const glm::f32* GetProjection();
@@ -30,6 +36,7 @@ namespace Light {
 		inline float GetZoomLevel  () const { return m_ZoomLevel;   }
 		inline float GetAspectRatio() const { return m_AspectRatio; }
 
+
 		// Setters
 		inline void Move (const glm::vec2& offset) { m_Position += offset;  }
 		inline void MoveX(float            offset) { m_Position.x += offset; }
@@ -37,17 +44,14 @@ namespace Light {
 
 		inline void Zoom(float offset) { m_ZoomLevel -= offset; }
 
-
 		inline void SetPosition(const glm::vec2& position) { m_Position = position; }
-
-		inline void SetProjection(float aspectRatio, float zoomLevel)
-			{ m_AspectRatio = aspectRatio; m_ZoomLevel = zoomLevel; }
 
 		inline void SetZoomLevel(float zoom) { m_ZoomLevel = zoom; }
 
 		inline void SetAspectRatio(float ratio) { m_AspectRatio = ratio; }
 
-		void ShowDebugLayer();
+		inline void SetProjection(float aspectRatio, float zoomLevel)
+			{ m_AspectRatio = aspectRatio; m_ZoomLevel = zoomLevel; }
 	};
 
 }

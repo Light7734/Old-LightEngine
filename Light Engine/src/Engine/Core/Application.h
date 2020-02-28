@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Layers/LayerStack.h"
+#include "Core.h"
 
-#include "Core/Core.h"
+#include "Layers/LayerStack.h"
 
 namespace Light {
 
@@ -20,13 +20,14 @@ namespace Light {
 	protected:
 		std::unique_ptr<Window> m_Window;
 	public:
-		Application           (                  )         ;
-		Application           (const Application&) = delete;
-		Application& operator=(const Application&) = delete;
-		virtual ~Application  (                  )         ;
+		Application();
+		virtual ~Application();
 
-		void GameLoop(            );
-		void OnEvent (Event& event);
+		Application(const Application&) = delete;
+		Application& operator=(const Application&) = delete;
+
+		void GameLoop();
+		void OnEvent(Event& event);
 	private:
 		bool OnWindowClosedEvent(WindowClosedEvent& event);
 	};

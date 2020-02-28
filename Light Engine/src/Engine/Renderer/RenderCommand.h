@@ -6,10 +6,6 @@
 
 namespace Light {
 
-	class Event;
-
-	class GraphicsContext;
-
 	class RenderCommand
 	{
 	private:

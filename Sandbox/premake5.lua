@@ -26,12 +26,12 @@ project "Sandbox"
     {
 		"%{wks.location}/Light Engine/src/Engine/" ,
 		"%{wks.location}/Light Engine/src"         ,
-		"%{wks.location}/spdlog/"                  ,
 		"%{wks.location}/glfw/include"             ,
 		"%{wks.location}/glad/"                    ,
+		"%{wks.location}/ImGui/"                   ,
+		"%{wks.location}/spdlog/"                  ,
 		"%{wks.location}/Dependencies/glm/"        ,
-    }
-
+	}
 
     -- Configurations
     filter "configurations:debug"

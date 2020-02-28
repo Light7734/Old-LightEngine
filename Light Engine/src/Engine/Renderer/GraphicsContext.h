@@ -1,10 +1,9 @@
 #pragma once
 
+#include "Core/Core.h"
 #include "Core/Monitor.h"
 
-#include "Core/Core.h"
-
-class GLFWmonitor;
+struct GLFWmonitor;
 
 namespace Light {
 
@@ -15,10 +14,15 @@ namespace Light {
 		AR_16_10,
 	};
 
+	enum class GraphicsAPI
+	{
+		Default, Opengl, Directx, // #todo: Metal
+	};
+
 	struct Resolution
 	{
-		unsigned int width, height;
-		float aspectRatio;
+		unsigned int width = 0u, height = 0u;
+		float aspectRatio = 0.0f;
 
 		Resolution(unsigned int _width, unsigned int _height, AspectRatio ratio)
 			: width(_width), height(_height), aspectRatio((float)_width / _height)
@@ -35,19 +39,15 @@ namespace Light {
 
 		Resolution() : width(0), height(0), aspectRatio(0.0f) {}
 
+
+		// Operators
 		operator bool() const
 		{
 			return width && height && (float)width / height == aspectRatio;
 		}
 	};
 
-
-	enum class GraphicsAPI
-	{
-		Default, Opengl, Directx, // #todo: Metal
-	};
-
-	// #todo: improve
+	// #todo: improve ( should I remove this? I don't see the point of this struct when we have the Monitor class)
 	struct GraphicsProperties
 	{
 		std::shared_ptr<Monitor> primaryMonitor;
@@ -59,9 +59,6 @@ namespace Light {
 		Resolution resolution;
 		bool vSync = true;
 	};
-
-
-	class Event;
 
 	class GraphicsContext
 	{
@@ -80,6 +77,10 @@ namespace Light {
 	public:
 		virtual ~GraphicsContext() = default;
 		
+
+		static void ShowDebugWindow();
+
+
 		// Rendering stuff
 		virtual void SwapBuffers() = 0;
 
@@ -88,26 +89,22 @@ namespace Light {
 		virtual void Draw(unsigned int count) = 0;
 		virtual void DrawIndexed(unsigned int count) = 0;
 
+
 		// Setters
 		virtual void SetConfigurations(const GraphicsConfigurations& configurations) = 0;
 		virtual void SetResolution    (const Resolution& resolution                ) = 0;
 		virtual void SetVSync         (bool vsync                                  ) = 0;
 
-		virtual void MakeContextCurrent() {}; // for opengl only
 
 		// Getters
 		static inline const GraphicsConfigurations& GetConfigurations() { return s_Configurations; }
 		static inline const GraphicsProperties&     GetProperties    () { return s_Properties;     }
 		static inline const GraphicsAPI             GetAPI           () { return s_Api;            }
 		
-
 		static inline const Resolution& GetResolution() { return s_Configurations.resolution; }
 		static inline float GetAspectRatio() { return s_Configurations.resolution.aspectRatio; }
 
 		static inline bool IsVSync() { return s_Configurations.vSync; }
-
-		static void ShowDebugWindow();
-	protected:
 	};
 
 }

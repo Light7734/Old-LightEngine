@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Renderer/Texture.h"
-
 #include "Core/Core.h"
 
 namespace Light {
@@ -11,8 +9,8 @@ namespace Light {
 	public:
 		FileManager() = delete;
 
-		static std::string LoadTextFile(const std::string& path);
 
+		static std::string LoadTextFile(const std::string& path);
 		static unsigned char* LoadTextureFile(const std::string& path, int* x, int* y, int* channels);
 	};
 

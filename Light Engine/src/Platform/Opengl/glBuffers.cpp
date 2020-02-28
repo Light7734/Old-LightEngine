@@ -19,6 +19,7 @@ namespace Light {
 		glDeleteBuffers(1, &m_ViewProjBuffer);
 	}
 
+
 	void glUniformBuffers::SetViewProjMatrixImpl(const glm::f32* view, const glm::f32* proj)
 	{
 		glm::mat4* map = (glm::mat4*)glMapNamedBuffer(m_ViewProjBuffer, GL_WRITE_ONLY);
@@ -42,6 +43,7 @@ namespace Light {
 	{
 		glDeleteBuffers(1, &m_BufferID);
 	}
+
 
 	void glVertexBuffer::Bind()
 	{
@@ -70,6 +72,7 @@ namespace Light {
 	{
 		glDeleteBuffers(1, &m_BufferID);
 	}
+
 
 	void glIndexBuffer::Bind()
 	{

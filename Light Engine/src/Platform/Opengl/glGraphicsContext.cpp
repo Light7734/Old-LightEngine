@@ -36,7 +36,8 @@ namespace Light {
 		LT_CORE_INFO("        Renderer: {}", glGetString(GL_RENDERER));
 		LT_CORE_INFO("        Version : {}", glGetString(GL_VERSION ));
 	}
-	
+
+
 	void glGraphicsContext::SwapBuffers()
 	{
 		glfwSwapBuffers(m_WindowHandle);
@@ -57,6 +58,7 @@ namespace Light {
 	{
 		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
 	}
+
 
 	void glGraphicsContext::SetConfigurations(const GraphicsConfigurations& configurations)
 	{
@@ -87,11 +89,6 @@ namespace Light {
 	{
 		glfwSwapInterval(vSync);
 		s_Configurations.vSync = vSync;
-	}
-
-	void glGraphicsContext::MakeContextCurrent()
-	{
-		glfwMakeContextCurrent(m_WindowHandle);
 	}
 
 	void glGraphicsContext::SetDebugMessageCallback()

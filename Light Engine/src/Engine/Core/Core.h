@@ -24,8 +24,7 @@
 	#define LT_DX(x)
 #endif
 
-#define LT_MAP_MACRO_TO_NAME(macro) { macro, #macro }
-
+#define LT_MAP_MACRO_VALUE_TO_NAME(macro) { macro, #macro }
 
 #define BIT(x) 1 << x
 
@@ -35,7 +34,7 @@
 #ifndef LIGHT_DIST
 	#define LT_DBREAK __debugbreak()
 #else
-	#define LT_BREAK
+	#define LT_DBREAK
 #endif
 
 #define LT_ASSERT(x, ...)      if(!(x)) { LT_FATAL(__VA_ARGS__)     ; LT_DBREAK; throw ::Light::FailedAssertion(__FILE__, __LINE__); }

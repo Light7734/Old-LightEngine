@@ -1,10 +1,9 @@
 #pragma once
 
 #include "Application.h"
+#include "Core.h"
 
 #include "Debug/Exceptions.h"
-
-#include "Core/Core.h"
 
 int main()
 {

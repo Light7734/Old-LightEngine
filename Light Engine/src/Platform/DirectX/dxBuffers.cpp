@@ -27,6 +27,7 @@ namespace Light {
 		                                                            m_ViewProjBuffer.GetAddressOf());
 	}
 
+
 	void dxConstantBuffers::SetViewProjMatrixImpl(const glm::f32* view, const glm::f32* proj)
 	{
 		D3D11_MAPPED_SUBRESOURCE map;
@@ -58,6 +59,7 @@ namespace Light {
 		HRESULT hr;
 		DXC(dxGraphicsContext::GetDevice()->CreateBuffer(&bd, sd.pSysMem ? &sd : nullptr, &m_Buffer));
 	}
+
 
 	void* dxVertexBuffer::Map()
 	{
@@ -92,6 +94,7 @@ namespace Light {
 		HRESULT hr;
 		DXC(dxGraphicsContext::GetDevice()->CreateBuffer(&bd, &sd, &m_Buffer));
 	}
+
 
 	void dxIndexBuffer::Bind()
 	{

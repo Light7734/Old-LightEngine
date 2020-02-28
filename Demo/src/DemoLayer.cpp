@@ -34,8 +34,6 @@ void DemoLayer::OnAttach()
 	LT_INFO("|     X     |  Resolution (16:9)   |");
 	LT_INFO("|     C     |  Resolution (16:10)  |");
 	LT_INFO("|___________|______________________|");
-	LT_INFO("Note: A legendary pepe will follow wherever the mouse goes");
-
 
 	float colors[4] = { 0.2f, 0.45f, 0.81f, 1.0f };
 	Light::RenderCommand::SetClearBackbufferColor(colors);

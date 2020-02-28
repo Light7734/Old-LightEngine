@@ -14,6 +14,7 @@ namespace Light {
 		}
 	}
 
+
 	glVertexAttributes glVertexLayout::GetTypeAttributes(VertexType type)
 	{
 		switch (type)

@@ -17,6 +17,7 @@ namespace Light {
 	public:
 		WindowResizedEvent(const glm::ivec2& size): m_Size(size) {}
 
+
 		inline int GetWidth () const { return m_Size.x; }
 		inline int GetHeight() const { return m_Size.y; }
 
@@ -39,6 +40,7 @@ namespace Light {
 		const glm::ivec2 m_WindowPos;
 	public:
 		WindowMovedEvent(const glm::ivec2& position): m_WindowPos(position) {}
+
 
 		inline int GetX() const { return m_WindowPos.x; }
 		inline int GetY() const { return m_WindowPos.y; }

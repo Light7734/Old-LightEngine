@@ -24,7 +24,6 @@ namespace Light {
 
 	unsigned char* FileManager::LoadTextureFile(const std::string& path, int* x, int* y, int* channels)
 	{
-
 		unsigned char* pixels = stbi_load(path.c_str(), x, y, channels, 4);
 		if (!pixels)
 			LT_CORE_ERROR("FileManager::LoadTextureFile: Failed to load texture file: {}", path);

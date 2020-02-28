@@ -1,8 +1,8 @@
 #pragma once
 
-#include "UserInterface/Userinterface.h"
-
 #include "Core/Core.h"
+
+#include "UserInterface/UserInterface.h"
 
 namespace Light {
 
@@ -12,9 +12,11 @@ namespace Light {
 		friend class UserInterface;
 		dxUserInterface();
 
+		void TerminateImpl() override;
+
+
 		void BeginImpl() override;
 		void EndImpl() override;
-		void TerminateImpl() override;
 	};
 
 }

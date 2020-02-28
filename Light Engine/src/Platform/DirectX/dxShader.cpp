@@ -24,6 +24,7 @@ namespace Light {
 		DXC(dxGraphicsContext::GetDevice()->CreatePixelShader(ps->GetBufferPointer(), ps->GetBufferSize(), NULL, &m_PixelShader));
 	}
 
+
 	void dxShader::Bind()
 	{
 		dxGraphicsContext::GetDeviceContext()->VSSetShader(m_VertexShader.Get(), nullptr, 0u);

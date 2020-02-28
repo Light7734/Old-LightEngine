@@ -30,7 +30,15 @@ namespace Light {
 		ImGui_ImplGlfw_InitForOpenGL(Window::GetGlfwHandle(), false);
 		ImGui_ImplOpenGL3_Init("#version 450 core");
 	}
-		
+
+	void glUserInterface::TerminateImpl()
+	{
+		ImGui_ImplOpenGL3_Shutdown();
+		ImGui_ImplGlfw_Shutdown();
+		ImGui::DestroyContext();
+	}
+
+
 	void glUserInterface::BeginImpl()
 	{
 		ImGui_ImplOpenGL3_NewFrame();
@@ -42,13 +50,6 @@ namespace Light {
 	{
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-	}
-
-	void glUserInterface::TerminateImpl()
-	{
-		ImGui_ImplOpenGL3_Shutdown();
-		ImGui_ImplGlfw_Shutdown();
-		ImGui::DestroyContext();
 	}
 
 }

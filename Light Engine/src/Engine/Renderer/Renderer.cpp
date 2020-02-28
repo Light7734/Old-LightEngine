@@ -3,6 +3,7 @@
 
 #include "BufferLayout.h"
 #include "Buffers.h"
+#include "Camera.h"
 #include "RenderCommand.h"
 #include "Shader.h"
 #include "Texture.h"
@@ -51,6 +52,7 @@ namespace Light {
 		delete[] indices;
 		//=============== BASIC QUAD RENDERER ===============//
 	}
+
 
 	void Renderer::Start(Camera& camera)
 	{

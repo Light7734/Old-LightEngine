@@ -45,9 +45,11 @@ namespace Light {
 		static std::shared_ptr<TextureAtlas> Create(const std::string& atlasPath);
 		virtual ~TextureAtlas();
 
-		TextureCoordinates* GetCoordinates(const std::string& name) { return &m_Segments[name]; }
 
 		static void DestroyTextureArray();
+
+
+		TextureCoordinates* GetCoordinates(const std::string& name) { return &m_Segments[name]; }
 	protected:
 		void ParseSegments(const std::string& data);
 	};

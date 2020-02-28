@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Core/Core.h"
+
 #include "Renderer/Texture.h"
 
 #include <glm/glm.hpp>
@@ -12,6 +14,7 @@ namespace Light {
 		static unsigned int m_AtlasID;
 	public:
 		glTextureAtlas(const TextureData& data);
+
 
 		static void DestroyTextureArray();
 	private:

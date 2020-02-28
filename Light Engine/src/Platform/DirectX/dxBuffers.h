@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Renderer/Buffers.h"
-
 #include "Core/Core.h"
+
+#include "Renderer/Buffers.h"
 
 #include <glm/glm.hpp>
 
@@ -24,6 +24,7 @@ namespace Light {
 	public:
 		dxConstantBuffers();
 
+
 		void SetViewProjMatrixImpl(const glm::f32* view, const glm::f32* proj) override;
 	};
 
@@ -35,6 +36,7 @@ namespace Light {
 		unsigned int m_Stride = 0u, m_Offset = 0u;
 	public:
 		dxVertexBuffer(float* vertices, unsigned int size, unsigned int stride);
+
 
 		void* Map  () override;
 		void  UnMap() override;
@@ -48,6 +50,7 @@ namespace Light {
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_Buffer;
 	public:
 		dxIndexBuffer(unsigned int* indices, unsigned int size);
+
 
 		void Bind() override;
 	};

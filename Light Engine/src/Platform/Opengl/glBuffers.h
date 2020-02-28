@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Renderer/Buffers.h"
-
 #include "Core/Core.h"
+
+#include "Renderer/Buffers.h"
 
 #include <glm/glm.hpp>
 
@@ -22,6 +22,7 @@ namespace Light {
 		glUniformBuffers();
 		~glUniformBuffers();
 
+
 		void SetViewProjMatrixImpl(const glm::f32* view, const glm::f32* proj) override;
 	};
 
@@ -32,6 +33,7 @@ namespace Light {
 	public:
 		glVertexBuffer(float* vertices, unsigned int size);
 		~glVertexBuffer();
+
 
 		void Bind() override;
 
@@ -46,6 +48,7 @@ namespace Light {
 	public:
 		glIndexBuffer(unsigned int* indices, unsigned int size);
 		~glIndexBuffer();
+
 
 		void Bind() override;
 	};

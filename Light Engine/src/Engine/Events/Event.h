@@ -3,6 +3,7 @@
 #include "Core/Core.h"
 
 #include <ostream>
+
 #include <functional>
 
 namespace Light {
@@ -31,6 +32,7 @@ namespace Light {
 
 #define EVENT_CATEGORY(Category) inline bool IsInCategory(EventCategory category) const override { return (Category) & category; }
 
+
 	class Event
 	{
 	private:
@@ -39,6 +41,8 @@ namespace Light {
 	public:
 		Event() = default;
 
+
+		// Getters
 		virtual inline EventType   GetEventType() const = 0;
 		virtual        std::string GetLogInfo  () const = 0;
 
@@ -46,6 +50,8 @@ namespace Light {
 
 		inline bool IsDispatched() const { return b_Dispatched; }
 
+
+		// Operators
 		friend inline std::ostream& operator<<(std::ostream& os, const Event& event) // why can't I use this on spdlog????
 		{
 			return os << event.GetLogInfo();
@@ -58,6 +64,7 @@ namespace Light {
 		Event& m_Event;
 	public:
 		Dispatcher(Event& event): m_Event(event) {}
+
 
 		template <typename EventType>
 		void Dispatch(std::function<bool(EventType&)> function)

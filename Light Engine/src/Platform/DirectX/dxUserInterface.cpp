@@ -5,11 +5,11 @@
 
 #include "Core/Window.h"
 
+#include "Renderer/RenderCommand.h"
+
 #include <imgui.h>
 #include <imgui_impl_win32.h>
 #include <imgui_impl_dx11.h>
-
-#include "Renderer/RenderCommand.h"
 
 namespace Light {
 
@@ -34,6 +34,14 @@ namespace Light {
 		ImGui_ImplDX11_Init(dxGraphicsContext::GetDevice(), dxGraphicsContext::GetDeviceContext());
 	}
 
+	void dxUserInterface::TerminateImpl()
+	{
+		ImGui_ImplDX11_Shutdown();
+		ImGui_ImplWin32_Shutdown();
+		ImGui::DestroyContext();
+	}
+
+
 	void dxUserInterface::BeginImpl()
 	{
 		ImGui_ImplDX11_NewFrame();
@@ -45,13 +53,6 @@ namespace Light {
 	{
 		ImGui::Render();
 		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-	}
-
-	void dxUserInterface::TerminateImpl()
-	{
-		ImGui_ImplDX11_Shutdown();
-		ImGui_ImplWin32_Shutdown();
-		ImGui::DestroyContext();
 	}
 
 }

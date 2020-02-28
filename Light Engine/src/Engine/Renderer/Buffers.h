@@ -29,6 +29,7 @@ namespace Light {
 		static std::shared_ptr<VertexBuffer> Create(float* vertices, unsigned int size, unsigned int stride);
 		virtual ~VertexBuffer() = default;
 
+
 		virtual void Bind() = 0;
 
 		virtual void* Map  () = 0;

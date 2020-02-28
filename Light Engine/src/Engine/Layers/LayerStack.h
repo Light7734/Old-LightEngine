@@ -24,6 +24,10 @@ namespace Light {
 		static void AttachLayer(Layer* layer);
 		static void DetatchLayer(Layer* layer);
 
+		static void ShowDebugWindow();
+
+
+		// Getters
 		static unsigned int GetSize() { return static_cast<unsigned int>(s_Layers.size()); }
 
 		std::vector<Layer*>::iterator begin() { return s_Layers.begin(); }
@@ -31,8 +35,6 @@ namespace Light {
 
 		std::vector<Layer*>::reverse_iterator rbegin() { return s_Layers.rbegin(); }
 		std::vector<Layer*>::reverse_iterator rend() { return s_Layers.rend(); }
-
-		static void ShowDebugWindow();
 	private:
 		void HandleQueuedLayers();
 	};

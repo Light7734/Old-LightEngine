@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Renderer/Shader.h"
-
 #include "Core/Core.h"
+
+#include "Renderer/Shader.h"
 
 namespace Light {
 
@@ -13,6 +13,7 @@ namespace Light {
 	public:
 		glShader(const std::string& vertex_source, const std::string& fragment_source);
 		~glShader();
+
 
 		void Bind() override;
 	private:

@@ -7,24 +7,11 @@
 
 namespace Light {
 
+	std::vector<std::shared_ptr<Monitor>> Monitor::s_Handles = {};
+
 	GLFWmonitor** Monitor::s_Monitors = nullptr;
+
 	int Monitor::s_Count = 0;
-	std::vector<std::shared_ptr<Monitor>> Monitor::s_Handles;
-
-	Monitor::Monitor(int index)
-		: m_Index(index), b_Valid(true)
-	{
-		if (index >= s_Count)
-			{ LT_CORE_ERROR("Monitor::Monitor: index out of range"); b_Valid = false;}
-	}
-
-	std::shared_ptr<Monitor> Monitor::GetMonitor(unsigned int index)
-	{
-		if (index >= s_Count)
-			{ LT_CORE_ERROR("Monitor::GetMonitor: index out of range"); return nullptr; }
-
-		return s_Handles[index];
-	}
 
 	void Monitor::Init()
 	{
@@ -53,64 +40,23 @@ namespace Light {
 		});
 	}
 
-	const char* Monitor::GetName() const
+	Monitor::Monitor(int index)
+		: m_Index(index), b_Valid(true)
 	{
-		return glfwGetMonitorName(s_Monitors[m_Index]);
+		if (index >= s_Count)
+			{ LT_CORE_ERROR("Monitor::Monitor: index out of range"); b_Valid = false;}
 	}
 
-	glm::ivec2 Monitor::GetPhysicalSize() const
-	{
-		glm::ivec2 size;
-		glfwGetMonitorPhysicalSize(s_Monitors[m_Index], &size.x, &size.y);
-		return size;
-	}
-
-	glm::vec2 Monitor::GetContentScale() const
-	{
-		glm::vec2 scale;
-		glfwGetMonitorContentScale(s_Monitors[m_Index], &scale.x, &scale.y);
-		return scale;
-	}
-
-	glm::ivec2 Monitor::GetVirtualPosition() const
-	{
-		glm::ivec2 pos;
-		glfwGetMonitorPos(s_Monitors[m_Index], &pos.x, &pos.y);
-		return pos;
-	}
-
-	glm::ivec4 Monitor::GetWorkArea() const
-	{
-		glm::ivec4 area;
-		glfwGetMonitorWorkarea(s_Monitors[m_Index], &area.x, &area.y, &area.z, &area.w);
-		return area;
-	}
-
-	const GLFWvidmode* Monitor::GetVideoMode() const
-	{
-		return glfwGetVideoMode(s_Monitors[m_Index]);
-	}
-
-	void Monitor::SetUserePointer(void* userPointer)
-	{
-		glfwSetMonitorUserPointer(s_Monitors[m_Index], userPointer);
-	}
-
-
-	void* Monitor::GetUserPointer() const
-	{
-		return glfwGetMonitorUserPointer(s_Monitors[m_Index]);
-	}
 
 	void Monitor::ShowDebugWindow()
 	{
 		if (ImGui::TreeNode(GetGlfwHandle(), "%s (%d)", GetName(), GetIndex())) // monitor handle is guaranteed to be unique
 		{
 			const glm::ivec2   physical = GetPhysicalSize();
-			const glm::vec2    scale    = GetContentScale();
-			const glm::ivec2   pos      = GetVirtualPosition();
-			const glm::ivec4   area     = GetWorkArea();
-			const GLFWvidmode* mode     = GetVideoMode();
+			const glm::vec2    scale = GetContentScale();
+			const glm::ivec2   pos = GetVirtualPosition();
+			const glm::ivec4   area = GetWorkArea();
+			const GLFWvidmode* mode = GetVideoMode();
 
 			ImGui::BulletText("physical size: [%dmm x %dmm]", physical.x, physical.y);
 			ImGui::BulletText("content scale: [%f x %f]", scale.x, scale.y);
@@ -134,4 +80,65 @@ namespace Light {
 		for (int i = 0; i < GetCount(); i++)
 			GetMonitor(i)->ShowDebugWindow();
 	}
+
+
+	// Setters
+	void Monitor::SetUserPointer(void* userPointer)
+	{
+		glfwSetMonitorUserPointer(s_Monitors[m_Index], userPointer);
+	}
+
+
+	// Getters 
+	std::shared_ptr<Monitor> Monitor::GetMonitor(unsigned int index)
+	{
+		if (index >= s_Count)
+			{ LT_CORE_ERROR("Monitor::GetMonitor: index out of range"); return nullptr; }
+
+		return s_Handles[index];
+	}
+
+	void* Monitor::GetUserPointer() const
+	{
+		return glfwGetMonitorUserPointer(s_Monitors[m_Index]);
+	}
+
+	const char* Monitor::GetName() const
+	{
+		return glfwGetMonitorName(s_Monitors[m_Index]);
+	}
+
+	const GLFWvidmode* Monitor::GetVideoMode() const
+	{
+		return glfwGetVideoMode(s_Monitors[m_Index]);
+	}
+
+	glm::ivec4 Monitor::GetWorkArea() const
+	{
+		glm::ivec4 area;
+		glfwGetMonitorWorkarea(s_Monitors[m_Index], &area.x, &area.y, &area.z, &area.w);
+		return area;
+	}
+
+	glm::vec2 Monitor::GetContentScale() const
+	{
+		glm::vec2 scale;
+		glfwGetMonitorContentScale(s_Monitors[m_Index], &scale.x, &scale.y);
+		return scale;
+	}
+
+	glm::ivec2 Monitor::GetPhysicalSize() const
+	{
+		glm::ivec2 size;
+		glfwGetMonitorPhysicalSize(s_Monitors[m_Index], &size.x, &size.y);
+		return size;
+	}
+
+	glm::ivec2 Monitor::GetVirtualPosition() const
+	{
+		glm::ivec2 pos;
+		glfwGetMonitorPos(s_Monitors[m_Index], &pos.x, &pos.y);
+		return pos;
+	}
+
 }

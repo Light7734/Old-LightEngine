@@ -41,6 +41,7 @@ namespace Light {
 		glDeleteProgram(m_ShaderID);
 	}
 
+
 	void glShader::Bind()
 	{
 		glUseProgram(m_ShaderID);

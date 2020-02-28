@@ -15,9 +15,8 @@ namespace Light {
 	class VertexLayout
 	{
 	public:
-		virtual ~VertexLayout() = default;
-
 		static std::shared_ptr<VertexLayout> Create(std::initializer_list<std::pair<const char*, VertexType>> init_list);
+		virtual ~VertexLayout() = default;
 	};
 
 }

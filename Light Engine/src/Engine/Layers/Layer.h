@@ -20,6 +20,7 @@ namespace Light {
 		Layer& operator=(const Layer&) = delete ;
 		virtual ~Layer  (            ) = default;
 
+
 		virtual void Enable () { b_Enabled = true ; }
 		virtual void Disable() { b_Enabled = false; }
 
@@ -30,10 +31,12 @@ namespace Light {
 		virtual void OnRender(               ) {}
 		virtual void OnUserInterfaceUpdate(  ) {}
 
-		virtual void OnEvent(Event& event) {}
-
 		virtual void ShowDebugWindow() { ImGui::Text("ShowDebugWindow function is not overridden!"); }
 
+		virtual void OnEvent(Event& event) {}
+
+
+		// Getters
 		inline const std::string& GetName() const { return m_LayerName; }
 		inline bool IsEnabled() const { return b_Enabled; }
 	};

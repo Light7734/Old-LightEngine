@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Renderer/GraphicsContext.h"
+#include "Core.h"
 
-#include "Core/Core.h"
+#include "Renderer/GraphicsContext.h"
 
 struct GLFWwindow;
 
@@ -19,7 +19,7 @@ namespace Light {
 
 	struct WindowData
 	{
-		std::string title = "LightEngine Window";
+		std::string title = "LightEngineWindow";
 
 		DisplayMode displayMode = DisplayMode::Windowed;
 
@@ -50,10 +50,13 @@ namespace Light {
 		Window& operator=(const Window&) = delete;
 		~Window();
 
+
 		void HandleEvents();
 
+
 		// Graphics
-		static void GfxSetApi(GraphicsAPI api, const GraphicsConfigurations& configurations);
+		static inline void GfxSetApi(GraphicsAPI api, const GraphicsConfigurations& configurations)
+		                   { s_Context->m_GraphicsContext = GraphicsContext::Create(api, configurations); }
 
 		static inline void GfxSetSetConfigurations(const GraphicsConfigurations& configurations)
 		                   { s_Context->m_GraphicsContext->SetConfigurations(configurations); }
@@ -64,8 +67,6 @@ namespace Light {
 		static inline void GfxSetVSync            (bool vsync)
 		                   { s_Context->m_GraphicsContext->SetVSync(vsync); }
 
-		static inline void GfxMakeContextCurrent()
-		                   { s_Context->m_GraphicsContext->MakeContextCurrent(); }
 
 		// Setters
 		void SetEventCallbackFunction(std::function<void(Event&)> event_callback_func);
@@ -75,10 +76,9 @@ namespace Light {
 		static void SetDisplayMode(DisplayMode mode);
 
 		static void SetVisibility(bool visible);
-
 		static void Center();
-
 		static void Close();
+
 
 		// Getters
 		static GLFWwindow* GetGlfwHandle  () { return s_Context->m_GlfwHandle;   }

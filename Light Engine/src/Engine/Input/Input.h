@@ -26,8 +26,8 @@ namespace Light {
 	class Input
 	{
 	private:
-		static glm::ivec2 s_MouseOff;
 		static glm::ivec2 s_MousePos;
+		static glm::ivec2 s_MouseOff;
 
 		static int s_MouseWheelOff;
 
@@ -39,34 +39,32 @@ namespace Light {
 	public:
 		Input() = delete;
 
+
 		static void OnEvent(Event& event);
 
+		static glm::vec2 MousePosToCameraView(const Camera& camera);
+
+		static void ShowDebugWindow();
+
+		
+		// Getters
 		static bool GetKey   (int  key   ) { return s_Keys   [key   ]; }
 		static bool GetButton(int  button) { return s_Buttons[button]; }
-
 
 		static inline int GetMouseX() { return s_MousePos.x; }
 		static inline int GetMouseY() { return s_MousePos.y; }
 
 		static inline const glm::ivec2& GetMousePos() { return s_MousePos; }
 
-
 		static inline int GetMouseOffX() { return s_MouseOff.x; }
 		static inline int GetMouseOffY() { return s_MouseOff.y; }
 
 		static inline const glm::ivec2& GetMouseOff() { s_MouseOff; }
 
-
 		static inline int GetWheelOff() { return s_MouseWheelOff; }
-
-
-		static glm::vec2 MousePosToCameraView(const Camera& camera);
-
 
 		static std::string GetKeyName(int key);
 		static std::string GetButtonName(int button);
-
-		static void ShowDebugWindow();
 	private:
 		static bool OnKeyPress     (KeyboardKeyPressedEvent&  event);
 		static bool OnKeyRelease   (KeyboardKeyReleasedEvent& event);

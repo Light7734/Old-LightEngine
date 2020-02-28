@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Renderer/VertexLayout.h"
-
 #include "Core/Core.h"
+
+#include "Renderer/VertexLayout.h"
 
 namespace Light {
 
@@ -21,6 +21,7 @@ namespace Light {
 		unsigned int m_Stride = 0;
 	public:
 		glVertexLayout(std::initializer_list<std::pair<const char*, VertexType>> init_list);
+
 
 		inline std::vector<glVertexAttributes> GetAttribtues() { return m_Attributes; }
 

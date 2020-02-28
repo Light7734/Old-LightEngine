@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Renderer/BufferLayout.h"
-
 #include "Core/Core.h"
+
+#include "Renderer/BufferLayout.h"
 
 namespace Light {
 
@@ -16,6 +16,7 @@ namespace Light {
 	public:
 		glBufferLayout(std::shared_ptr<VertexBuffer> buffer, std::shared_ptr<VertexLayout> layout);
 		~glBufferLayout();
+
 
 		void Bind() override;
 	};

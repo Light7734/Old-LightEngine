@@ -2,9 +2,9 @@
 
 #include "Event.h"
 
-#include "Input/Input.h"
-
 #include "Core/Core.h"
+
+#include "Input/Input.h"
 
 #include <glm/glm.hpp>
 
@@ -18,6 +18,7 @@ namespace Light {
 		const glm::ivec2 m_MousePos;
 	public:
 		MouseMovedEvent(const glm::ivec2& position): m_MousePos(position){}
+
 
 		inline int GetX() { return m_MousePos.x; }
 		inline int GetY() { return m_MousePos.y; }
@@ -42,6 +43,7 @@ namespace Light {
 	public:
 		MouseButtonPressedEvent(int button): m_Button(button) {}
 
+
 		inline int GetButton() { return m_Button; }
 
 		std::string GetLogInfo() const override
@@ -63,6 +65,7 @@ namespace Light {
 	public:
 		MouseButtonReleasedEvent(uint8_t button): m_Button(button) {}
 
+
 		inline int GetButton() { return m_Button; }
 
 		std::string GetLogInfo() const override 
@@ -83,6 +86,7 @@ namespace Light {
 		const int m_XOffset;
 	public:
 		MouseScrolledEvent(int xOffset): m_XOffset(xOffset) {}
+
 
 		inline int GetOffset() { return m_XOffset; }
 

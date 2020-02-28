@@ -16,6 +16,7 @@ namespace Light {
 		}
 	}
 
+
 	DXGI_FORMAT dxVertexLayout::GetDxgiFormat(VertexType type)
 	{
 		switch (type)

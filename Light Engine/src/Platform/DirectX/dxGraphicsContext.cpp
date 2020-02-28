@@ -121,6 +121,7 @@ namespace Light {
 		LT_CORE_INFO("        Renderer: {}", adapterDesc);
 	}
 
+
 	void dxGraphicsContext::SwapBuffers()
 	{
 		m_SwapChain->Present(s_Configurations.vSync, NULL);
@@ -141,6 +142,7 @@ namespace Light {
 	{
 		m_DeviceContext->DrawIndexed(count, 0u, 0u);
 	}
+
 
 	void dxGraphicsContext::SetConfigurations(const GraphicsConfigurations& configurations)
 	{

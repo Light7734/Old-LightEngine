@@ -34,6 +34,7 @@ namespace Light {
 		glDeleteVertexArrays(1, &m_ArrayID);
 	}
 
+
 	void glBufferLayout::Bind()
 	{
 		glBindVertexArray(m_ArrayID);

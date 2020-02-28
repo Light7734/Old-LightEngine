@@ -8,11 +8,6 @@
 #include "Events/MouseEvents.h"
 #include "Events/WindowEvents.h"
 
-#include "Renderer/Buffers.h"
-#include "Renderer/Camera.h"
-#include "Renderer/Renderer.h"
-#include "Renderer/RenderCommand.h"
-
 #if   defined(LIGHT_PLATFORM_WINDOWS)
 	#define GLFW_EXPOSE_NATIVE_WIN32
 
@@ -21,7 +16,6 @@
 
 #elif defined (LIGHT_PLATFORM_MAC)
 	#define GLFW_EXPOSE_NATIVE_COCOA
-
 #endif
 
 #include <glfw/glfw3.h>
@@ -76,16 +70,14 @@ namespace Light {
 		glfwTerminate();
 	}
 
+
 	void Window::HandleEvents()
 	{
 		glfwPollEvents();
 	}
 
-	void Window::GfxSetApi(GraphicsAPI api, const GraphicsConfigurations& configurations)
-	{
-		s_Context->m_GraphicsContext = GraphicsContext::Create(api, configurations);
-	}
 
+	// Setters
 	void Window::SetEventCallbackFunction(std::function<void(Event&)> event_callback_func)
 	{
 		s_Context->m_Data.eventCallback = event_callback_func;

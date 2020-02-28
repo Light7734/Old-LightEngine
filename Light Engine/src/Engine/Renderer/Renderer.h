@@ -1,8 +1,5 @@
 #pragma once
 
-#include "Camera.h"
-#include "Texture.h"
-
 #include "Core/Core.h"
 
 #include <glm/glm.hpp>
@@ -12,9 +9,12 @@
 namespace Light {
 
 	class Shader;
-	class VertexBuffer;
-	class IndexBuffer;
 	class BufferLayout;
+	class IndexBuffer;
+	class VertexBuffer;
+
+	class Camera;
+
 	struct TextureCoordinates;
 
 	class Renderer
@@ -37,7 +37,6 @@ namespace Light {
 		friend class GraphicsContext;
 		static void Init();
 	public:
-
 		static void Start(Camera& camera);
 
 		//=============== BASIC QUAD RENDERER ===============//

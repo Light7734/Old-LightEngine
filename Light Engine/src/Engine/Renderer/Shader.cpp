@@ -43,6 +43,7 @@ namespace Light {
 		}
 	}
 
+
 	void Shader::ExtractShaderSource(std::string& src, const std::string& delim)
 	{
 		size_t begDelimPos, endDelimPos;

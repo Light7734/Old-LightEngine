@@ -10,7 +10,8 @@
 
 namespace Light {
 		
-	std::shared_ptr<Light::BufferLayout> BufferLayout::Create(std::shared_ptr<Shader> shader, std::shared_ptr<VertexBuffer> buffer,
+	std::shared_ptr<Light::BufferLayout> BufferLayout::Create(std::shared_ptr<Shader> shader,
+	                                                          std::shared_ptr<VertexBuffer> buffer,
 	                                                          std::shared_ptr<VertexLayout> layout)
 	{
 		switch (GraphicsContext::GetAPI())

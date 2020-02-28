@@ -86,6 +86,7 @@ namespace Light {
 		}
 	}
 
+
 	void GraphicsContext::ShowDebugWindow()
 	{
 		ImGui::BulletText("graphics api: %s", s_Api == GraphicsAPI::Opengl  ? "opengl"  :

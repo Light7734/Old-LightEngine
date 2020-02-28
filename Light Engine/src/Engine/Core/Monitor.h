@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Core.h"
+#include "Core.h"
 
 #include <glm/glm.hpp>
 
@@ -13,10 +13,10 @@ namespace Light {
 	class Monitor
 	{
 	private:
-		static GLFWmonitor** s_Monitors;
-		static int s_Count;
-
 		static std::vector<std::shared_ptr<Monitor>> s_Handles;
+		static GLFWmonitor** s_Monitors;
+
+		static int s_Count;
 	private:
 		int m_Index;
 		bool b_Valid;
@@ -26,33 +26,39 @@ namespace Light {
 	public:
 		Monitor(int index);
 
-		// NULL for primary monitor
-		static std::shared_ptr<Monitor> GetMonitor(unsigned int index);
-		
-		static inline unsigned int GetCount() { return s_Count; }
-
-		const char* GetName() const;
-
-		inline int GetIndex() { return m_Index; }
-		inline bool IsValid() { return b_Valid; }
-
-		inline GLFWmonitor* GetGlfwHandle() const { return s_Monitors[m_Index]; };
-
-		glm::ivec2 GetPhysicalSize   () const;
-		glm::vec2  GetContentScale   () const;
-		glm::ivec2 GetVirtualPosition() const;
-
-		glm::ivec4 GetWorkArea() const;
-
-		const GLFWvidmode* GetVideoMode() const;
-
-		void* GetUserPointer() const;
-		void SetUserePointer(void* userPointer);
-
-		void ShowDebugWindow();
 
 		static void ShowDebugWindowAll();
 
+		void ShowDebugWindow();
+
+
+		// Setters
+		void SetUserPointer(void* userPointer);
+
+
+		// Getters
+		static std::shared_ptr<Monitor> GetMonitor(unsigned int index);
+
+		static inline unsigned int GetCount() { return s_Count; }
+
+		void* GetUserPointer() const;
+
+		const char* GetName() const;
+
+		const GLFWvidmode* GetVideoMode() const;
+
+		glm::ivec4 GetWorkArea() const;
+		glm::vec2 GetContentScale() const;
+		glm::ivec2 GetPhysicalSize() const;
+		glm::ivec2 GetVirtualPosition() const;
+
+		inline GLFWmonitor* GetGlfwHandle() const { return s_Monitors[m_Index]; };
+
+		inline int GetIndex() const { return m_Index; }
+		inline bool IsValid() const { return b_Valid; }
+
+
+		// Operators
 		operator bool() const
 		{
 			return b_Valid && m_Index < s_Count;

@@ -5,9 +5,9 @@
 
 namespace Light {
 
-	std::vector<Layer*> LayerStack::s_Layers;
-	std::vector<Layer*> LayerStack::s_PushedLayers;
-	std::vector<Layer*> LayerStack::s_PoppedLayers;
+	std::vector<Layer*> LayerStack::s_Layers = {};
+	std::vector<Layer*> LayerStack::s_PushedLayers = {};
+	std::vector<Layer*> LayerStack::s_PoppedLayers = {};
 
 	bool LayerStack::b_LayersQueued = false;
 
@@ -19,6 +19,7 @@ namespace Light {
 			delete layer;
 		}
 	}
+
 
 	void LayerStack::AttachLayer(Layer* layer)
 	{

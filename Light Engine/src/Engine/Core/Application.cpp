@@ -14,7 +14,7 @@
 #include "Renderer/RenderCommand.h"
 #include "Renderer/Renderer.h"
 
-#include "UserInterface/Userinterface.h"
+#include "UserInterface/UserInterface.h"
 
 namespace Light {
 
@@ -39,7 +39,6 @@ namespace Light {
 	void Application::GameLoop()
 	{
 		LT_CORE_ASSERT(m_Window, "Application::GameLoop: Application::m_Window is not initialized");
-		LT_CORE_ASSERT(RenderCommand::HasContext(), "Application::GameLoop: GraphicsContext::CreateContext() was never called");
 
 		while (!m_Window->IsClosed())
 		{
@@ -50,6 +49,7 @@ namespace Light {
 			for (Layer* layer : m_LayerStack)
 				if(layer->IsEnabled()) 
 					layer->OnUpdate(Time::GetDeltaTime());
+			m_LayerStack.HandleQueuedLayers();
 
 			if (!m_Window->IsMinimized())
 			{
@@ -61,14 +61,12 @@ namespace Light {
 				for (Layer* layer : m_LayerStack)
 					if (layer->IsEnabled())
 						layer->OnUserInterfaceUpdate();
-				UserInterface::End  ();
+				m_LayerStack.HandleQueuedLayers();
+				UserInterface::End();
 			}
 
 
-			m_LayerStack.HandleQueuedLayers();
 			m_Window->HandleEvents();
-
-
 			RenderCommand::SwapBuffers();
 		}
 	}
@@ -76,18 +74,16 @@ namespace Light {
 	void Application::OnEvent(Event& event)
 	{
 		if (event.IsInCategory(EventCategory_Input))
-		{
 			Input::OnEvent(event);
-			UserInterface::OnEvent(event); // maybe merge these 2 functions
-		}
 
 		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)
 		{
-			if((*it)->IsEnabled())
+			if ((*it)->IsEnabled())
+			{
 				(*it)->OnEvent(event);
-
-			if (event.IsDispatched())
-				return;
+				if (event.IsDispatched())
+					return;
+			}
 		}
 	
 		Dispatcher dispatcher(event);
