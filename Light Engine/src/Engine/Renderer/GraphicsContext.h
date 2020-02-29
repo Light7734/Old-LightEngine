@@ -67,13 +67,13 @@ namespace Light {
 	protected:
 		static GraphicsProperties s_Properties;
 		static GraphicsConfigurations s_Configurations;
-	protected:
+	private:
 		friend class Window;
+		static std::unique_ptr<GraphicsContext> Create(GraphicsAPI api, const GraphicsConfigurations& configurations);
+	protected:
 		GraphicsContext           (                      ) = default;
 		GraphicsContext           (const GraphicsContext&) = delete ;
 		GraphicsContext& operator=(const GraphicsContext&) = delete ;
-
-		static std::unique_ptr<GraphicsContext> Create(GraphicsAPI api, const GraphicsConfigurations& configurations);
 	public:
 		virtual ~GraphicsContext() = default;
 		

@@ -58,6 +58,7 @@
 // ---------------------------
 
 // Renderer -----------------
+#include "Renderer/Blender.h"
 #include "Renderer/BufferLayout.h"
 #include "Renderer/Buffers.h"
 #include "Renderer/Camera.h"

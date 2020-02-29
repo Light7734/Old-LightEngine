@@ -88,8 +88,11 @@ public:
 			m_Camera.MoveY(m_CameraSpeed * DeltaTime);
 
 
-		for (auto& sprite : m_Sprites)
+		for (int i = 1; i < m_Sprites.size(); i++)
 		{
+			auto& sprite = m_Sprites[i];
+
+
 			sprite.position += sprite.velocity * DeltaTime;
 
 			if (sprite.position.x < 0.0f)
@@ -120,12 +123,10 @@ public:
 	{
 		Light::Renderer::Start(m_Camera); // Start
 
-
-		for (auto& sprite : m_Sprites) // Draw ...
-			Light::Renderer::DrawQuad(sprite.position, sprite.size, sprite.coordinates, glm::vec4(1.0f));
-
-		Light::Renderer::DrawQuad(m_Border.position, m_Border.size, m_Border.coordinates, glm::vec4(1.0f)); // ... Draw
-
+		// Draw ...
+		Light::Renderer::DrawQuad(m_Border.position, m_Border.size, m_Border.coordinates, glm::vec4(1.0f)); 
+		for (auto& sprite : m_Sprites) 
+			Light::Renderer::DrawQuad(sprite.position, sprite.size, sprite.coordinates, glm::vec4(1.0f)); // .. Draw
 
 		Light::Renderer::End(); // End
 	} 

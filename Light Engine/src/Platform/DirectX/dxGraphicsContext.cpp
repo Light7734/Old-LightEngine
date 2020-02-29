@@ -5,11 +5,6 @@
 
 #include "Debug/Exceptions.h"
 
-#include "Events/Event.h"
-#include "Events/WindowEvents.h"
-
-#include <glfw/glfw3.h>
-
 namespace Light {
 
 	dxGraphicsContext* dxGraphicsContext::s_Instance = nullptr;
@@ -62,22 +57,6 @@ namespace Light {
 			&m_Device,
 			nullptr,
 			&m_DeviceContext   ));
-
-
-		// Set blend state
-		Microsoft::WRL::ComPtr<ID3D11BlendState> blendState;
-		D3D11_BLEND_DESC blendDesc = {};
-		blendDesc.RenderTarget[0].BlendEnable = true;
-		blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-		blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-		blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-		blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-		blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-		blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-		blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-
-		DXC(m_Device->CreateBlendState(&blendDesc, &blendState));
-		m_DeviceContext->OMSetBlendState(blendState.Get(), 0, 0xffffffff);
 
 
 		// Set topology

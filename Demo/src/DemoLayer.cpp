@@ -38,6 +38,8 @@ void DemoLayer::OnAttach()
 	float colors[4] = { 0.2f, 0.45f, 0.81f, 1.0f };
 	Light::RenderCommand::SetClearBackbufferColor(colors);
 
+	Light::Blender::Enable();
+
 	Light::LayerStack::AttachLayer(m_QuadsLayer);
 }
 
@@ -77,6 +79,13 @@ void DemoLayer::OnUserInterfaceUpdate()
 	if (ImGui::TreeNode("GraphicsContext"))
 	{
 		Light::GraphicsContext::ShowDebugWindow();
+		ImGui::TreePop();
+	}
+	ImGui::Separator();
+
+	if (ImGui::TreeNode("Blender"))
+	{
+		Light::Blender::ShowDebugWindow();
 		ImGui::TreePop();
 	}
 

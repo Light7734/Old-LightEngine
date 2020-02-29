@@ -1,6 +1,7 @@
 #include "ltpch.h"
 #include "GraphicsContext.h"
 
+#include "Blender.h"
 #include "Camera.h"
 #include "RenderCommand.h"
 #include "Renderer.h"
@@ -63,6 +64,7 @@ namespace Light {
 		{
 			std::unique_ptr<glGraphicsContext> context = std::make_unique<glGraphicsContext>(configurations);
 
+			Blender::Init();
 			RenderCommand::SetGraphicsContext(context.get());
 			Renderer::Init();
 			ConstantBuffers::Init();
@@ -74,6 +76,7 @@ namespace Light {
 		{
 			std::unique_ptr<dxGraphicsContext> context = std::make_unique<dxGraphicsContext>(configurations);
 
+			Blender::Init();
 			RenderCommand::SetGraphicsContext(context.get());
 			Renderer::Init();
 			ConstantBuffers::Init();
@@ -91,6 +94,7 @@ namespace Light {
 	{
 		ImGui::BulletText("graphics api: %s", s_Api == GraphicsAPI::Opengl  ? "opengl"  :
 		                                      s_Api == GraphicsAPI::Directx ? "directx" : "");
+
 
 		ImGui::BulletText("resolution: [%d x %d]", s_Configurations.resolution.width, s_Configurations.resolution.height);
 		ImGui::BulletText("aspect ratio: %f", s_Configurations.resolution.aspectRatio);

@@ -24,9 +24,6 @@ namespace Light {
 		LT_CORE_ASSERT(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress),
 		               "glGraphicsContext::glGraphicsContext: gladLoadGLLoader failed");
 
-		glEnable(GL_BLEND); // #todo: create blender
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 		// Set graphics stuff
 		SetConfigurations(configurations);
 		SetDebugMessageCallback();

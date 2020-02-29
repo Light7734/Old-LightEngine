@@ -14,9 +14,10 @@ namespace Light {
 	protected:
 		UserInterface() = default;
 	public:
+		static inline void Terminate() { s_Context->TerminateImpl(); };
+
 		static inline void Begin    () { s_Context->BeginImpl();     };
 		static inline void End      () { s_Context->EndImpl();       };
-		static inline void Terminate() { s_Context->TerminateImpl(); };
 
 		static void ShowImGuiDemoWnidow();
 	protected:
