@@ -57,6 +57,10 @@
 #include "Layers/LayerStack.h"
 // ---------------------------
 
+// Physics -------------------
+#include "Physics/Collision.h"
+// ---------------------------
+
 // Renderer -----------------
 #include "Renderer/Blender.h"
 #include "Renderer/BufferLayout.h"

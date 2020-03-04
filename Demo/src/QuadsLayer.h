@@ -2,10 +2,13 @@
 
 #include <LightEngine.h>
 
+enum Shape { Rect = 0, Circle };
+
 struct Sprite
 {
+	Shape shape;
+
 	glm::vec2 position;
-	glm::vec2 velocity;
 	glm::vec2 size;
 
 	Light::TextureCoordinates* coordinates;	
@@ -18,28 +21,24 @@ private:
 	float m_CameraSpeed = 250.0f;
 
 	std::shared_ptr<Light::TextureAtlas> m_TextureAtlas;
+
 	std::vector<Sprite> m_Sprites;
-	Sprite m_Border;
+	Sprite* m_SelectedSprite = nullptr;
 public:
 	QuadsLayer()
 		: m_Camera(glm::vec2(500.0f, 500.0f), Light::GraphicsContext::GetAspectRatio(), 1000.0f)
 	{
 		m_LayerName = "QuadsLayer";
 
-		m_Border.position = glm::vec2(-28, -62);
-		m_Border.size = glm::vec2(1000.0f + 56, 1000.0f + 93);
-
 		srand(time(NULL));
-
+			
 		for (int i = 0; i < 125; i++)
 		{
 			Sprite sprite;
 
-			sprite.size = glm::vec2(rand() % ((125 - 25) + 1) + 25);
+			sprite.size = glm::vec2(100.0f, 100.0f);
 			sprite.position.x = std::rand() % 1000;
 			sprite.position.y = std::rand() % 1000;
-
-			sprite.velocity = glm::vec2(rand() % ((125 - 25) + 1) + 25);
 
 			m_Sprites.push_back(sprite);
 		}
@@ -51,19 +50,16 @@ public:
 
 		m_Camera.SetProjection(Light::GraphicsContext::GetAspectRatio(), m_Camera.GetZoomLevel());
 
-		Light::TextureCoordinates *pepeCoords, *awesomeCoords;
+		Light::TextureCoordinates *awesomeCoords, *boxCoords;
 		m_TextureAtlas = Light::TextureAtlas::Create("res/atlas.txt");
 
-		pepeCoords = m_TextureAtlas->GetCoordinates("pepe");
 		awesomeCoords = m_TextureAtlas->GetCoordinates("awesomeface");
-		m_Border.coordinates = m_TextureAtlas->GetCoordinates("border");
+		boxCoords = m_TextureAtlas->GetCoordinates("box");
 
 		for (int i = 0; i < m_Sprites.size(); i++)
 		{
-			if (i > m_Sprites.size() / 3)
-				m_Sprites[i].coordinates = awesomeCoords;
-			else
-				m_Sprites[i].coordinates = pepeCoords;
+			m_Sprites[i].shape = (Shape)(i % 2);
+			m_Sprites[i].coordinates = m_Sprites[i].shape == Rect ? boxCoords : awesomeCoords;
 		}
 	}
 
@@ -74,8 +70,19 @@ public:
 	
 	void OnUpdate(float DeltaTime)
 	{
-		if(!m_Sprites.empty())
-			m_Sprites[0].position = Light::Input::MousePosToCameraView(m_Camera) - m_Sprites[0].size / 2.0f;
+		if (m_SelectedSprite)
+			m_SelectedSprite->position = Light::Input::MousePosToCameraView(m_Camera) - m_SelectedSprite->size / 2.0f;
+
+		for (auto& sprite : m_Sprites)
+		{
+			for (auto& target : m_Sprites)
+			{
+				if (&sprite == &target)
+					continue;
+
+				DoCollision(sprite, target);
+			}
+		}
 
 		if (Light::Input::GetKey(KEY_A))
 			m_Camera.MoveX(-m_CameraSpeed * DeltaTime);
@@ -86,49 +93,18 @@ public:
 			m_Camera.MoveY(-m_CameraSpeed * DeltaTime);
 		if (Light::Input::GetKey(KEY_S))
 			m_Camera.MoveY(m_CameraSpeed * DeltaTime);
-
-
-		for (int i = 1; i < m_Sprites.size(); i++)
-		{
-			auto& sprite = m_Sprites[i];
-
-
-			sprite.position += sprite.velocity * DeltaTime;
-
-			if (sprite.position.x < 0.0f)
-			{
-				sprite.position.x = 0.0f;
-				sprite.velocity.x *= -1;
-			}
-			else if (sprite.position.x + sprite.size.x > 1000.0f)
-			{
-				sprite.position.x = 1000.0f - sprite.size.x;
-				sprite.velocity.x *= -1;
-			}
-
-			if (sprite.position.y < 0.0f)
-			{
-				sprite.position.y = 0.0f;
-				sprite.velocity.y *= -1;
-			}
-			else if (sprite.position.y + sprite.size.y > 1000.0f)
-			{
-				sprite.position.y = 1000.0f - sprite.size.y;
-				sprite.velocity.y *= -1;
-			}
-		}
 	}
 
 	void OnRender()
 	{
-		Light::Renderer::Start(m_Camera); // Start
+		Light::Renderer::Start(m_Camera);
 
-		// Draw ...
-		Light::Renderer::DrawQuad(m_Border.position, m_Border.size, m_Border.coordinates, glm::vec4(1.0f)); 
 		for (auto& sprite : m_Sprites) 
-			Light::Renderer::DrawQuad(sprite.position, sprite.size, sprite.coordinates, glm::vec4(1.0f)); // .. Draw
+			Light::Renderer::DrawQuad(sprite.position, sprite.size, sprite.coordinates,
+			                          &sprite == m_SelectedSprite ? glm::vec4(1.0f, 0.6f, 0.6f, 1.0f) :
+			                                                        glm::vec4(1.0f));
 
-		Light::Renderer::End(); // End
+		Light::Renderer::End();
 	} 
 
 	void ShowDebugWindow()
@@ -136,49 +112,13 @@ public:
 		if (ImGui::TreeNode("Camera"))
 		{
 			m_Camera.ShowDebugLayer();
-			ImGui::Text("speed: %f", m_CameraSpeed);
+			ImGui::BulletText("speed: %f", m_CameraSpeed);
 			ImGui::TreePop();
 		}
 
-		if(ImGui::TreeNode("Sprites"))
+		if (ImGui::TreeNode("Sprites"))
 		{
-			if (ImGui::Button("push 50"))
-			{
-				for (int i = 0; i < 50; i++)
-				{
-					Light::TextureCoordinates* pepeCoords, * awesomeCoords;
-					pepeCoords = m_TextureAtlas->GetCoordinates("pepe");
-					awesomeCoords = m_TextureAtlas->GetCoordinates("awesomeface");
-
-
-					Sprite sprite;
-
-					sprite.size = glm::vec2(rand() % ((125 - 25) + 1) + 25);
-					sprite.position.x = std::rand() % 1000;
-					sprite.position.y = std::rand() % 1000;
-
-					sprite.velocity = glm::vec2(rand() % ((125 - 25) + 1) + 25);
-
-					if (i > 50 / 20)
-						sprite.coordinates = awesomeCoords;
-					else
-						sprite.coordinates = pepeCoords;
-
-
-					m_Sprites.push_back(sprite);
-				}
-			} ImGui::SameLine();
-
-			if (ImGui::Button("pop 50"))
-			{
-				for (int i = 0; i < 50; i++)
-					if(m_Sprites.size() != 0)
-						m_Sprites.pop_back();
-			}
-
-
-			ImGui::Text("count: %d", m_Sprites.size());
-
+			ImGui::BulletText("you can drag sprites with mouse!");
 			ImGui::TreePop();
 		}
 	}
@@ -187,8 +127,34 @@ public:
 	{
 		Light::Dispatcher dispatcher(event);
 
+		dispatcher.Dispatch<Light::MouseButtonPressedEvent>(LT_EVENT_FN(QuadsLayer::OnButtonPress));
+		dispatcher.Dispatch<Light::MouseButtonReleasedEvent>(LT_EVENT_FN(QuadsLayer::OnButtonRelease));
+
 		dispatcher.Dispatch<Light::MouseScrolledEvent>(LT_EVENT_FN(QuadsLayer::OnMouseScroll));
+
 		dispatcher.Dispatch<Light::WindowResizedEvent>(LT_EVENT_FN(QuadsLayer::OnWindowResize));
+	}
+
+	bool OnButtonPress(Light::MouseButtonPressedEvent& event)
+	{
+		glm::vec2 mouse = Light::Input::MousePosToCameraView(m_Camera);
+
+		for (auto& sprite : m_Sprites)
+		{
+			if (mouse.x > sprite.position.x && mouse.x < sprite.position.x + sprite.size.x &&
+				mouse.y > sprite.position.y && mouse.y < sprite.position.y + sprite.size.y)
+			{
+				m_SelectedSprite = &sprite;
+				return true;
+			}
+		}
+		return true;
+	}
+
+	bool OnButtonRelease(Light::MouseButtonReleasedEvent& event)
+	{
+		m_SelectedSprite = nullptr;
+		return true;
 	}
 
 	bool OnMouseScroll(Light::MouseScrolledEvent& event)
@@ -203,6 +169,40 @@ public:
 		return true;
 	}
 
+	void DoCollision(Sprite& sprite, Sprite& target)
+	{
+		glm::vec2 diff (0.0f);
+
+		if (sprite.shape == Circle)
+		{
+			if(target.shape == Circle)
+				Light::CheckCollision(sprite.position, sprite.size.x / 2.0f,
+					                  target.position, target.size.x / 2.0f,
+				                      &diff);
+			
+			else
+				Light::CheckCollision(sprite.position, sprite.size.x / 2.0f,
+					                  target.position, target.size,
+				                      &diff);
+		}
+		else
+		{
+			if(target.shape == Circle)
+				Light::CheckCollision(sprite.position, sprite.size,
+					                  target.position, target.size.x / 2.0f,
+				                      &diff);
+			
+			else
+				Light::CheckCollision(sprite.position, sprite.size,
+					                  target.position, target.size,
+				                      &diff);
+		}
+
+		sprite.position -= diff / 2.0f;
+		target.position += diff / 2.0f;
+	}
+
 	inline const glm::vec2& GetPosition() { return m_Sprites[std::size(m_Sprites) - 1].position; }
 	inline const glm::vec2& GetSize    () { return m_Sprites[std::size(m_Sprites) - 1].size;     }
+
 };

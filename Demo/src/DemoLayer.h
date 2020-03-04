@@ -2,7 +2,7 @@
 
 #include <LightEngine.h>
 
-#include "QuadsLayer.h"
+class QuadsLayer;
 
 class DemoLayer : public Light::Layer
 {

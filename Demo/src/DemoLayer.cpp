@@ -1,4 +1,5 @@
 #include "DemoLayer.h"
+#include "QuadsLayer.h"
 
 DemoLayer::DemoLayer()
 {
