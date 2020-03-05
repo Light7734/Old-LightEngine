@@ -3,33 +3,30 @@
 
 #include "GraphicsContext.h"
 
-#include "Platform/Opengl/glBlender.h"
-
 #ifdef LIGHT_PLATFORM_WINDOWS
 	#include "Platform/DirectX/dxBlender.h"
 #endif
+#include "Platform/Opengl/glBlender.h"
 
 #include <imgui.h>
 
 namespace Light {
 
-	Blender* Blender::s_Context = nullptr;
-
+	std::unique_ptr<Blender> Blender::s_Context;
 	bool Blender::b_Enabled = false;
 
 	void Blender::Init()
 	{
-		if (s_Context)
-			delete s_Context;
+		s_Context.reset();
 
 		switch (GraphicsContext::GetAPI())
 		{
 		case GraphicsAPI::Opengl:
-			s_Context = new glBlender;
+			s_Context = std::make_unique<glBlender>();
 			break;
 
 		case GraphicsAPI::Directx:
-			s_Context = new dxBlender;
+			s_Context = std::make_unique<dxBlender>();
 			break;
 
 		default:
@@ -43,6 +40,7 @@ namespace Light {
 	void Blender::ShowDebugWindow()
 	{
 		ImGui::Text("Blending: %s", b_Enabled ? "on" : "off");
+
 		if (ImGui::Button("enable"))
 			Enable();
 		ImGui::SameLine();

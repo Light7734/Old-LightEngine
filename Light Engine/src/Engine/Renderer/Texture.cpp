@@ -15,7 +15,7 @@ namespace Light {
 	std::vector<unsigned int> TextureAtlas::s_AvailableSlots = {15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0};
 
 	unsigned int TextureAtlas::s_Height = 0;
-	unsigned int TextureAtlas::s_Width = 0;
+	unsigned int TextureAtlas::s_Width  = 0;
 
 	TextureAtlas::TextureAtlas()
 	{
@@ -36,23 +36,26 @@ namespace Light {
 		TextureData data;
 		data.pixels = FileManager::LoadTextureFile(atlasData.substr(0, atlasData.find('\n')),
 		                                           &data.width, &data.height, &data.channels);
+		LT_CORE_ASSERT(data, "TextureAtlas::Create: failed to load texture atlas: {}", atlasPath);
 
 		switch (GraphicsContext::GetAPI())
 		{
 		case GraphicsAPI::Opengl:
 		{
 			std::shared_ptr<glTextureAtlas> glAtlas = std::make_shared<glTextureAtlas>(data);
-
 			glAtlas->ParseSegments(atlasData);
+
 			return glAtlas;
 		}
+
 		case GraphicsAPI::Directx: LT_DX(
 		{
 			std::shared_ptr<dxTextureAtlas> dxAtlas = std::make_shared<dxTextureAtlas>(data);
-
 			dxAtlas->ParseSegments(atlasData);
+
 			return dxAtlas;
 		} )
+
 		default:
 			LT_CORE_ASSERT(false, "TextureAtlas::Create: Invalid GraphicsAPI");
 		}
@@ -91,11 +94,13 @@ namespace Light {
 			glTextureAtlas::DestroyTextureArray();
 			break;
 		}
+
 		case GraphicsAPI::Directx: LT_DX(
 		{
 			dxTextureAtlas::DestroyTextureArray();
 			break;
 		})
+
 		default:
 			LT_CORE_ASSERT(false, "TextureAtlas::DestroyTextureArray: Invalid GraphicsAPI");
 		}

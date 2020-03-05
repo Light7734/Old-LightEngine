@@ -5,9 +5,6 @@
 
 #include "Debug/Exceptions.h"
 
-#include "Events/Event.h"
-#include "Events/WindowEvents.h"
-
 #include "glDebug/glToString.h"
 
 #include <glad/glad.h>
@@ -34,7 +31,6 @@ namespace Light {
 		LT_CORE_INFO("        Version : {}", glGetString(GL_VERSION ));
 	}
 
-
 	void glGraphicsContext::SwapBuffers()
 	{
 		glfwSwapBuffers(m_WindowHandle);
@@ -56,7 +52,6 @@ namespace Light {
 		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
 	}
 
-
 	void glGraphicsContext::SetConfigurations(const GraphicsConfigurations& configurations)
 	{
 		SetResolution(configurations.resolution);
@@ -65,11 +60,14 @@ namespace Light {
 	
 	void glGraphicsContext::SetResolution(const Resolution& resolution)
 	{
-		if (resolution.width > s_Properties.primaryMonitorRes.width || resolution.height > s_Properties.primaryMonitorRes.height)
+		std::shared_ptr<Monitor> windowMonitor = Monitor::GetWindowMonitor();
+		const VideoMode videoMode = windowMonitor->GetVideoMode();
+
+		if (resolution.width > videoMode.width || resolution.height > videoMode.height)
 		{
 			LT_CORE_ERROR("GraphicsContext::SetResolution: Window's resolution cannot be higher than monitor's: [{}x{}] > [{}x{}]",
 			              resolution.width, resolution.height,
-			              s_Properties.primaryMonitorRes.width, s_Properties.primaryMonitorRes.height);
+			              videoMode.width , videoMode.height);
 			return;
 		}
 

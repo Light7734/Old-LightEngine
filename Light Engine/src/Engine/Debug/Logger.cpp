@@ -70,7 +70,6 @@ namespace Light {
 		s_Initialized = false;
 	}
 
-
 	void Logger::InitLogFileOutputDir()
 	{
 		// log file's name is the time logger reached its constructor

@@ -5,11 +5,19 @@
 
 namespace Light {
 
+	Light::LayerStack* LayerStack::s_Instance = nullptr;
+
 	std::vector<Layer*> LayerStack::s_Layers = {};
 	std::vector<Layer*> LayerStack::s_PushedLayers = {};
 	std::vector<Layer*> LayerStack::s_PoppedLayers = {};
 
 	bool LayerStack::b_LayersQueued = false;
+
+	LayerStack::LayerStack()
+	{
+		LT_CORE_ASSERT(!s_Instance, "LayerStack::LayerStack: LayerStack should not be constructed on client projects");
+		s_Instance = this;
+	}
 
 	LayerStack::~LayerStack()
 	{
@@ -19,7 +27,6 @@ namespace Light {
 			delete layer;
 		}
 	}
-
 
 	void LayerStack::AttachLayer(Layer* layer)
 	{

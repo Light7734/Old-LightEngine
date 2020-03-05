@@ -3,6 +3,7 @@
 
 #include "Timer.h"
 #include "Window.h"
+#include "Monitor.h"
 
 #include "Events/Event.h"
 #include "Events/WindowEvents.h"
@@ -75,6 +76,9 @@ namespace Light {
 	{
 		if (event.IsInCategory(EventCategory_Input))
 			Input::OnEvent(event);
+
+		if(event.GetEventType() == EventType::WindowMoved)
+			Monitor::OnWindowMove();
 
 		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)
 		{

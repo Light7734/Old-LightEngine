@@ -8,12 +8,9 @@ namespace Light {
 
 	class glUserInterface : public UserInterface
 	{
-	private:
-		friend class UserInterface;
+	public:
 		glUserInterface();
-
-		void TerminateImpl() override;
-
+		~glUserInterface();
 
 		void BeginImpl() override;
 		void EndImpl() override;

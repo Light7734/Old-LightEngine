@@ -5,12 +5,12 @@
 
 namespace Light {
 
-	glShader::glShader(const std::string& vertex_source, const std::string& fragment_source)
+	glShader::glShader(const std::string& vertexSource, const std::string& fragmentSource)
 	{
 		m_ShaderID = glCreateProgram();
 
-		const char* lvs_source = vertex_source.c_str();
-		const char* lfs_source = fragment_source.c_str();
+		const char* lvs_source = vertexSource.c_str();
+		const char* lfs_source = fragmentSource.c_str();
 
 		unsigned int vs = glCreateShader(GL_VERTEX_SHADER);
 		glShaderSource(vs, 1, &lvs_source, nullptr);
@@ -29,11 +29,11 @@ namespace Light {
 
 		int linkStatus;
 		glGetProgramiv(m_ShaderID, GL_LINK_STATUS, &linkStatus);
-		LT_CORE_ASSERT(linkStatus, "glShader::glShader: Failed to link glShader:\nVERTEX_SOURCE:\n{}\nFRAGMENT_SOURCE:\n{}",
-		               vertex_source, fragment_source);
+		LT_CORE_ASSERT(linkStatus, "glShader::glShader: Failed to link glShader:\nvertexSource:\n{}\nfragmentSource:\n{}",
+		               vertexSource, fragmentSource);
 
 
-		BindTextures(fragment_source);
+		BindTextures(fragmentSource);
 	}
 
 	glShader::~glShader()
@@ -41,16 +41,15 @@ namespace Light {
 		glDeleteProgram(m_ShaderID);
 	}
 
-
 	void glShader::Bind()
 	{
 		glUseProgram(m_ShaderID);
 	}
 
-	void glShader::BindTextures(const std::string& fragment_source)
+	void glShader::BindTextures(const std::string& fragmentSource)
 	{
 		int index = 0;
-		std::stringstream stream(fragment_source);
+		std::stringstream stream(fragmentSource);
 		std::string line;
 		Bind();
 

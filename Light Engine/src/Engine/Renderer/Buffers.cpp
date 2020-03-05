@@ -14,14 +14,18 @@ namespace Light {
 
 	void ConstantBuffers::Init()
 	{
+		s_Context.reset();
+
 		switch (GraphicsContext::GetAPI())
 		{
 		case GraphicsAPI::Opengl:
 			s_Context = std::make_unique<glUniformBuffers>();
-			return;
+			break;
+
 		case GraphicsAPI::Directx: LT_DX(
 			s_Context = std::make_unique<dxConstantBuffers>();
-			return; )
+			break; )
+
 		default:
 			LT_CORE_ASSERT(false, "ConstantBuffers::Init: Invalid GraphicsAPI");
 		}

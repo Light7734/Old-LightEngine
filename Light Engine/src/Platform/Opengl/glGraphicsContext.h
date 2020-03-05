@@ -15,14 +15,12 @@ namespace Light {
 	public:
 		glGraphicsContext(const GraphicsConfigurations& configurations);
 
-
 		void SwapBuffers() override;
 
 		void ClearBackbuffer(float colors[4]) override;
 
 		void Draw(unsigned int count) override;
 		void DrawIndexed(unsigned int count) override;
-
 
 		// Setters
 		void SetConfigurations(const GraphicsConfigurations& configurations) override;

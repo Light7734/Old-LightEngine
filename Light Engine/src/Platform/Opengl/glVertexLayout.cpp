@@ -5,15 +5,14 @@
 
 namespace Light {
 
-	glVertexLayout::glVertexLayout(std::initializer_list<std::pair<const char*, VertexType>> init_list)
+	glVertexLayout::glVertexLayout(std::initializer_list<std::pair<const char*, VertexType>> initList)
 	{
-		for (std::pair<const char*, VertexType> listElement : init_list)
+		for (std::pair<const char*, VertexType> listElement : initList)
 		{
 			m_Attributes.emplace_back(GetTypeAttributes(listElement.second));
 			UpdateStride();
 		}
 	}
-
 
 	glVertexAttributes glVertexLayout::GetTypeAttributes(VertexType type)
 	{

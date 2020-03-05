@@ -1,4 +1,4 @@
-#include "ltpch.h"
+ #include "ltpch.h"
 #include "dxTexture.h"
 
 #include "dxGraphicsContext.h"

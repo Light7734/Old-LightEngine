@@ -22,7 +22,6 @@ namespace Light {
 
 		HRESULT hr;
 		DXC(dxGraphicsContext::GetDevice()->CreateBlendState(&blendDesc, &m_State));
-
 	}
 
 	void dxBlender::EnableImpl()

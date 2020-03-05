@@ -23,7 +23,6 @@ namespace Light {
 		                                                      dxpShader->GetVertexBlob().Get()->GetBufferSize(), &m_InputLayout));
 	}
 
-
 	void dxBufferLayout::Bind()
 	{ 
 		dxGraphicsContext::GetDeviceContext()->IASetInputLayout(m_InputLayout.Get());

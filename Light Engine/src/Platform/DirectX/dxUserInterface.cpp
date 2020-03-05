@@ -34,13 +34,12 @@ namespace Light {
 		ImGui_ImplDX11_Init(dxGraphicsContext::GetDevice(), dxGraphicsContext::GetDeviceContext());
 	}
 
-	void dxUserInterface::TerminateImpl()
+	dxUserInterface::~dxUserInterface()
 	{
 		ImGui_ImplDX11_Shutdown();
 		ImGui_ImplWin32_Shutdown();
 		ImGui::DestroyContext();
 	}
-
 
 	void dxUserInterface::BeginImpl()
 	{

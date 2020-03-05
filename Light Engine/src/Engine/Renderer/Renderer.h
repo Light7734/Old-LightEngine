@@ -4,8 +4,6 @@
 
 #include <glm/glm.hpp>
 
-#include <map>
-
 namespace Light {
 
 	class Shader;
@@ -33,9 +31,6 @@ namespace Light {
 			unsigned int quadCount = 0;
 		};
 		static BasicQuadRenderer s_QuadRenderer;
-	private:
-		friend class GraphicsContext;
-		static void Init();
 	public:
 		static void Start(Camera& camera);
 
@@ -45,6 +40,9 @@ namespace Light {
 		//=============== BASIC QUAD RENDERER ===============//
 
 		static void End();
+	private:
+		friend class GraphicsContext;
+		static void Init();
 	};
 
 }

@@ -15,7 +15,6 @@ namespace Light {
 	{
 	private:
 		static Application* s_Instance;
-	private:
 		LayerStack m_LayerStack;
 	protected:
 		std::unique_ptr<Window> m_Window;

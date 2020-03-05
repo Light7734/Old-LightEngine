@@ -12,11 +12,10 @@ namespace Light {
 	class glBufferLayout : public BufferLayout
 	{
 	private:
-		unsigned int m_ArrayID = 0;
+		unsigned int m_ArrayID;
 	public:
 		glBufferLayout(std::shared_ptr<VertexBuffer> buffer, std::shared_ptr<VertexLayout> layout);
 		~glBufferLayout();
-
 
 		void Bind() override;
 	};

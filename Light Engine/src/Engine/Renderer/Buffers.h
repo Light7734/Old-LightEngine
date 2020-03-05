@@ -10,25 +10,24 @@ namespace Light {
 	{
 	private:
 		static std::unique_ptr<ConstantBuffers> s_Context;
-	private:
-		friend class GraphicsContext;
-		static void Init();
 	public:
 		virtual ~ConstantBuffers() = default;
 
-
 		static void SetViewProjMatrix(const glm::f32* view, const glm::f32* proj)
 		            { s_Context->SetViewProjMatrixImpl(view, proj); }
-	protected:
+
 		virtual void SetViewProjMatrixImpl(const glm::f32* view, const glm::f32* proj) = 0;
+	private:
+		friend class GraphicsContext;
+		static void Init();
 	};
 
 	class VertexBuffer
 	{
 	public:
-		static std::shared_ptr<VertexBuffer> Create(float* vertices, unsigned int size, unsigned int stride);
 		virtual ~VertexBuffer() = default;
 
+		static std::shared_ptr<VertexBuffer> Create(float* vertices, unsigned int size, unsigned int stride);
 
 		virtual void Bind() = 0;
 
@@ -39,8 +38,9 @@ namespace Light {
 	class IndexBuffer
 	{
 	public:
-		static std::shared_ptr<IndexBuffer> Create(unsigned int* indices, unsigned int size);
 		virtual ~IndexBuffer() = default;
+
+		static std::shared_ptr<IndexBuffer> Create(unsigned int* indices, unsigned int size);
 
 		virtual void Bind() = 0;
 	};

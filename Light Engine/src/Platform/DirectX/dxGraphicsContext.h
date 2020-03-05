@@ -4,11 +4,11 @@
 
 #include "Renderer/GraphicsContext.h"
 
+#include <glfw/glfw3.h>
+
 #include <d3d11.h>
 #include <dxgi.h>
 #include <wrl.h>
-
-#include <glfw/glfw3.h>
 
 namespace Light {
 
@@ -24,7 +24,6 @@ namespace Light {
 	public:
 		dxGraphicsContext(const GraphicsConfigurations& configurations);
 
-
 		void SwapBuffers() override;
 
 		void ClearBackbuffer(float colors[4]) override;
@@ -32,12 +31,10 @@ namespace Light {
 		void Draw(unsigned int count) override;
 		void DrawIndexed(unsigned int count) override;
 
-
 		// Setters
 		void SetConfigurations(const GraphicsConfigurations& configurations) override;
 		void SetResolution(const Resolution& resolution) override;
 		void SetVSync(bool vSync) override; 
-
 
 		// Getters
 		static ID3D11Device*        GetDevice       () { return s_Instance->m_Device.Get()       ; }

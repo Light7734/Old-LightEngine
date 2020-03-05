@@ -4,7 +4,7 @@
 
 #include <glm/glm.hpp>
 
-#include <map>
+#include <unordered_map>
 
 namespace Light {
 
@@ -27,7 +27,7 @@ namespace Light {
 
 	struct TextureCoordinates
 	{
-		float xMin, yMin, xMax, yMax, atlasIndex;
+		float xMin, yMin, xMax, yMax, sliceIndex;
 	};
 
 	class TextureAtlas
@@ -36,21 +36,19 @@ namespace Light {
 		static std::vector<unsigned int> s_AvailableSlots;
 	protected:
 		static unsigned int s_Width, s_Height;
-	protected:
-		std::map<std::string, TextureCoordinates> m_Segments;
+
+		std::unordered_map<std::string, TextureCoordinates> m_Segments;
 		unsigned int m_Index;
-	protected:
-		TextureAtlas();
 	public:
-		static std::shared_ptr<TextureAtlas> Create(const std::string& atlasPath);
+		TextureAtlas();
 		virtual ~TextureAtlas();
 
+		static std::shared_ptr<TextureAtlas> Create(const std::string& atlasPath);
 
 		static void DestroyTextureArray();
 
-
 		TextureCoordinates* GetCoordinates(const std::string& name) { return &m_Segments[name]; }
-	protected:
+	private:
 		void ParseSegments(const std::string& data);
 	};
 

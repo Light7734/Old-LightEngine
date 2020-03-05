@@ -11,21 +11,23 @@ namespace Light {
 	class LayerStack
 	{
 	private:
+		static LayerStack* s_Instance;
+
 		static std::vector<Layer*> s_Layers;
 		static std::vector<Layer*> s_PushedLayers;
 		static std::vector<Layer*> s_PoppedLayers;
 
 		static bool b_LayersQueued;
-	private:
-		friend class Application;
-		LayerStack() = default;
-		~LayerStack();
 	public:
+		LayerStack();
+		~LayerStack();
+
 		static void AttachLayer(Layer* layer);
 		static void DetatchLayer(Layer* layer);
 
 		static void ShowDebugWindow();
 
+		void HandleQueuedLayers();
 
 		// Getters
 		static unsigned int GetSize() { return static_cast<unsigned int>(s_Layers.size()); }
@@ -35,8 +37,6 @@ namespace Light {
 
 		std::vector<Layer*>::reverse_iterator rbegin() { return s_Layers.rbegin(); }
 		std::vector<Layer*>::reverse_iterator rend() { return s_Layers.rend(); }
-	private:
-		void HandleQueuedLayers();
 	};
 
 }

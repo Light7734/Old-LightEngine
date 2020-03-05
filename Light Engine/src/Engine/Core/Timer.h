@@ -31,7 +31,6 @@ namespace Light {
 		chrono::time_point< chrono::steady_clock > m_StartPoint;
 	public:
 		Timer() { Reset(); }
-		~Timer() = default;
 
 		inline void Reset() { m_StartPoint = chrono::steady_clock::now(); }
 		

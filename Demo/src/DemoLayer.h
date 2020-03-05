@@ -10,7 +10,6 @@ private:
 	QuadsLayer* m_QuadsLayer;
 public:
 	DemoLayer();
-	~DemoLayer();
 
 	void OnAttach() override;
 	void OnDetatch() override;

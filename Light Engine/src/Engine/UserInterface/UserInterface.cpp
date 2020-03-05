@@ -1,36 +1,32 @@
 #include "ltpch.h"
 #include "UserInterface.h"
 
-#include "Core/Window.h"
+#include "Renderer/GraphicsContext.h"
 
-#include "Platform/Opengl/glUserInterface.h"
 #ifdef LIGHT_PLATFORM_WINDOWS
 	#include "Platform/DirectX/dxUserInterface.h"
 #endif
+#include "Platform/Opengl/glUserInterface.h"
 
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 
 namespace Light {
 
-	UserInterface* UserInterface::s_Context = nullptr;
+	std::unique_ptr<UserInterface> UserInterface::s_Context;
 
 	void UserInterface::Init()
 	{
-		if (s_Context)
-		{
-			s_Context->TerminateImpl();
-			delete s_Context;
-		}
+		s_Context.reset();
 
 		switch (GraphicsContext::GetAPI())
 		{
 		case GraphicsAPI::Opengl:
-			s_Context = new glUserInterface;
+			s_Context = std::make_unique<glUserInterface>();
 			break;
 
 		case GraphicsAPI::Directx: LT_DX(
-			s_Context = new dxUserInterface;
+			s_Context = std::make_unique<dxUserInterface>();
 			break;
 		)
 

@@ -50,9 +50,7 @@ namespace Light {
 		Window& operator=(const Window&) = delete;
 		~Window();
 
-
 		void HandleEvents();
-
 
 		// Graphics
 		static inline void GfxSetApi(GraphicsAPI api, const GraphicsConfigurations& configurations)
@@ -67,7 +65,6 @@ namespace Light {
 		static inline void GfxSetVSync            (bool vsync)
 		                   { s_Context->m_GraphicsContext->SetVSync(vsync); }
 
-
 		// Setters
 		void SetEventCallbackFunction(std::function<void(Event&)> event_callback_func);
 
@@ -79,10 +76,9 @@ namespace Light {
 		static void Center();
 		static void Close();
 
-
 		// Getters
-		static GLFWwindow* GetGlfwHandle  () { return s_Context->m_GlfwHandle;   }
-		static void*       GetNativeHandle() { return s_Context->m_NativeHandle; }
+		static inline GLFWwindow* GetGlfwHandle  () { return s_Context->m_GlfwHandle;   }
+		static inline void*       GetNativeHandle() { return s_Context->m_NativeHandle; }
 
 		static inline const std::string& GetTitle() { return s_Context->m_Data.title; }
 

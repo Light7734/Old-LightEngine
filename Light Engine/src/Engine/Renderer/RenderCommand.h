@@ -11,9 +11,6 @@ namespace Light {
 	private:
 		static GraphicsContext* s_pToGraphicsContext;
 		static float s_backBuffercolor[4];
-	private:
-		friend class GraphicsContext;
-		static inline void SetGraphicsContext(GraphicsContext* context) { s_pToGraphicsContext = context; }
 	public:
 		static bool HasContext() { return s_pToGraphicsContext; }
 
@@ -24,6 +21,9 @@ namespace Light {
 
 		static void Draw(unsigned int count);
 		static void DrawIndexed(unsigned int count);
+	private:
+		friend class GraphicsContext;
+		static inline void SetGraphicsContext(GraphicsContext* context) { s_pToGraphicsContext = context; }
 	};
 
 }

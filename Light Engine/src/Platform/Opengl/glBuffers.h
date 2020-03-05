@@ -17,11 +17,10 @@ namespace Light {
 	class glUniformBuffers : public ConstantBuffers
 	{
 	private:
-		unsigned int m_ViewProjBuffer = 0;
+		unsigned int m_ViewProjBuffer;
 	public:
 		glUniformBuffers();
 		~glUniformBuffers();
-
 
 		void SetViewProjMatrixImpl(const glm::f32* view, const glm::f32* proj) override;
 	};
@@ -29,11 +28,10 @@ namespace Light {
 	class glVertexBuffer : public VertexBuffer
 	{
 	private:
-		unsigned int m_BufferID = 0;
+		unsigned int m_BufferID;
 	public:
 		glVertexBuffer(float* vertices, unsigned int size);
 		~glVertexBuffer();
-
 
 		void Bind() override;
 
@@ -44,11 +42,10 @@ namespace Light {
 	class glIndexBuffer : public IndexBuffer
 	{
 	private:
-		unsigned int m_BufferID = 0;
+		unsigned int m_BufferID;
 	public:
 		glIndexBuffer(unsigned int* indices, unsigned int size);
 		~glIndexBuffer();
-
 
 		void Bind() override;
 	};

@@ -20,8 +20,7 @@ namespace Light {
 		std::vector<glVertexAttributes> m_Attributes;
 		unsigned int m_Stride = 0;
 	public:
-		glVertexLayout(std::initializer_list<std::pair<const char*, VertexType>> init_list);
-
+		glVertexLayout(std::initializer_list<std::pair<const char*, VertexType>> initList);
 
 		inline std::vector<glVertexAttributes> GetAttribtues() { return m_Attributes; }
 

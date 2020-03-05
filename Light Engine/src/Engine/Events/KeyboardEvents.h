@@ -17,7 +17,6 @@ namespace Light {
 	public:
 		KeyboardKeyPressedEvent(int16_t key): m_Key(key) {}
 
-
 		inline int GetKey() const { return m_Key; }
 
 		std::string GetLogInfo() const 
@@ -37,7 +36,6 @@ namespace Light {
 		const int m_Key;
 	public:
 		KeyboardKeyReleasedEvent(int key): m_Key(key) {}
-
 
 		inline int GetKey() const { return m_Key; }
 

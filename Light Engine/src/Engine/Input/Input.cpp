@@ -13,8 +13,8 @@
 
 namespace Light {
 
-	glm::ivec2 Input::s_MouseOff;
-	glm::ivec2 Input::s_MousePos;
+	glm::ivec2 Input::s_MouseOff = glm::ivec2(0, 0);
+	glm::ivec2 Input::s_MousePos = glm::ivec2(0, 0);
 
 	int  Input::s_MouseWheelOff = 0;
 
@@ -233,7 +233,6 @@ namespace Light {
 
 		return buttonMap[button].empty() ? std::to_string(button) : buttonMap[button];
 	}
-
 
 	bool Input::OnKeyPress(KeyboardKeyPressedEvent& event)
 	{

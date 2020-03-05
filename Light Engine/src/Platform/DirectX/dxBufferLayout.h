@@ -19,7 +19,6 @@ namespace Light {
 	public:
 		dxBufferLayout(std::shared_ptr<Shader> shader, std::shared_ptr<VertexLayout> layout);
 
-
 		void Bind() override;
 	};
 

@@ -4,8 +4,6 @@
 
 #include "Renderer/Texture.h"
 
-#include <glm/glm.hpp>
-
 namespace Light {
 
 	class glTextureAtlas : public TextureAtlas
@@ -14,7 +12,6 @@ namespace Light {
 		static unsigned int m_AtlasID;
 	public:
 		glTextureAtlas(const TextureData& data);
-
 
 		static void DestroyTextureArray();
 	private:

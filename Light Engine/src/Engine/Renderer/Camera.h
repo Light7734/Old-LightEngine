@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Buffers.h"
-
 #include "Core/Core.h"
 
 #include <glm/glm.hpp>
@@ -13,8 +11,8 @@ namespace Light {
 	private:
 		static const glm::vec3 s_Up;
 	private:
-		glm::mat4 m_Projection = glm::mat4(1.0f);
-		glm::mat4 m_View = glm::mat4(1.0f);
+		glm::mat4 m_Projection;
+		glm::mat4 m_View;
 		glm::vec2 m_Position;
 
 		float m_ZoomLevel;
@@ -23,9 +21,7 @@ namespace Light {
 		Camera(const glm::vec2& position, float aspectRatio, float zoomLevel)
 			: m_Position(position), m_AspectRatio(aspectRatio), m_ZoomLevel(zoomLevel) {}
 
-
 		void ShowDebugLayer();
-
 
 		// Getters
 		const glm::f32* GetView();
@@ -35,7 +31,6 @@ namespace Light {
 
 		inline float GetZoomLevel  () const { return m_ZoomLevel;   }
 		inline float GetAspectRatio() const { return m_AspectRatio; }
-
 
 		// Setters
 		inline void Move (const glm::vec2& offset) { m_Position += offset;  }

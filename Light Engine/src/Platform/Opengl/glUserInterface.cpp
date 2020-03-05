@@ -14,9 +14,9 @@ namespace Light {
 		// Setup Dear ImGui context
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
-		ImGuiIO& io = ImGui::GetIO(); (void)io;
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+		ImGuiIO& io = ImGui::GetIO();
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;  // Enable Gamepad Controls
 
 		// Setup Dear ImGui style
 		ImGui::StyleColorsDark();
@@ -26,18 +26,16 @@ namespace Light {
 		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 
 		// Setup Platform/Renderer bindings
-
 		ImGui_ImplGlfw_InitForOpenGL(Window::GetGlfwHandle(), false);
 		ImGui_ImplOpenGL3_Init("#version 450 core");
 	}
 
-	void glUserInterface::TerminateImpl()
+	glUserInterface::~glUserInterface()
 	{
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
 	}
-
 
 	void glUserInterface::BeginImpl()
 	{

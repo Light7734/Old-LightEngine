@@ -15,7 +15,6 @@ namespace Light {
 	public:
 		dxVertexLayout(std::initializer_list<std::pair<const char*, VertexType>> init_list);
 
-
 		inline D3D11_INPUT_ELEMENT_DESC* GetElements() { return &(m_InputElements.front()); }
 
 		inline unsigned int GetElementsCount() const { return static_cast<unsigned int>(m_InputElements.size()); }

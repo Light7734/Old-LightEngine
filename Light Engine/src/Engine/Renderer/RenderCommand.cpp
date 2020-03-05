@@ -1,8 +1,6 @@
 #include "ltpch.h"
 #include "RenderCommand.h"
 
-#include "Events/Event.h"
-
 #include <glad/glad.h>
 
 namespace Light {

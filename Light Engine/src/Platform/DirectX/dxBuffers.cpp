@@ -16,7 +16,7 @@ namespace Light {
 		bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 		bd.Usage = D3D11_USAGE_DYNAMIC;
 		bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		bd.ByteWidth = sizeof(glm::mat4) * 2;
+		bd.ByteWidth = sizeof(glm::mat4) * 2u;
 
 		HRESULT hr;
 		DXC(dxGraphicsContext::GetDevice()->CreateBuffer(&bd, nullptr, &m_ViewProjBuffer));
@@ -26,7 +26,6 @@ namespace Light {
 		                                                            1u,
 		                                                            m_ViewProjBuffer.GetAddressOf());
 	}
-
 
 	void dxConstantBuffers::SetViewProjMatrixImpl(const glm::f32* view, const glm::f32* proj)
 	{
@@ -39,7 +38,6 @@ namespace Light {
 
 		dxGraphicsContext::GetDeviceContext()->Unmap(m_ViewProjBuffer.Get(), NULL);
 	}
-
 
 	// VertexBuffer //
 	dxVertexBuffer::dxVertexBuffer(float* vertices, unsigned int size, unsigned int stride)
@@ -60,7 +58,6 @@ namespace Light {
 		DXC(dxGraphicsContext::GetDevice()->CreateBuffer(&bd, sd.pSysMem ? &sd : nullptr, &m_Buffer));
 	}
 
-
 	void* dxVertexBuffer::Map()
 	{
 		dxGraphicsContext::GetDeviceContext()->Map(m_Buffer.Get(), NULL, D3D11_MAP_WRITE_DISCARD, NULL, &m_Map);
@@ -74,9 +71,9 @@ namespace Light {
 
 	void dxVertexBuffer::Bind()
 	{
-		dxGraphicsContext::GetDeviceContext()->IASetVertexBuffers(0u, 1u, m_Buffer.GetAddressOf(), &m_Stride, &m_Offset);
+		static const UINT offset = 0u;
+		dxGraphicsContext::GetDeviceContext()->IASetVertexBuffers(0u, 1u, m_Buffer.GetAddressOf(), &m_Stride, &offset);
 	}
-
 
 	// IndexBuffer //
 	dxIndexBuffer::dxIndexBuffer(unsigned int* indices, unsigned int size)
@@ -94,7 +91,6 @@ namespace Light {
 		HRESULT hr;
 		DXC(dxGraphicsContext::GetDevice()->CreateBuffer(&bd, &sd, &m_Buffer));
 	}
-
 
 	void dxIndexBuffer::Bind()
 	{

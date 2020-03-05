@@ -11,11 +11,11 @@ namespace Light {
 	class BufferLayout
 	{
 	public:
+		virtual ~BufferLayout() = default;	
+
 		static std::shared_ptr<BufferLayout> Create(std::shared_ptr<Shader> shader,
 		                                            std::shared_ptr<VertexBuffer> buffer,
 		                                            std::shared_ptr<VertexLayout> layout);
-		virtual ~BufferLayout() = default;	
-
 
 		virtual void Bind() = 0;
 	};

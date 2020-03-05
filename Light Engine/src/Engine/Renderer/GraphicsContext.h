@@ -21,8 +21,8 @@ namespace Light {
 
 	struct Resolution
 	{
-		unsigned int width = 0u, height = 0u;
-		float aspectRatio = 0.0f;
+		unsigned int width, height;
+		float aspectRatio;
 
 		Resolution(unsigned int _width, unsigned int _height, AspectRatio ratio)
 			: width(_width), height(_height), aspectRatio((float)_width / _height)
@@ -47,13 +47,6 @@ namespace Light {
 		}
 	};
 
-	// #todo: improve ( should I remove this? I don't see the point of this struct when we have the Monitor class)
-	struct GraphicsProperties
-	{
-		std::shared_ptr<Monitor> primaryMonitor;
-		Resolution primaryMonitorRes;
-	};
-
 	struct GraphicsConfigurations
 	{
 		Resolution resolution;
@@ -65,23 +58,12 @@ namespace Light {
 	private:
 		static GraphicsAPI s_Api;
 	protected:
-		static GraphicsProperties s_Properties;
 		static GraphicsConfigurations s_Configurations;
-	private:
-		friend class Window;
-		static std::unique_ptr<GraphicsContext> Create(GraphicsAPI api, const GraphicsConfigurations& configurations);
-	protected:
-		GraphicsContext           (                      ) = default;
-		GraphicsContext           (const GraphicsContext&) = delete ;
-		GraphicsContext& operator=(const GraphicsContext&) = delete ;
 	public:
 		virtual ~GraphicsContext() = default;
 		
-
 		static void ShowDebugWindow();
 
-
-		// Rendering stuff
 		virtual void SwapBuffers() = 0;
 
 		virtual void ClearBackbuffer(float colors[4]) = 0;
@@ -89,22 +71,22 @@ namespace Light {
 		virtual void Draw(unsigned int count) = 0;
 		virtual void DrawIndexed(unsigned int count) = 0;
 
-
 		// Setters
 		virtual void SetConfigurations(const GraphicsConfigurations& configurations) = 0;
 		virtual void SetResolution    (const Resolution& resolution                ) = 0;
 		virtual void SetVSync         (bool vsync                                  ) = 0;
 
-
 		// Getters
 		static inline const GraphicsConfigurations& GetConfigurations() { return s_Configurations; }
-		static inline const GraphicsProperties&     GetProperties    () { return s_Properties;     }
 		static inline const GraphicsAPI             GetAPI           () { return s_Api;            }
 		
 		static inline const Resolution& GetResolution() { return s_Configurations.resolution; }
 		static inline float GetAspectRatio() { return s_Configurations.resolution.aspectRatio; }
 
 		static inline bool IsVSync() { return s_Configurations.vSync; }
+	private:
+		friend class Window;
+		static std::unique_ptr<GraphicsContext> Create(GraphicsAPI api, const GraphicsConfigurations& configurations);
 	};
 
 }

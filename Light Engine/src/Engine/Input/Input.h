@@ -39,7 +39,6 @@ namespace Light {
 	public:
 		Input() = delete;
 
-
 		static void OnEvent(Event& event);
 
 		static glm::vec2 MousePosToCameraView(const Camera& camera);

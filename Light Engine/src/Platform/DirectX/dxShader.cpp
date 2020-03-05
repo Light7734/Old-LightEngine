@@ -9,12 +9,12 @@
 
 namespace Light {
 
-	dxShader::dxShader(const std::string& vertex_source, const std::string& pixel_source)
+	dxShader::dxShader(const std::string& vertexSource, const std::string& pixelSource)
 	{
 		Microsoft::WRL::ComPtr<ID3DBlob> ps = nullptr, vsErr = nullptr, psErr = nullptr;
 
-		D3DCompile(vertex_source.c_str(), vertex_source.length(), NULL, nullptr, nullptr, "main", "vs_4_0", NULL, NULL, &m_VertexBlob, &vsErr);
-		D3DCompile(pixel_source.c_str() , pixel_source.length() , NULL, nullptr, nullptr, "main", "ps_4_0", NULL, NULL, &ps, &psErr);
+		D3DCompile(vertexSource.c_str(), vertexSource.length(), NULL, nullptr, nullptr, "main", "vs_4_0", NULL, NULL, &m_VertexBlob, &vsErr);
+		D3DCompile(pixelSource.c_str() , pixelSource.length() , NULL, nullptr, nullptr, "main", "ps_4_0", NULL, NULL, &ps, &psErr);
 
 		LT_CORE_ASSERT(!vsErr.Get(), "dxShader::dxShader: Vertex shader compile error: {}", (char*)vsErr->GetBufferPointer());
 		LT_CORE_ASSERT(!psErr.Get(), "dxShader::dxShader: Pixel shader compile error: {}", (char*)psErr->GetBufferPointer());

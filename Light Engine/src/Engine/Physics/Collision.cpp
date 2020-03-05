@@ -5,10 +5,7 @@
 #include <glm/matrix.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include <ImGui.h>
-
 namespace Light {
-
 
 	bool CheckCollision(const glm::vec2& rectOnePos, const glm::vec2& rectOneSize,
 	                    const glm::vec2& rectTwoPos, const glm::vec2& rectTwoSize,

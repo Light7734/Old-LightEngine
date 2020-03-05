@@ -53,7 +53,6 @@ namespace Light {
 		//=============== BASIC QUAD RENDERER ===============//
 	}
 
-
 	void Renderer::Start(Camera& camera)
 	{
 		ConstantBuffers::SetViewProjMatrix(camera.GetView(), camera.GetProjection());
@@ -94,7 +93,7 @@ namespace Light {
 
 		s_QuadRenderer.mapCurrent[6 + 0] = str.xMin;
 		s_QuadRenderer.mapCurrent[7 + 0] = str.yMin;
-		s_QuadRenderer.mapCurrent[8 + 0] = str.atlasIndex;
+		s_QuadRenderer.mapCurrent[8 + 0] = str.sliceIndex;
 
 		// TOP_RIGHT
 		s_QuadRenderer.mapCurrent[0 + 9] = xMax;
@@ -107,7 +106,7 @@ namespace Light {
 
 		s_QuadRenderer.mapCurrent[6 + 9] = str.xMax;
 		s_QuadRenderer.mapCurrent[7 + 9] = str.yMin;
-		s_QuadRenderer.mapCurrent[8 + 9] = str.atlasIndex;
+		s_QuadRenderer.mapCurrent[8 + 9] = str.sliceIndex;
 
 		// BOTTOM_RIGHT
 		s_QuadRenderer.mapCurrent[0 + 18] = xMax;
@@ -120,7 +119,7 @@ namespace Light {
 
 		s_QuadRenderer.mapCurrent[6 + 18] = str.xMax;
 		s_QuadRenderer.mapCurrent[7 + 18] = str.yMax;
-		s_QuadRenderer.mapCurrent[8 + 18] = str.atlasIndex;
+		s_QuadRenderer.mapCurrent[8 + 18] = str.sliceIndex;
 
 		// BOTTOM_LEFT
 		s_QuadRenderer.mapCurrent[0 + 27] = xMin;
@@ -133,7 +132,7 @@ namespace Light {
 
 		s_QuadRenderer.mapCurrent[6 + 27] = str.xMin;
 		s_QuadRenderer.mapCurrent[7 + 27] = str.yMax;
-		s_QuadRenderer.mapCurrent[8 + 27] = str.atlasIndex;
+		s_QuadRenderer.mapCurrent[8 + 27] = str.sliceIndex;
 
 
 		// Increase buffer map and quad count

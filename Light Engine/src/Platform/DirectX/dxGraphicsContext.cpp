@@ -100,7 +100,6 @@ namespace Light {
 		LT_CORE_INFO("        Renderer: {}", adapterDesc);
 	}
 
-
 	void dxGraphicsContext::SwapBuffers()
 	{
 		m_SwapChain->Present(s_Configurations.vSync, NULL);
@@ -131,11 +130,15 @@ namespace Light {
 
 	void dxGraphicsContext::SetResolution(const Resolution& resolution)
 	{
-		if (resolution.width > s_Properties.primaryMonitorRes.width || resolution.height > s_Properties.primaryMonitorRes.height)
+		std::shared_ptr<Monitor> windowMonitor = Monitor::GetWindowMonitor();
+		const VideoMode videoMode = windowMonitor->GetVideoMode();
+
+
+		if (resolution.width > videoMode.width || resolution.height > videoMode.height)
 		{
 			LT_CORE_ERROR("GraphicsContext::SetResolution: Window's resolution cannot be higher than monitor's: [{}x{}] > [{}x{}]",
 			              resolution.width, resolution.height,
-			              s_Properties.primaryMonitorRes.width, s_Properties.primaryMonitorRes.height);
+			              videoMode.width , videoMode.height);
 			return;
 		}
 

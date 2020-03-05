@@ -1,6 +1,8 @@
 #include "ltpch.h"
 #include "Exceptions.h"
 
+#include "Platform/Opengl/glDebug/glToString.h"
+
 #include <glad/glad.h>
 
 #ifdef LIGHT_PLATFORM_WINDOWS
@@ -10,9 +12,13 @@
 namespace Light {
 
 	glException::glException(unsigned int source, unsigned int type, unsigned int id, const char* msg)
+
 	{
 		// #todo: Log more information
 		LT_CORE_FATAL("glException has been thrown:");
+		LT_CORE_WARN("glMessageCallback: :: Source: {} :: Type: {} :: ID: {}",
+		             glToString::DebugMsgSource  (source  ),
+		             glToString::DebugMsgType    (type    ), id);
 		LT_CORE_FATAL("        Vendor  : {}", glGetString(GL_VENDOR));
 		LT_CORE_FATAL("        Renderer: {}", glGetString(GL_RENDERER));
 		LT_CORE_FATAL("        Version : {}", glGetString(GL_VERSION));

@@ -70,12 +70,10 @@ namespace Light {
 		glfwTerminate();
 	}
 
-
 	void Window::HandleEvents()
 	{
 		glfwPollEvents();
 	}
-
 
 	// Setters
 	void Window::SetEventCallbackFunction(std::function<void(Event&)> event_callback_func)

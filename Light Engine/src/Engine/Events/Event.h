@@ -41,7 +41,6 @@ namespace Light {
 	public:
 		Event() = default;
 
-
 		// Getters
 		virtual inline EventType   GetEventType() const = 0;
 		virtual        std::string GetLogInfo  () const = 0;
@@ -49,7 +48,6 @@ namespace Light {
 		virtual inline bool IsInCategory(EventCategory category) const = 0;
 
 		inline bool IsDispatched() const { return b_Dispatched; }
-
 
 		// Operators
 		friend inline std::ostream& operator<<(std::ostream& os, const Event& event) // why can't I use this on spdlog????
@@ -64,7 +62,6 @@ namespace Light {
 		Event& m_Event;
 	public:
 		Dispatcher(Event& event): m_Event(event) {}
-
 
 		template <typename EventType>
 		void Dispatch(std::function<bool(EventType&)> function)

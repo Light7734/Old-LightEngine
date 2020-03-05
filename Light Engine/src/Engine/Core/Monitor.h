@@ -9,35 +9,44 @@ struct GLFWvidmode;
 
 namespace Light {
 
-	// #todo: Add more stuff (gamma ramp, etc)
+	struct VideoMode
+	{
+		int width, height;
+		int redBits, greenBits, blueBits;
+		int refreshRate;
+
+		VideoMode(const GLFWvidmode* mode);
+
+		operator bool() { return width && height; }
+	};
+
 	class Monitor
 	{
 	private:
 		static std::vector<std::shared_ptr<Monitor>> s_Handles;
 		static GLFWmonitor** s_Monitors;
-
 		static int s_Count;
-	private:
+
+		static int s_WindowMonitorIndex;
+
 		int m_Index;
 		bool b_Valid;
-	private:
-		friend class Window;
-		static void Init();
 	public:
 		Monitor(int index);
 
+		static void OnWindowMove();
 
 		static void ShowDebugWindowAll();
 
 		void ShowDebugWindow();
 
-
 		// Setters
 		void SetUserPointer(void* userPointer);
 
-
 		// Getters
 		static std::shared_ptr<Monitor> GetMonitor(unsigned int index);
+
+		static inline std::shared_ptr<Monitor> GetWindowMonitor() { return s_Handles[s_WindowMonitorIndex]; }
 
 		static inline unsigned int GetCount() { return s_Count; }
 
@@ -45,7 +54,7 @@ namespace Light {
 
 		const char* GetName() const;
 
-		const GLFWvidmode* GetVideoMode() const;
+		const VideoMode GetVideoMode() const;
 
 		glm::ivec4 GetWorkArea() const;
 		glm::vec2 GetContentScale() const;
@@ -57,12 +66,14 @@ namespace Light {
 		inline int GetIndex() const { return m_Index; }
 		inline bool IsValid() const { return b_Valid; }
 
-
 		// Operators
 		operator bool() const
 		{
 			return b_Valid && m_Index < s_Count;
 		}
+	private:
+		friend class Window;
+		static void Init();
 	};
 
 }

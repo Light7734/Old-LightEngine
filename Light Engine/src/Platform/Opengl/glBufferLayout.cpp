@@ -1,8 +1,9 @@
 #include "ltpch.h"
 #include "glBufferLayout.h"
 
-#include "glBuffers.h"
 #include "glVertexLayout.h"
+
+#include "Renderer/Buffers.h"
 
 #include <glad/glad.h>
 
@@ -21,7 +22,7 @@ namespace Light {
 		unsigned int index = 0;
 		for (glVertexAttributes attribute : glpLayout->GetAttribtues())
 		{
-			if (attribute.type <= GL_UNSIGNED_INT)
+			if (attribute.type <= GL_UNSIGNED_INT) // #todo:
 				glVertexAttribIPointer(index, attribute.count, attribute.type, glpLayout->GetStride(), (const void*)attribute.offset);
 			else
 				glVertexAttribPointer(index, attribute.count, attribute.type, false, glpLayout->GetStride(), (const void*)attribute.offset);
@@ -33,7 +34,6 @@ namespace Light {
 	{
 		glDeleteVertexArrays(1, &m_ArrayID);
 	}
-
 
 	void glBufferLayout::Bind()
 	{

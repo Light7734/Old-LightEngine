@@ -3,12 +3,8 @@
 
 DemoLayer::DemoLayer()
 {
-	m_LayerName = "DemoLayer";
+	m_LayeDebugrName = "DemoLayer";
 	m_QuadsLayer = new QuadsLayer;
-}
-
-DemoLayer::~DemoLayer()
-{
 }
 
 void DemoLayer::OnAttach()

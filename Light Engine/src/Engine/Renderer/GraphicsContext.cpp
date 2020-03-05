@@ -2,7 +2,7 @@
 #include "GraphicsContext.h"
 
 #include "Blender.h"
-#include "Camera.h"
+#include "Buffers.h"
 #include "RenderCommand.h"
 #include "Renderer.h"
 #include "Texture.h"
@@ -16,33 +16,19 @@
 #endif
 #include "Platform/Opengl/glGraphicsContext.h"
 
-
 #include <glfw/glfw3.h>
 
 #include <imgui.h>
 
 namespace Light {
 
-	GraphicsProperties GraphicsContext::s_Properties;
 	GraphicsConfigurations GraphicsContext::s_Configurations;
 
 	GraphicsAPI GraphicsContext::s_Api = GraphicsAPI::Default;
 
 	std::unique_ptr<GraphicsContext> GraphicsContext::Create(GraphicsAPI api, const GraphicsConfigurations& configurations)
 	{
-		if(s_Api == GraphicsAPI::Default) // First call
-		{
-			s_Properties.primaryMonitor = Monitor::GetMonitor(0);
-
-			const GLFWvidmode* mode = s_Properties.primaryMonitor->GetVideoMode();
-			float ratio = (float)mode->width / mode->height;
-			s_Properties.primaryMonitorRes = Resolution(mode->width, mode->height,
-			                                            ratio == 4.0f / 3.0f ? AspectRatio::AR_4_3     :
-			                                            ratio == 16.0f / 9.0f ? AspectRatio::AR_16_9   :
-			                                            ratio == 16.0f / 10.0f ? AspectRatio::AR_16_10 :
-			                                            AspectRatio());
-		}
-		else
+		if(s_Api != GraphicsAPI::Default)
 			TextureAtlas::DestroyTextureArray(); // Destroy previous GraphicsAPI's texture array
 
 
@@ -64,8 +50,8 @@ namespace Light {
 		{
 			std::unique_ptr<glGraphicsContext> context = std::make_unique<glGraphicsContext>(configurations);
 
-			Blender::Init();
 			RenderCommand::SetGraphicsContext(context.get());
+			Blender::Init();
 			Renderer::Init();
 			ConstantBuffers::Init();
 			UserInterface::Init();
@@ -76,8 +62,8 @@ namespace Light {
 		{
 			std::unique_ptr<dxGraphicsContext> context = std::make_unique<dxGraphicsContext>(configurations);
 
-			Blender::Init();
 			RenderCommand::SetGraphicsContext(context.get());
+			Blender::Init();
 			Renderer::Init();
 			ConstantBuffers::Init();
 			UserInterface::Init();
@@ -88,7 +74,6 @@ namespace Light {
 			LT_CORE_ASSERT(false, "GraphicsContext::Create: Invalid GraphicsAPI");
 		}
 	}
-
 
 	void GraphicsContext::ShowDebugWindow()
 	{

@@ -10,16 +10,14 @@ namespace Light {
 	
 	class Layer
 	{
-	private:
-		bool b_Enabled = true;
 	protected:
-		std::string m_LayerName = "DefaultLayerName";
+		std::string m_LayeDebugrName = "DefaultLayerName";
+		bool b_Enabled = true;
 	public:
 		Layer           (            ) = default;
 		Layer           (const Layer&) = delete ;
 		Layer& operator=(const Layer&) = delete ;
 		virtual ~Layer  (            ) = default;
-
 
 		virtual void Enable () { b_Enabled = true ; }
 		virtual void Disable() { b_Enabled = false; }
@@ -35,9 +33,8 @@ namespace Light {
 
 		virtual void OnEvent(Event& event) {}
 
-
 		// Getters
-		inline const std::string& GetName() const { return m_LayerName; }
+		inline const std::string& GetName() const { return m_LayeDebugrName; }
 		inline bool IsEnabled() const { return b_Enabled; }
 	};
 

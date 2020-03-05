@@ -8,12 +8,9 @@ namespace Light {
 
 	class dxUserInterface : public UserInterface
 	{
-	private:
-		friend class UserInterface;
+	public:
 		dxUserInterface();
-
-		void TerminateImpl() override;
-
+		~dxUserInterface();
 
 		void BeginImpl() override;
 		void EndImpl() override;
