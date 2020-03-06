@@ -12,12 +12,18 @@ namespace Light {
 	class dxBlender : public Blender
 	{
 	private:
+		const std::unordered_map<BlendFactor, D3D11_BLEND> m_BlendFactorsMap;
+
 		Microsoft::WRL::ComPtr<ID3D11BlendState> m_State;
+		D3D11_BLEND_DESC m_Desc;
 	public:
 		dxBlender();
 
 		void EnableImpl() override;
 		void DisableImpl() override;
+
+		void SetSrcFactorImpl(BlendFactor factor);
+		void SetDstFactorImpl(BlendFactor factor);
 	};
 
 }

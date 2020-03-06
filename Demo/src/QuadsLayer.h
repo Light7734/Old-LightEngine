@@ -2,14 +2,11 @@
 
 #include <LightEngine.h>
 
-enum Shape { Rect = 0, Circle };
-
 struct Sprite
 {
-	Shape shape;
-
 	glm::vec2 position;
 	glm::vec2 size;
+	glm::vec4 tint;
 
 	Light::TextureCoordinates* coordinates;	
 };

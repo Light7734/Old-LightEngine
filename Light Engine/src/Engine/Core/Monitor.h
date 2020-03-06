@@ -55,6 +55,7 @@ namespace Light {
 		const char* GetName() const;
 
 		const VideoMode GetVideoMode() const;
+		std::vector<VideoMode> GetVideoModes() const;
 
 		glm::ivec4 GetWorkArea() const;
 		glm::vec2 GetContentScale() const;

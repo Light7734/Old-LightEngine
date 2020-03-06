@@ -147,6 +147,19 @@ namespace Light {
 		return VideoMode(glfwGetVideoMode(s_Monitors[m_Index]));
 	}
 
+	std::vector<VideoMode> Monitor::GetVideoModes() const
+	{
+		int count;
+		const GLFWvidmode* glfwVideoModes = glfwGetVideoModes(s_Monitors[m_Index], &count);
+
+		std::vector<VideoMode> engineVideoModes;
+
+		for (int i = 0; i < count; i++)
+			engineVideoModes.emplace_back(glfwVideoModes + i);
+
+		return engineVideoModes;
+	}
+
 	glm::ivec4 Monitor::GetWorkArea() const
 	{
 		glm::ivec4 area;

@@ -26,16 +26,16 @@ void QuadsLayer::OnAttach()
 
 	m_Camera.SetProjection(Light::GraphicsContext::GetAspectRatio(), m_Camera.GetZoomLevel());
 
-	Light::TextureCoordinates* awesomeCoords, * boxCoords;
 	m_TextureAtlas = Light::TextureAtlas::Create("res/atlas.txt");
-
-	awesomeCoords = m_TextureAtlas->GetCoordinates("awesomeface");
-	boxCoords = m_TextureAtlas->GetCoordinates("box");
+	Light::TextureCoordinates* planeCoords = m_TextureAtlas->GetCoordinates("plane");
 
 	for (int i = 0; i < m_Sprites.size(); i++)
 	{
-		m_Sprites[i].shape = (Shape)(i % 2);
-		m_Sprites[i].coordinates = m_Sprites[i].shape == Rect ? boxCoords : awesomeCoords;
+		m_Sprites[i].coordinates = planeCoords;
+		m_Sprites[i].tint.r = (float)(std::rand() % 1000) / 1000.0f;
+		m_Sprites[i].tint.g = (float)(std::rand() % 1000) / 1000.0f;
+		m_Sprites[i].tint.b = (float)(std::rand() % 1000) / 1000.0f;
+		m_Sprites[i].tint.a = 0.5f;
 	}
 }
 
@@ -48,17 +48,6 @@ void QuadsLayer::OnUpdate(float DeltaTime)
 {
 	if (m_SelectedSprite)
 		m_SelectedSprite->position = Light::Input::MousePosToCameraView(m_Camera) - m_SelectedSprite->size / 2.0f;
-
-	for (auto& sprite : m_Sprites)
-	{
-		for (auto& target : m_Sprites)
-		{
-			if (&sprite == &target)
-				continue;
-
-			DoCollision(sprite, target);
-		}
-	}
 
 	if (Light::Input::GetKey(KEY_A))
 		m_Camera.MoveX(-m_CameraSpeed * DeltaTime);
@@ -76,9 +65,7 @@ void QuadsLayer::OnRender()
 	Light::Renderer::Start(m_Camera);
 
 	for (auto& sprite : m_Sprites)
-		Light::Renderer::DrawQuad(sprite.position, sprite.size, sprite.coordinates,
-			&sprite == m_SelectedSprite ? glm::vec4(1.0f, 0.6f, 0.6f, 1.0f) :
-			glm::vec4(1.0f));
+		Light::Renderer::DrawQuad(sprite.position, sprite.size, sprite.coordinates, sprite.tint);
 
 	Light::Renderer::End();
 }
@@ -135,7 +122,8 @@ bool QuadsLayer::OnButtonRelease(Light::MouseButtonReleasedEvent& event)
 
 bool QuadsLayer::OnMouseScroll(Light::MouseScrolledEvent& event)
 {
-	m_Camera.Zoom(event.GetOffset() * 25);
+	if(Light::Input::GetKey(KEY_LEFT_CONTROL))
+		m_Camera.Zoom(event.GetOffset() * 25);
 	return true;
 }
 
@@ -144,37 +132,3 @@ bool QuadsLayer::OnWindowResize(Light::WindowResizedEvent& event)
 	m_Camera.SetProjection(Light::GraphicsContext::GetAspectRatio(), m_Camera.GetZoomLevel());
 	return true;
 }
-
-void QuadsLayer::DoCollision(Sprite& sprite, Sprite& target)
-{
-	glm::vec2 diff(0.0f);
-
-	if (sprite.shape == Circle)
-	{
-		if (target.shape == Circle)
-			Light::CheckCollision(sprite.position, sprite.size.x / 2.0f,
-				target.position, target.size.x / 2.0f,
-				&diff);
-
-		else
-			Light::CheckCollision(sprite.position, sprite.size.x / 2.0f,
-				target.position, target.size,
-				&diff);
-	}
-	else
-	{
-		if (target.shape == Circle)
-			Light::CheckCollision(sprite.position, sprite.size,
-				target.position, target.size.x / 2.0f,
-				&diff);
-
-		else
-			Light::CheckCollision(sprite.position, sprite.size,
-				target.position, target.size,
-				&diff);
-	}
-
-	sprite.position -= diff / 2.0f;
-	target.position += diff / 2.0f;
-}
-

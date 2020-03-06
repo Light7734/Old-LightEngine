@@ -32,7 +32,7 @@ void DemoLayer::OnAttach()
 	LT_INFO("|     C     |  Resolution (16:10)  |");
 	LT_INFO("|___________|______________________|");
 
-	float colors[4] = { 0.2f, 0.45f, 0.81f, 1.0f };
+	float colors[4] = { 0.0f, 0.0f, 0.0f, 1.0f};
 	Light::RenderCommand::SetClearBackbufferColor(colors);
 
 	Light::Blender::Enable();

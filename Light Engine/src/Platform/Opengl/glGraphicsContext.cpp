@@ -61,13 +61,23 @@ namespace Light {
 	void glGraphicsContext::SetResolution(const Resolution& resolution)
 	{
 		std::shared_ptr<Monitor> windowMonitor = Monitor::GetWindowMonitor();
-		const VideoMode videoMode = windowMonitor->GetVideoMode();
+		std::vector<VideoMode> videoModes = windowMonitor->GetVideoModes();
 
-		if (resolution.width > videoMode.width || resolution.height > videoMode.height)
+		int maxWidth = 0, maxHeight = 0;
+		for (const auto& videoMode : videoModes)
+		{
+			if (videoMode.width > maxWidth)
+				maxWidth = videoMode.width;
+
+			if (videoMode.height > maxHeight)
+				maxHeight = videoMode.height;
+		}
+
+		if (resolution.width > maxWidth || resolution.height > maxHeight)
 		{
 			LT_CORE_ERROR("GraphicsContext::SetResolution: Window's resolution cannot be higher than monitor's: [{}x{}] > [{}x{}]",
 			              resolution.width, resolution.height,
-			              videoMode.width , videoMode.height);
+			              maxWidth , maxHeight);
 			return;
 		}
 
