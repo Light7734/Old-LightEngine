@@ -1,8 +1,8 @@
 #include "ltpch.h"
 #include "Renderer.h"
 
-#include "BufferLayout.h"
 #include "Buffers.h"
+#include "Framebuffer.h"
 #include "Camera.h"
 #include "RenderCommand.h"
 #include "Shader.h"
@@ -17,20 +17,45 @@ namespace Light {
 
 	Renderer::BasicQuadRenderer Renderer::s_QuadRenderer;
 
+	std::vector<std::shared_ptr<Framebuffer>> Renderer::s_Framebuffers;
+
+	std::shared_ptr<VertexBuffer> Renderer::s_FramebufferVertices;
+
+	std::shared_ptr<VertexLayout> Renderer::s_FramebufferLayout;
+
+	std::shared_ptr<Camera> Renderer::s_Camera;
+
+	std::shared_ptr<ConstantBuffer> Renderer::s_ViewProjBuffer;
+
 	void Renderer::Init()
 	{
+		// camera
+		if (!s_Camera)
+			s_Camera = std::make_shared<Camera>(glm::vec2(0.0f, 0.0f), GraphicsContext::GetResolution().aspectRatio, 1000.0f);
+
+		// framebuffers
+		s_Framebuffers.clear();
+
+		float framebufferVertices[] =
+		{
+			-1.0f,  1.0f,  0.0f, 1.0f,
+			 1.0f,  1.0f,  1.0f, 1.0f,
+			 1.0f, -1.0f,  1.0f, 0.0f,
+
+			 1.0f, -1.0f,  1.0f, 0.0f,
+			-1.0f, -1.0f,  0.0f, 0.0f,
+			-1.0f,  1.0f,  0.0f, 1.0f,
+		};
+
+		s_FramebufferVertices = VertexBuffer::Create(framebufferVertices, sizeof(framebufferVertices), sizeof(float) * 4);
+		s_FramebufferLayout = VertexLayout::Create(nullptr, s_FramebufferVertices, { {"POSITION" , VertexElementType::Float2 },
+																					 {"TEXCOORDS", VertexElementType::Float2} });
+
+		// view projection buffer
+		s_ViewProjBuffer = ConstantBuffer::Create(ConstantBufferIndex_ViewProjection, sizeof(glm::mat4) * 2);
+
 		//=============== BASIC QUAD RENDERER ===============//
-		// Create stuff 
-		s_QuadRenderer.shader = Shader::Create(QuadShaderSrc_VS, QuadShaderSrc_FS);
-		s_QuadRenderer.vertexBuffer = VertexBuffer::Create(nullptr, LT_MAX_BASIC_SPRITES * sizeof(float) * 9 * 4, sizeof(float) * 9);
-
-		s_QuadRenderer.bufferLayout = BufferLayout::Create(s_QuadRenderer.shader,
-		                                                   s_QuadRenderer.vertexBuffer,
-		                                                   VertexLayout::Create({ {"POSITION" , VertexType::Float2},
-		                                                                          {"COLOR"    , VertexType::Float4},
-		                                                                          {"TEXCOORDS", VertexType::Float3}, }));
-
-		// Indices for index buffer
+		// indices for index buffer
 		unsigned int* indices = new unsigned int [LT_MAX_BASIC_SPRITES * 6];
 		unsigned int offset = 0;
 
@@ -47,22 +72,30 @@ namespace Light {
 			offset += 4;
 		}
 
-		// Create IndexBuffer
+		// create bindables
+		s_QuadRenderer.shader = Shader::Create(QuadShaderSrc_VS, QuadShaderSrc_FS);
+		s_QuadRenderer.vertexBuffer = VertexBuffer::Create(nullptr, LT_MAX_BASIC_SPRITES * sizeof(float) * 9 * 4, sizeof(float) * 9);
+
+		s_QuadRenderer.vertexLayout = VertexLayout::Create(s_QuadRenderer.shader,
+		                                                   s_QuadRenderer.vertexBuffer,
+		                                                   { {"POSITION" , VertexElementType::Float2},
+		                                                     {"COLOR"    , VertexElementType::Float4},
+		                                                     {"TEXCOORDS", VertexElementType::Float3}, });
+
 		s_QuadRenderer.indexBuffer = IndexBuffer::Create(indices, LT_MAX_BASIC_SPRITES * sizeof(unsigned int) * 6);
+
+
 		delete[] indices;
 		//=============== BASIC QUAD RENDERER ===============//
 	}
 
-	void Renderer::Start(Camera& camera)
+	void Renderer::Begin()
 	{
-		ConstantBuffers::SetViewProjMatrix(camera.GetView(), camera.GetProjection());
-
 		s_QuadRenderer.mapCurrent = (float*)s_QuadRenderer.vertexBuffer->Map();
 		s_QuadRenderer.mapEnd = s_QuadRenderer.mapCurrent + LT_MAX_BASIC_SPRITES * 9 * 4;
 	}
 	
-	void Renderer::DrawQuad(const glm::vec2& position, const glm::vec2& size,
-	                        const TextureCoordinates* textureCoordinates, const glm::vec4& tint)
+	void Renderer::DrawQuad(const glm::vec2& position, const glm::vec2& size, const TextureCoordinates* uv, const glm::vec4& tint)
 	{
 		// #todo: make VertexBuffer size dynamic
 		if (s_QuadRenderer.mapCurrent == s_QuadRenderer.mapEnd)
@@ -70,17 +103,16 @@ namespace Light {
 			LT_CORE_WARN("Renderer::DrawQuad: calls to this function exceeded its limit: {}", LT_MAX_BASIC_SPRITES);
 
 			End();
-			s_QuadRenderer.mapCurrent = (float*)s_QuadRenderer.vertexBuffer->Map();
-			s_QuadRenderer.mapEnd = s_QuadRenderer.mapCurrent + LT_MAX_BASIC_SPRITES * 9 * 4;
+			Begin();
 		}
 
-		// Locals
+		// locals
 		const float xMin = position.x;
 		const float yMin = position.y;
 		const float xMax = position.x + size.x;
 		const float yMax = position.y + size.y;
 
-		const TextureCoordinates str = *textureCoordinates;
+		const TextureCoordinates str = *uv;
 
 		// TOP_LEFT
 		s_QuadRenderer.mapCurrent[0 + 0] = xMin;
@@ -135,30 +167,78 @@ namespace Light {
 		s_QuadRenderer.mapCurrent[8 + 27] = str.sliceIndex;
 
 
-		// Increase buffer map and quad count
+		// move buffer map forward and increase quad count
 		s_QuadRenderer.mapCurrent += 36;
 		s_QuadRenderer.quadCount++;
 	}
 
 	void Renderer::End()
 	{
-		// Unmap vertex buffers
+		// set view projection buffer
+		glm::mat4* map = (glm::mat4*)s_ViewProjBuffer->Map();
+		*(map + 0) = s_Camera->GetView();
+		*(map + 1) = s_Camera->GetProjection();
+		s_ViewProjBuffer->UnMap();
+
+		// unmap vertex buffers
 		s_QuadRenderer.vertexBuffer->UnMap();
+
+		// set the first framebuffer as render target if we have any
+		if (!s_Framebuffers.empty())
+			s_Framebuffers[0]->BindAsTarget();
 
 		//=============== BASIC QUAD RENDERER ===============//
 		if (s_QuadRenderer.quadCount)
 		{
-			// Bind stuff
+			// bindables
 			s_QuadRenderer.shader->Bind();
-			s_QuadRenderer.bufferLayout->Bind();
+			s_QuadRenderer.vertexLayout->Bind();
 			s_QuadRenderer.indexBuffer->Bind();
 			s_QuadRenderer.vertexBuffer->Bind();
 
-			// Draw
-			RenderCommand::DrawIndexed(s_QuadRenderer.quadCount* 6);
+			// draw
+			RenderCommand::DrawIndexed(s_QuadRenderer.quadCount * 6);
 			s_QuadRenderer.quadCount = 0;
 		}
 		//=============== BASIC QUAD RENDERER ===============//
+
+		// handle the framebuffers
+		if (!s_Framebuffers.empty())
+		{
+			s_FramebufferVertices->Bind();
+			s_FramebufferLayout->Bind();
+
+			for (int i = 1; i < s_Framebuffers.size(); i++)
+			{
+				s_Framebuffers[i]->BindAsTarget();
+				s_Framebuffers[i - 1]->BindAsResource();
+				RenderCommand::Draw(6);
+			}
+
+			RenderCommand::DefaultRenderBuffer();
+			s_Framebuffers.back()->BindAsResource();
+			RenderCommand::Draw(6);
+		}
 	}
 
-}
+	void Renderer::AddFramebuffer(std::shared_ptr<Framebuffer> framebuffer)
+	{
+		auto it = std::find(s_Framebuffers.begin(), s_Framebuffers.end(), framebuffer);
+
+		if (it == s_Framebuffers.end())
+			s_Framebuffers.push_back(framebuffer);
+		else
+			LT_CORE_ERROR("Renderer::AddFramebuffer: cannot add the same framebuffer twice");
+	}
+
+	void Renderer::RemoveFramebuffer(std::shared_ptr<Framebuffer> framebuffer)
+	{
+		auto it = std::find(s_Framebuffers.begin(), s_Framebuffers.end(), framebuffer);
+
+		if (it != s_Framebuffers.end())
+			s_Framebuffers.erase(it);
+		else
+			LT_CORE_ERROR("Renderer::RemoveFramebuffer: failed to find framebuffer");
+	}
+
+} 

@@ -38,19 +38,19 @@ namespace Light {
 		disatcher.Dispatch<MouseScrolledEvent      >(LT_EVENT_FN_STATIC(Input::OnMouseScrolled));
 	}
 
-	glm::vec2 Input::MousePosToCameraView(const Camera& camera)
+	glm::vec2 Input::MousePosToCameraView(const std::shared_ptr<Camera> camera)
 	{
 		glm::vec2 mouse = (glm::vec2)s_MousePos;
 
 		mouse.x /= GraphicsContext::GetResolution().width;
 		mouse.y /= GraphicsContext::GetResolution().height;
 
-		mouse.x = -camera.GetZoomLevel() + (mouse.x * camera.GetZoomLevel() * 2);
-		mouse.x *= camera.GetAspectRatio();
+		mouse.x = -camera->GetZoomLevel() + (mouse.x * camera->GetZoomLevel() * 2);
+		mouse.x *= camera->GetAspectRatio();
 
-		mouse.y = -camera.GetZoomLevel() + (mouse.y * camera.GetZoomLevel() * 2);
+		mouse.y = -camera->GetZoomLevel() + (mouse.y * camera->GetZoomLevel() * 2);
 
-		mouse += camera.GetPosition();
+		mouse += camera->GetPosition();
 
 		return mouse;
 	}
@@ -86,8 +86,6 @@ namespace Light {
 		}
 	}
 
-
-	// Getters
 	std::string Input::GetKeyName(int key)
 	{
 		static std::unordered_map<int, std::string> keyMap =

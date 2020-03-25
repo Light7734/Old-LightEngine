@@ -2,8 +2,6 @@
 
 #include "Core/Core.h"
 
-#include <glm/glm.hpp>
-
 #include <unordered_map>
 
 namespace Light {
@@ -19,10 +17,7 @@ namespace Light {
 
 		~TextureData() { free(pixels); }
 
-		operator bool() const
-		{
-			return pixels && width && height && channels;
-		}
+		inline operator bool() const { return pixels && width && height && channels; }
 	};
 
 	struct TextureCoordinates
@@ -32,24 +27,42 @@ namespace Light {
 
 	class TextureAtlas
 	{
-	private:
-		static std::vector<unsigned int> s_AvailableSlots;
 	protected:
-		static unsigned int s_Width, s_Height;
-
 		std::unordered_map<std::string, TextureCoordinates> m_Segments;
 		unsigned int m_Index;
+
+		std::string m_Name;
 	public:
-		TextureAtlas();
-		virtual ~TextureAtlas();
+		TextureAtlas(const std::string& name, const std::string& path, unsigned int sliceIndex);
 
-		static std::shared_ptr<TextureAtlas> Create(const std::string& atlasPath);
+		inline TextureCoordinates* GetCoordinates(const std::string& name) { return &m_Segments[name]; }
 
-		static void DestroyTextureArray();
+		inline unsigned int GetSliceIndex() const { return m_Index; }
 
-		TextureCoordinates* GetCoordinates(const std::string& name) { return &m_Segments[name]; }
+		inline const std::string& GetName() const { return m_Name; }
 	private:
-		void ParseSegments(const std::string& data);
+	};
+
+	class TextureArray
+	{
+	protected:
+		std::vector<unsigned int> m_AvailableSlots;	
+		std::unordered_map<std::string, std::shared_ptr<TextureAtlas>> m_Atlases;
+
+		unsigned int m_Width, m_Height, m_Depth;
+	public:
+		TextureArray() : m_Width(0), m_Height(0), m_Depth(0) {}
+
+		virtual ~TextureArray() = default;
+
+		static std::shared_ptr<TextureArray> Create(unsigned int slices);
+
+		inline std::shared_ptr<TextureAtlas> GetAtlas(const std::string& name) { return m_Atlases[name]; }
+
+		virtual void CreateAtlas(const std::string& name, const std::string& texturePath, const std::string& atlasPath) = 0;
+		virtual void DeleteAtlas(const std::string& name) = 0;
+
+		virtual void Bind() = 0;
 	};
 
 }

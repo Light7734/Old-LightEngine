@@ -28,7 +28,7 @@ namespace Light {
 	{
 		s_Monitors = glfwGetMonitors(&s_Count);
 
-		LT_CORE_ASSERT(s_Count, "Monitor::Init: No monitors are connected or an error has been occurd");
+		LT_CORE_ASSERT(s_Count, "Monitor::Init: no monitors are connected or an error has been occurd");
 
 		for (int i = 0; i < s_Count; i++)
 			s_Handles.push_back(std::make_shared<Monitor>(i));
@@ -99,7 +99,7 @@ namespace Light {
 			ImGui::BulletText("virtual position: [%d x %d]", pos.x, pos.y);
 			ImGui::BulletText("work area: [xpos: %d, ypos: %d, width: %d, height: %d]", area.x, area.y, area.z, area.w);
 
-			if (ImGui::TreeNode(mode, "Video mode")) // I don't know if video modes are unique #todo
+			if (ImGui::TreeNode(mode, "Video mode")) // i don't know if video modes are unique #todo
 			{
 				ImGui::BulletText("size: [%d x %d]", mode->width, mode->height);
 				ImGui::BulletText("bits: [r: %d, g: %d, b: %d]", mode->redBits, mode->greenBits, mode->blueBits);
@@ -117,13 +117,11 @@ namespace Light {
 			GetMonitor(i)->ShowDebugWindow();
 	}
 
-	// Setters
 	void Monitor::SetUserPointer(void* userPointer)
 	{
 		glfwSetMonitorUserPointer(s_Monitors[m_Index], userPointer);
 	}
 
-	// Getters 
 	std::shared_ptr<Monitor> Monitor::GetMonitor(unsigned int index)
 	{
 		if (index >= s_Count)

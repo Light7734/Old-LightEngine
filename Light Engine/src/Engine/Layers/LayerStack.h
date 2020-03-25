@@ -29,7 +29,7 @@ namespace Light {
 
 		void HandleQueuedLayers();
 
-		// Getters
+		// getters
 		static unsigned int GetSize() { return static_cast<unsigned int>(s_Layers.size()); }
 
 		std::vector<Layer*>::iterator begin() { return s_Layers.begin(); }

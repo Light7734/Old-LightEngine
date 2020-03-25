@@ -5,21 +5,22 @@
 #include "Renderer/VertexLayout.h"
 
 #include <d3d11.h>
+#include <wrl.h>
 
 namespace Light {
+
+	class Shader;
 
 	class dxVertexLayout : public VertexLayout
 	{
 	private:
-		std::vector<D3D11_INPUT_ELEMENT_DESC> m_InputElements;
+		Microsoft::WRL::ComPtr<ID3D11InputLayout> m_InputLayout;
 	public:
-		dxVertexLayout(std::initializer_list<std::pair<const char*, VertexType>> init_list);
+		dxVertexLayout(std::shared_ptr<Shader> shader, std::initializer_list<std::pair<const char*, VertexElementType>> elements);
 
-		inline D3D11_INPUT_ELEMENT_DESC* GetElements() { return &(m_InputElements.front()); }
-
-		inline unsigned int GetElementsCount() const { return static_cast<unsigned int>(m_InputElements.size()); }
+		void Bind() override;
 	private:
-		DXGI_FORMAT GetDxgiFormat(VertexType type);
+		DXGI_FORMAT GetDxgiFormat(VertexElementType type);
 	};
 
 }

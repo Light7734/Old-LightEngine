@@ -11,28 +11,28 @@
 
 namespace Light {
 
-	enum ConstantBufferIndex
-	{
-		CBufferIndex_ViewProjection = 0,
-		// ...
-	};
-
-	class dxConstantBuffers : public ConstantBuffers
+	class dxConstantBuffer : public ConstantBuffer
 	{
 	private:
-		Microsoft::WRL::ComPtr<ID3D11Buffer> m_ViewProjBuffer;
-	public:
-		dxConstantBuffers();
+		Microsoft::WRL::ComPtr<ID3D11Buffer> m_Buffer;
+		D3D11_MAPPED_SUBRESOURCE m_Map;
 
-		void SetViewProjMatrixImpl(const glm::f32* view, const glm::f32* proj) override;
+		unsigned int m_Index;
+	public:
+		dxConstantBuffer(ConstantBufferIndex index, unsigned int size);
+
+		void Bind() override;
+
+		void* Map() override;
+		void UnMap() override;
 	};
 
 	class dxVertexBuffer : public VertexBuffer
 	{
 	private:
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_Buffer;
-
 		D3D11_MAPPED_SUBRESOURCE m_Map;
+
 		unsigned int m_Stride;
 	public:
 		dxVertexBuffer(float* vertices, unsigned int size, unsigned int stride);

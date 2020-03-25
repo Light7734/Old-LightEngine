@@ -1,32 +1,40 @@
 #include "ltpch.h"
 #include "glBuffers.h"
 
+#include "Renderer/GraphicsContext.h"
+
 #include <glad/glad.h>
 
 namespace Light {
 
-	// UniformBuffers //
-	glUniformBuffers::glUniformBuffers()
+	// ConstantBuffer //
+	glConstantBuffer::glConstantBuffer(ConstantBufferIndex index, unsigned int size)
+		: m_Index(index)
 	{
-		glCreateBuffers(1, &m_ViewProjBuffer);
-		glNamedBufferData(m_ViewProjBuffer, sizeof(glm::mat4) * 2, NULL, GL_DYNAMIC_DRAW);
+		glCreateBuffers(1, &m_BufferID);
+		glNamedBufferData(m_BufferID, size, NULL, GL_DYNAMIC_DRAW);
 
-		glBindBufferBase(GL_UNIFORM_BUFFER, UBufferIndex_ViewProjection, m_ViewProjBuffer);
+		Bind();
 	}
 
-	glUniformBuffers::~glUniformBuffers()
+	glConstantBuffer::~glConstantBuffer()
 	{
-		glDeleteBuffers(1, &m_ViewProjBuffer);
+		glDeleteBuffers(1, &m_BufferID);
 	}
 
-	void glUniformBuffers::SetViewProjMatrixImpl(const glm::f32* view, const glm::f32* proj)
+	void glConstantBuffer::Bind()
 	{
-		glm::mat4* map = (glm::mat4*)glMapNamedBuffer(m_ViewProjBuffer, GL_WRITE_ONLY);
+		glBindBufferBase(GL_UNIFORM_BUFFER, m_Index, m_BufferID);
+	}
 
-		memcpy(map, view, sizeof(glm::mat4));
-		memcpy(map + 1, proj, sizeof(glm::mat4));
+	void* glConstantBuffer::Map()
+	{
+		return glMapNamedBuffer(m_BufferID, GL_WRITE_ONLY);
+	}
 
-		glUnmapNamedBuffer(m_ViewProjBuffer);
+	void glConstantBuffer::UnMap()
+	{
+		glUnmapNamedBuffer(m_BufferID);
 	}
 
 	// VertexBuffer //

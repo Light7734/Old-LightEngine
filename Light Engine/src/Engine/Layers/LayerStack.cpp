@@ -80,7 +80,7 @@ namespace Light {
 					if (it != s_Layers.end())
 						{ s_Layers.erase(it); }
 					else
-						LT_CORE_ERROR("LayerStack::HandleQueuedLayers: Failed to find the specified layer from LayerStack");
+						LT_CORE_ERROR("LayerStack::HandleQueuedLayers: failed to find the specified layer from LayerStack");
 				}
 
 				s_PoppedLayers.clear();

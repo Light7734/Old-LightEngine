@@ -2,12 +2,8 @@
 #include "GraphicsContext.h"
 
 #include "Blender.h"
-#include "Buffers.h"
 #include "RenderCommand.h"
 #include "Renderer.h"
-#include "Texture.h"
-
-#include "Core/Window.h"
 
 #include "UserInterface/UserInterface.h"
 
@@ -15,8 +11,6 @@
 	#include "Platform/DirectX/dxGraphicsContext.h"
 #endif
 #include "Platform/Opengl/glGraphicsContext.h"
-
-#include <glfw/glfw3.h>
 
 #include <imgui.h>
 
@@ -28,10 +22,15 @@ namespace Light {
 
 	std::unique_ptr<GraphicsContext> GraphicsContext::Create(GraphicsAPI api, const GraphicsConfigurations& configurations)
 	{
-		if(s_Api != GraphicsAPI::Default)
-			TextureAtlas::DestroyTextureArray(); // Destroy previous GraphicsAPI's texture array
+		// don't re-initialize the same graphics api
+		if (s_Api == api && api != GraphicsAPI::Default)
+		{
+			LT_CORE_ERROR("GraphicsContext::Create: re-initializing same graphics api is not allowed, api: {}", api);
+			return nullptr;
+		}
 
 
+		// if api is 'Default', find the preferred graphics api based on platform
 		if (api == GraphicsAPI::Default)
 		{
 #ifdef LIGHT_PLATFORM_WINDOWS
@@ -53,7 +52,6 @@ namespace Light {
 			RenderCommand::SetGraphicsContext(context.get());
 			Blender::Init();
 			Renderer::Init();
-			ConstantBuffers::Init();
 			UserInterface::Init();
 
 			return std::move(context);
@@ -65,13 +63,12 @@ namespace Light {
 			RenderCommand::SetGraphicsContext(context.get());
 			Blender::Init();
 			Renderer::Init();
-			ConstantBuffers::Init();
 			UserInterface::Init();
 
 			return std::move(context);
 		})
 		default:
-			LT_CORE_ASSERT(false, "GraphicsContext::Create: Invalid GraphicsAPI");
+			LT_CORE_ASSERT(false, "GraphicsContext::Create: invalid GraphicsAPI");
 		}
 	}
 

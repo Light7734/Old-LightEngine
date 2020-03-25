@@ -16,7 +16,7 @@ namespace Light {
 
 		void Bind() override;
 	private:
-		void BindTextures(const std::string& fragmentSource);
+		void AssignSamplersSlots(const std::string& fragmentSource);
 	};
 
 }

@@ -9,6 +9,8 @@ namespace Light {
 	private:
 		static std::unique_ptr<UserInterface> s_Context;
 	public:
+		virtual ~UserInterface() = default;
+
 		static inline void Begin() { s_Context->BeginImpl(); };
 		static inline void End  () { s_Context->EndImpl();   };
 

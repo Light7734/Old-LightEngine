@@ -14,7 +14,7 @@ namespace Light {
 	glException::glException(unsigned int source, unsigned int type, unsigned int id, const char* msg)
 
 	{
-		// #todo: Log more information
+		// #todo: log more information
 		LT_CORE_FATAL("glException has been thrown:");
 		LT_CORE_WARN("glMessageCallback: :: Source: {} :: Type: {} :: ID: {}",
 		             glToString::DebugMsgSource  (source  ),
@@ -35,7 +35,7 @@ namespace Light {
 		               MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 		               (LPSTR)(&message), NULL, nullptr);
 
-		// #todo: Log more information		
+		// #todo: log more information		
 		LT_CORE_FATAL("dxException has been thrown:");
 		LT_CORE_FATAL("        File: {}, Line: {}", file, line);
 		LT_CORE_FATAL("        {}", message);

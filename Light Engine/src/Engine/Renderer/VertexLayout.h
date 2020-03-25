@@ -4,7 +4,10 @@
 
 namespace Light {
 
-	enum class VertexType
+	class Shader;
+	class VertexBuffer;
+
+	enum class VertexElementType
 	{
 		Int,    Int2,    Int3,    Int4,
 		UInt,   UInt2,   UInt3,   UInt4,
@@ -17,7 +20,11 @@ namespace Light {
 	public:
 		virtual ~VertexLayout() = default;
 
-		static std::shared_ptr<VertexLayout> Create(std::initializer_list<std::pair<const char*, VertexType>> initList);
+		static std::shared_ptr<VertexLayout> Create(std::shared_ptr<Shader> shader,
+		                                            std::shared_ptr<VertexBuffer> buffer,
+		                                            std::initializer_list<std::pair<const char*, VertexElementType>> elements);
+
+		virtual void Bind() = 0;
 	};
 
 }

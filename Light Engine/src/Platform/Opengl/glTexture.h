@@ -6,16 +6,18 @@
 
 namespace Light {
 
-	class glTextureAtlas : public TextureAtlas
+	class glTextureArray : public TextureArray
 	{
 	private:
-		static unsigned int m_AtlasID;
+		unsigned int m_ArrayID;
 	public:
-		glTextureAtlas(const TextureData& data);
+		glTextureArray(unsigned int slices);
+		~glTextureArray();
 
-		static void DestroyTextureArray();
-	private:
-		void Init(unsigned int width, unsigned int height);
+		void CreateAtlas(const std::string& name, const std::string& texturePath, const std::string& atlasPath) override;
+		void DeleteAtlas(const std::string& name) override;
+
+		void Bind() override;
 	};
 
 }

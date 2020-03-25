@@ -1,44 +1,80 @@
 #include "ltpch.h"
 #include "glVertexLayout.h"
+#include "glBuffers.h"
 
 #include <glad/glad.h>
 
 namespace Light {
 
-	glVertexLayout::glVertexLayout(std::initializer_list<std::pair<const char*, VertexType>> initList)
+	glVertexLayout::glVertexLayout(std::shared_ptr<VertexBuffer> buffer,
+	                               std::initializer_list<std::pair<const char*, VertexElementType>> elements)
 	{
-		for (std::pair<const char*, VertexType> listElement : initList)
+		// assertion
+		LT_CORE_ASSERT(std::dynamic_pointer_cast<glVertexBuffer>(buffer),
+		               "glVertexlayout::glVertexLayout: failed to cast VertexBuffer to glVertexBuffer");
+
+
+		// vertex elements desc
+		std::vector<glVertexElementDesc> vertexElementsDesc;
+		vertexElementsDesc.reserve(elements.size());
+	
+		unsigned int stride = 0;
+		for (const auto& element : elements)
 		{
-			m_Attributes.emplace_back(GetTypeAttributes(listElement.second));
-			UpdateStride();
+			vertexElementsDesc.push_back(GetTypeDesc(element.second, stride));
+			stride += vertexElementsDesc.back().typeSize * vertexElementsDesc.back().count;
+		}
+
+
+		// vertex array
+		glCreateVertexArrays(1, &m_ArrayID);
+
+		buffer->Bind();
+		Bind();
+
+		unsigned int index = 0;
+		for (const auto& elementDesc : vertexElementsDesc)
+		{
+			glVertexAttribPointer(index, elementDesc.count, elementDesc.type, false, stride, (const void*)elementDesc.offset);
+			glEnableVertexAttribArray(index++);
 		}
 	}
 
-	glVertexAttributes glVertexLayout::GetTypeAttributes(VertexType type)
+	glVertexLayout::~glVertexLayout()
+	{
+		glDeleteVertexArrays(1, &m_ArrayID);
+	}
+
+	void glVertexLayout::Bind()
+	{
+		glBindVertexArray(m_ArrayID);
+	}
+
+	glVertexElementDesc glVertexLayout::GetTypeDesc(VertexElementType type, unsigned int offset)
 	{
 		switch (type)
 		{
-		case Light::VertexType::Int:        return { GL_INT         , 1, sizeof(int)   , m_Stride };
-		case Light::VertexType::Int2:       return { GL_INT         , 2, sizeof(int)   , m_Stride };
-		case Light::VertexType::Int3:       return { GL_INT         , 3, sizeof(int)   , m_Stride };
-		case Light::VertexType::Int4:       return { GL_INT         , 4, sizeof(int)   , m_Stride };
+		case VertexElementType::Int:        return { GL_INT         , 1, sizeof(int)   , offset };
+		case VertexElementType::Int2:       return { GL_INT         , 2, sizeof(int)   , offset };
+		case VertexElementType::Int3:       return { GL_INT         , 3, sizeof(int)   , offset };
+		case VertexElementType::Int4:       return { GL_INT         , 4, sizeof(int)   , offset };
 
-		case Light::VertexType::UInt:       return { GL_UNSIGNED_INT, 1, sizeof(int)   , m_Stride };
-		case Light::VertexType::UInt2:      return { GL_UNSIGNED_INT, 2, sizeof(int)   , m_Stride };
-		case Light::VertexType::UInt3:      return { GL_UNSIGNED_INT, 3, sizeof(int)   , m_Stride };
-		case Light::VertexType::UInt4:      return { GL_UNSIGNED_INT, 4, sizeof(int)   , m_Stride };
+		case VertexElementType::UInt:       return { GL_UNSIGNED_INT, 1, sizeof(int)   , offset };
+		case VertexElementType::UInt2:      return { GL_UNSIGNED_INT, 2, sizeof(int)   , offset };
+		case VertexElementType::UInt3:      return { GL_UNSIGNED_INT, 3, sizeof(int)   , offset };
+		case VertexElementType::UInt4:      return { GL_UNSIGNED_INT, 4, sizeof(int)   , offset };
 
-		case Light::VertexType::Float:      return { GL_FLOAT       , 1, sizeof(float) , m_Stride };
-		case Light::VertexType::Float2:     return { GL_FLOAT       , 2, sizeof(float) , m_Stride };
-		case Light::VertexType::Float3:     return { GL_FLOAT       , 3, sizeof(float) , m_Stride };
-		case Light::VertexType::Float4:     return { GL_FLOAT       , 4, sizeof(float) , m_Stride };
+		case VertexElementType::Float:      return { GL_FLOAT       , 1, sizeof(float) , offset };
+		case VertexElementType::Float2:     return { GL_FLOAT       , 2, sizeof(float) , offset };
+		case VertexElementType::Float3:     return { GL_FLOAT       , 3, sizeof(float) , offset };
+		case VertexElementType::Float4:     return { GL_FLOAT       , 4, sizeof(float) , offset };
 
-		case Light::VertexType::Double:     return { GL_DOUBLE      , 1, sizeof(double), m_Stride };
-		case Light::VertexType::Double2:    return { GL_DOUBLE      , 2, sizeof(double), m_Stride };
-		case Light::VertexType::Double3:    return { GL_DOUBLE      , 3, sizeof(double), m_Stride };
-		case Light::VertexType::Double4:    return { GL_DOUBLE      , 4, sizeof(double), m_Stride };
+		case VertexElementType::Double:     return { GL_DOUBLE      , 1, sizeof(double), offset };
+		case VertexElementType::Double2:    return { GL_DOUBLE      , 2, sizeof(double), offset };
+		case VertexElementType::Double3:    return { GL_DOUBLE      , 3, sizeof(double), offset };
+		case VertexElementType::Double4:    return { GL_DOUBLE      , 4, sizeof(double), offset };
 
-		default: LT_CORE_ASSERT(false, "glVertexLayout::GetTypeAttributes: Invalid vertex type");
+		default: LT_CORE_ASSERT(false, "glVertexLayout::GetTypeAttributes: invalid vertex type");
 		}
 	}
 

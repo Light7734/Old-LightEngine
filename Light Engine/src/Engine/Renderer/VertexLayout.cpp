@@ -10,16 +10,22 @@
 
 namespace Light {
 
-	std::shared_ptr<Light::VertexLayout> VertexLayout::Create(std::initializer_list<std::pair<const char*, VertexType>> initList)
+	std::shared_ptr<VertexLayout> VertexLayout::Create(std::shared_ptr<Shader> shader,
+	                                                   std::shared_ptr<VertexBuffer> buffer,
+	                                                   std::initializer_list<std::pair<const char*, VertexElementType>> elements)
 	{
 		switch (GraphicsContext::GetAPI())
 		{
 		case GraphicsAPI::Opengl:
-			return std::make_shared<glVertexLayout>(initList);
+			LT_CORE_ASSERT(buffer, "VertexLayout::Create: VertexBuffer cannot be null with opengl graphics api");
+			return std::make_shared<glVertexLayout>(buffer, elements);
+
 		case GraphicsAPI::Directx: LT_DX(
-			return std::make_shared<dxVertexLayout>(initList);)
+			// LT_CORE_ASSERT(shader, "VertexLayout::Create: Shader cannot be null with directx graphics api");
+			return std::make_shared<dxVertexLayout>(shader, elements); )
+
 		default:
-			LT_CORE_ASSERT(false, "VertexLayout::Create: Invalid GraphicsAPI");
+			LT_CORE_ASSERT(false, "VertexLayout::Create: invalid GraphicsAPI");
 		}
 	}
 

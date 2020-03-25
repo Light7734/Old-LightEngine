@@ -1,6 +1,8 @@
 #include "ltpch.h"
 #include "UserInterface.h"
 
+#include "Core/Window.h"
+
 #include "Renderer/GraphicsContext.h"
 
 #ifdef LIGHT_PLATFORM_WINDOWS
@@ -31,7 +33,7 @@ namespace Light {
 		)
 
 		default:
-			LT_CORE_ASSERT(false, "UserInterface::Init: Invalid GraphicsAPI");
+			LT_CORE_ASSERT(false, "UserInterface::Init: invalid GraphicsAPI");
 		}
 	}
 

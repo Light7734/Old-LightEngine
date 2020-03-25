@@ -1,3 +1,5 @@
+#pragma once
+
 #define QuadShaderSrc_VS \
 R"(
 +GLSL
@@ -7,20 +9,23 @@ layout(location = 0) in vec2 InPosition;
 layout(location = 1) in vec4 InColor;
 layout(location = 2) in vec3 InTexCoords;
 
-layout(std140, binding = 0) uniform ViewProjectionVSUniform
+layout(std140, binding = 6) uniform ViewProjectionVSUniform
 {
 	mat4 ViewMatrix;
 	mat4 ProjectionMatrix;
 };
 
-out vec4 VSOutColor;
-out vec3 VSOutTexCoords;
+out VS_OUT
+{
+	vec4 Color;
+	vec3 TexCoords;
+} VertexOut;
 
 void main()
 {
 	gl_Position = ProjectionMatrix * ViewMatrix * vec4(InPosition, 0.0, 1.0);
-	VSOutColor = InColor;
-	VSOutTexCoords = InTexCoords;
+	VertexOut.Color = InColor;
+	VertexOut.TexCoords = InTexCoords;
 }
 -GLSL
 
@@ -32,7 +37,7 @@ struct VertexOut
 	float4 Position : SV_Position;
 };
 
-cbuffer	ViewVSConstant : register(b0)
+cbuffer	ViewVSConstant : register(b6)
 {
 	row_major matrix ViewMatrix;
 	row_major matrix ProjectionMatrix;
@@ -55,14 +60,18 @@ R"(
 
 out vec4 FSOutFragColor;
 
-in vec4 VSOutColor;
-in vec3 VSOutTexCoords;
+
+in VS_OUT
+{
+	vec4 Color;
+	vec3 TexCoords;
+} FragmentIn;
 
 uniform sampler2DArray u_TextureArray;
 
 void main()
 {
-	FSOutFragColor = texture(u_TextureArray, VSOutTexCoords) * VSOutColor;
+	FSOutFragColor = texture(u_TextureArray, FragmentIn.TexCoords);
 }
 -GLSL
 

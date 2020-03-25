@@ -46,7 +46,6 @@ namespace Light {
 
 		std::string GetLogInfo() const override
 		{
-			// #todo: convert button's code to button's name
 			std::stringstream ss;
 			ss << "Mouse button pressed: " << Input::GetButtonName(m_Button);
 			return ss.str();
@@ -67,7 +66,6 @@ namespace Light {
 
 		std::string GetLogInfo() const override 
 		{ 
-			// #todo: convert button's code to button's name
 			std::stringstream ss;
 			ss << "Mouse button released: " << Input::GetButtonName(m_Button);
 			return  ss.str();

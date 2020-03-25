@@ -2,7 +2,7 @@
 
 #include "Core/Core.h"
 
-// Platform ==================
+// Platform =============================================
 #ifdef LIGHT_PLATFORM_WINDOWS
 #endif
 
@@ -11,10 +11,10 @@
 
 #ifdef LIGHT_PLATFORM_MAC
 #endif
-// ===========================
+// ======================================================
 
 
-// 3rd-Party libraries =======
+// 3rd-Party libraries ==================================
 
 // glm -----------------------
 #include <glm/glm.hpp>
@@ -27,10 +27,10 @@
 #include <imgui.h>
 // ---------------------------
 
-// ===========================
+// ======================================================
 
 
-// Engine ====================
+// Engine ===============================================
 
 // Core ----------------------
 #include "Core/Application.h"
@@ -66,10 +66,11 @@
 // ---------------------------
 
 // Renderer -----------------
+#include "Renderer/Shaders/QuadShader.h"
 #include "Renderer/Blender.h"
-#include "Renderer/BufferLayout.h"
 #include "Renderer/Buffers.h"
 #include "Renderer/Camera.h"
+#include "Renderer/Framebuffer.h"
 #include "Renderer/GraphicsContext.h"
 #include "Renderer/RenderCommand.h"
 #include "Renderer/Renderer.h"
@@ -86,4 +87,4 @@
 #include "Utility/FileManager.h"
 // --------------------------
 
-// ===========================
+// ======================================================

@@ -41,12 +41,11 @@ namespace Light {
 
 		static void OnEvent(Event& event);
 
-		static glm::vec2 MousePosToCameraView(const Camera& camera);
+		static glm::vec2 MousePosToCameraView(const std::shared_ptr<Camera> camera);
 
 		static void ShowDebugWindow();
 
-		
-		// Getters
+		// getters
 		static bool GetKey   (int  key   ) { return s_Keys   [key   ]; }
 		static bool GetButton(int  button) { return s_Buttons[button]; }
 

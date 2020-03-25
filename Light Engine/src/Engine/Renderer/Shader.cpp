@@ -14,14 +14,17 @@ namespace Light {
 
 	std::shared_ptr<Light::Shader> Shader::Create(const std::string& vertex, const std::string& fragment)
 	{
+		// figure out whether given string is the source or the path to the source
 		bool vsSourceInFile = vertex.find('\n') == std::string::npos;
 		bool fsSourceInFile = fragment.find('\n') == std::string::npos;
 
+		// load shader source
 		std::string vertex_source = vsSourceInFile ? FileManager::LoadTextFile(vertex) : vertex;
 		std::string fragment_source = fsSourceInFile ? FileManager::LoadTextFile(fragment) : fragment;
 
-		LT_CORE_ASSERT(!vertex_source.empty(), "Shader::Create: Empty vertex shader source");
-		LT_CORE_ASSERT(!fragment_source.empty(), "Shader::Create: Empty fragment shader source");
+		// assertions
+		LT_CORE_ASSERT(!vertex_source.empty(), "Shader::Create: empty vertex shader source");
+		LT_CORE_ASSERT(!fragment_source.empty(), "Shader::Create: empty fragment shader source");
 
 
 		switch (GraphicsContext::GetAPI())
@@ -39,7 +42,7 @@ namespace Light {
 			return std::make_shared<dxShader>(vertex_source, fragment_source); )
 
 		default:
-			LT_CORE_ASSERT(false, "Shader::Create: Invalid GraphicsAPI");
+			LT_CORE_ASSERT(false, "Shader::Create: invalid GraphicsAPI");
 		}
 	}
 
@@ -51,11 +54,11 @@ namespace Light {
 		endDelimPos = src.find("-" + delim);
 
 		LT_CORE_ASSERT(begDelimPos != std::string::npos + 5, 
-		               "Shader::ExtractShaderSource: Failed to find start delimiter in shader source, delim: {}, shader:\n{}",
+		               "Shader::ExtractShaderSource: failed to find start delimiter in shader source, delim: {}, shader:\n{}",
 		                delim, src);
 
 		LT_CORE_ASSERT(endDelimPos != std::string::npos,
-		               "Shader::ExtractShaderSource: Failed to find end delimiter in shader source, delim: {}, shader:\n{}",
+		               "Shader::ExtractShaderSource: failed to find end delimiter in shader source, delim: {}, shader:\n{}",
 		                delim, src);
 
 		src = src.substr(begDelimPos, endDelimPos - begDelimPos);

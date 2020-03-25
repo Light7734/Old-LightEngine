@@ -1,7 +1,10 @@
 #pragma once
 
 #include "Debug/Logger.h"
-
+#include <cstdio>
+#include <cstdlib>
+#include <new>
+	
 #ifdef _WIN32
 	#define LIGHT_PLATFORM_WINDOWS
 	#ifndef _WIN64
@@ -46,7 +49,7 @@ namespace Light {
 	{
 		FailedAssertion(const char* file, int line)		
 		{
-			LT_CORE_FATAL("Assertion failed, File: {}, Line: {}", file, line);
+			LT_CORE_FATAL("assertion failed, File: {}, Line: {}", file, line);
 		}
 	};
 

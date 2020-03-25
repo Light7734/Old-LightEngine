@@ -20,8 +20,7 @@ namespace Light {
 			{ BlendFactor::DST_ALPHA        , GL_DST_ALPHA           },
 			{ BlendFactor::DST_ALPHA_INVERSE, GL_ONE_MINUS_DST_ALPHA }})
 	{
-		glBlendFunc(GL_SRC_ALPHA, m_BlendFactorsMap.at(s_SrcFactor));
-		glBlendFunc(GL_DST_ALPHA, m_BlendFactorsMap.at(s_DstFactor));
+		glBlendFunc(m_BlendFactorsMap.at(s_SrcFactor), m_BlendFactorsMap.at(s_DstFactor));
 	}
 
 	void glBlender::EnableImpl()

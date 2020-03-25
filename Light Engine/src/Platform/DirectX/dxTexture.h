@@ -9,20 +9,19 @@
 
 namespace Light {
 
-	class dxTextureAtlas : public TextureAtlas
+	class dxTextureArray : public TextureArray
 	{
 	private:
-		static Microsoft::WRL::ComPtr<ID3D11Texture2D> s_Texture;
-		static Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> s_SRV;
-		static Microsoft::WRL::ComPtr<ID3D11SamplerState> s_SamplerState;
-
-		static unsigned int s_MipLevels;
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> m_Texture;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_SRV;
+		unsigned int m_MipLevels;
 	public:
-		dxTextureAtlas(const TextureData& data);
+		dxTextureArray(unsigned int slices);
 
-		static void DestroyTextureArray();
-	private:
-		void Init(unsigned int width, unsigned int height);
+		void CreateAtlas(const std::string& name, const std::string& texturePath, const std::string& atlasPath) override;
+		void DeleteAtlas(const std::string& name);
+
+		void Bind();
 	};
 
-};
+}

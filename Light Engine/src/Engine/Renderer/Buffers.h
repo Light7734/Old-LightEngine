@@ -2,24 +2,33 @@
 
 #include "Core/Core.h"
 
-#include <glm/glm.hpp>
-
 namespace Light {
 
-	class ConstantBuffers
+	enum ConstantBufferIndex
 	{
-	private:
-		static std::unique_ptr<ConstantBuffers> s_Context;
+		// Slots for client side
+		ConstantBufferIndex_ClientSlot0 = 0,
+		ConstantBufferIndex_ClientSlot1 = 1,
+		ConstantBufferIndex_ClientSlot2 = 2,
+		ConstantBufferIndex_ClientSlot3 = 3,
+		ConstantBufferIndex_ClientSlot4 = 4,
+		ConstantBufferIndex_ClientSlot5 = 5,
+
+		// Slots for engine
+		ConstantBufferIndex_ViewProjection = 6,
+	};
+
+	class ConstantBuffer
+	{
 	public:
-		virtual ~ConstantBuffers() = default;
+		virtual ~ConstantBuffer() = default;
 
-		static void SetViewProjMatrix(const glm::f32* view, const glm::f32* proj)
-		            { s_Context->SetViewProjMatrixImpl(view, proj); }
+		static std::shared_ptr<ConstantBuffer> Create(ConstantBufferIndex index, unsigned int size);
 
-		virtual void SetViewProjMatrixImpl(const glm::f32* view, const glm::f32* proj) = 0;
-	private:
-		friend class GraphicsContext;
-		static void Init();
+		virtual void Bind() = 0;
+
+		virtual void* Map() = 0;
+		virtual void UnMap() = 0;
 	};
 
 	class VertexBuffer
@@ -31,8 +40,8 @@ namespace Light {
 
 		virtual void Bind() = 0;
 
-		virtual void* Map  () = 0;
-		virtual void  UnMap() = 0;
+		virtual void* Map() = 0;
+		virtual void UnMap() = 0;
 	};
 
 	class IndexBuffer

@@ -28,21 +28,21 @@ namespace Light {
 	Window::Window(const WindowData& data, const GraphicsConfigurations& configurations, GraphicsAPI api)
 		: m_Data(data)
 	{
-		LT_CORE_ASSERT(!s_Context, "Window::Window: Multiple Window instances");
-		LT_CORE_ASSERT(glfwInit(), "Window::Window: glfwInit() failed");
+		LT_CORE_ASSERT(!s_Context, "Window::Window: multiple Window instances");
+		LT_CORE_ASSERT(glfwInit(), "Window::Window: call to glfwInit() failed");
 		s_Context = this;
 
-		// Window hints
+		// window hints
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 		glfwWindowHint(GLFW_VISIBLE  , data.visible);
 		glfwWindowHint(GLFW_DECORATED, data.displayMode != DisplayMode::BorderlessWindowed);
 		
-		// Create and check glfw window
+		// create and check glfw window
 		m_GlfwHandle = glfwCreateWindow(configurations.resolution.width, configurations.resolution.height,
 		                                data.title.c_str(),	
 		                                data.displayMode == DisplayMode::Fullscreen ? glfwGetPrimaryMonitor() : nullptr,
 		                                nullptr);
-		LT_CORE_ASSERT(m_GlfwHandle, "Window::Window: glfwCreateWindow() failed");
+		LT_CORE_ASSERT(m_GlfwHandle, "Window::Window: call to glfwCreateWindow() failed");
 
 		Center();
 		if(data.minimized)
@@ -51,7 +51,7 @@ namespace Light {
 		glfwSetWindowUserPointer(m_GlfwHandle, &m_Data);
 
 
-		// Set native window handle
+		// set native window handle
 #		ifdef GLFW_EXPOSE_NATIVE_WIN32
 			m_NativeHandle = glfwGetWin32Window(m_GlfwHandle);
 #		else
@@ -59,7 +59,7 @@ namespace Light {
 #		endif
 
 
-		// Init stuff
+		// init stuff
 		Monitor::Init();
 		GfxSetApi(api, configurations);
 	}
@@ -75,7 +75,6 @@ namespace Light {
 		glfwPollEvents();
 	}
 
-	// Setters
 	void Window::SetEventCallbackFunction(std::function<void(Event&)> event_callback_func)
 	{
 		s_Context->m_Data.eventCallback = event_callback_func;
@@ -119,7 +118,7 @@ namespace Light {
 			break;
 		}
 		default:
-			LT_CORE_ERROR("Window::SetDisplayMode: Invalid display mode: {}", mode);
+			LT_CORE_ERROR("Window::SetDisplayMode: invalid display mode: {}", mode);
 		}
 
 		Center();
@@ -160,7 +159,7 @@ namespace Light {
 	{
 		glfwSetErrorCallback([](int code, const char* error) 
 		{
-			// #todo: Improve:
+			// #todo: improve:
 			LT_CORE_ERROR("glfwErrorCallback: code: {}, desc: {}", code, error);
 		});
 

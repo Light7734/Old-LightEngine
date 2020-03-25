@@ -4,25 +4,21 @@
 
 #include "Renderer/Buffers.h"
 
-#include <glm/glm.hpp>
-
 namespace Light {
 	
-	enum UniformBufferIndex
-	{
-		UBufferIndex_ViewProjection = 0,
-		// ...
-	};
-
-	class glUniformBuffers : public ConstantBuffers
+	class glConstantBuffer : public ConstantBuffer
 	{
 	private:
-		unsigned int m_ViewProjBuffer;
+		unsigned int m_BufferID;
+		unsigned int m_Index;
 	public:
-		glUniformBuffers();
-		~glUniformBuffers();
+		glConstantBuffer(ConstantBufferIndex index, unsigned int size);
+		~glConstantBuffer();
 
-		void SetViewProjMatrixImpl(const glm::f32* view, const glm::f32* proj) override;
+		void Bind() override;
+
+		void* Map() override;
+		void UnMap() override;
 	};
 
 	class glVertexBuffer : public VertexBuffer
@@ -35,8 +31,8 @@ namespace Light {
 
 		void Bind() override;
 
-		void* Map  () override;
-		void  UnMap() override;
+		void* Map() override;
+		void UnMap() override;
 	};
 
 	class glIndexBuffer : public IndexBuffer

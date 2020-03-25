@@ -11,62 +11,16 @@
 #include "Platform/Opengl/glTexture.h"
 
 namespace Light {
-
-	std::vector<unsigned int> TextureAtlas::s_AvailableSlots = {15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0};
-
-	unsigned int TextureAtlas::s_Height = 0;
-	unsigned int TextureAtlas::s_Width  = 0;
-
-	TextureAtlas::TextureAtlas()
+	
+	TextureAtlas::TextureAtlas(const std::string& name, const std::string& path, unsigned int sliceIndex)
+		: m_Name(name), m_Index(sliceIndex)
 	{
-		LT_CORE_ASSERT(!s_AvailableSlots.empty(), "TextureAtlas::TextureAtlas: Texture atlas count exceeds the limit: {}", 16);
+		std::string data = FileManager::LoadTextFile(path);
 
-		m_Index = s_AvailableSlots.back();
-		s_AvailableSlots.pop_back();
-	}
-
-	TextureAtlas::~TextureAtlas()
-	{
-		s_AvailableSlots.push_back(m_Index);
-	}
-
-	std::shared_ptr<Light::TextureAtlas> TextureAtlas::Create(const std::string& atlasPath)
-	{
-		std::string atlasData = FileManager::LoadTextFile(atlasPath);
-		TextureData data;
-		data.pixels = FileManager::LoadTextureFile(atlasData.substr(0, atlasData.find('\n')),
-		                                           &data.width, &data.height, &data.channels);
-		LT_CORE_ASSERT(data, "TextureAtlas::Create: failed to load texture atlas: {}", atlasPath);
-
-		switch (GraphicsContext::GetAPI())
-		{
-		case GraphicsAPI::Opengl:
-		{
-			std::shared_ptr<glTextureAtlas> glAtlas = std::make_shared<glTextureAtlas>(data);
-			glAtlas->ParseSegments(atlasData);
-
-			return glAtlas;
-		}
-
-		case GraphicsAPI::Directx: LT_DX(
-		{
-			std::shared_ptr<dxTextureAtlas> dxAtlas = std::make_shared<dxTextureAtlas>(data);
-			dxAtlas->ParseSegments(atlasData);
-
-			return dxAtlas;
-		} )
-
-		default:
-			LT_CORE_ASSERT(false, "TextureAtlas::Create: Invalid GraphicsAPI");
-		}
-	}
-
-	void TextureAtlas::ParseSegments(const std::string& data)
-	{
 		std::stringstream stream(data);
 		std::string line;
 
-		std::getline(stream, line); // skip the first line
+		// note: I'm using (CodeAndWeb)TexturePacker with a custom exporter
 		while (std::getline(stream, line))
 		{
 			std::istringstream lineStream(line);
@@ -84,26 +38,19 @@ namespace Light {
 			m_Segments[name] = { xMin, yMin, xMax, yMax, static_cast<float>(m_Index) };
 		}
 	}
-	
-	void TextureAtlas::DestroyTextureArray()
+
+	std::shared_ptr<TextureArray> TextureArray::Create(unsigned int slices)
 	{
 		switch (GraphicsContext::GetAPI())
 		{
 		case GraphicsAPI::Opengl:
-		{
-			glTextureAtlas::DestroyTextureArray();
-			break;
-		}
-
-		case GraphicsAPI::Directx: LT_DX(
-		{
-			dxTextureAtlas::DestroyTextureArray();
-			break;
-		})
-
+			return std::make_shared<glTextureArray>(slices);
+		case GraphicsAPI::Directx:LT_DX(
+			return std::make_shared<dxTextureArray>(slices);)
 		default:
-			LT_CORE_ASSERT(false, "TextureAtlas::DestroyTextureArray: Invalid GraphicsAPI");
+			LT_CORE_ASSERT(false, "invalid GraphicsAPI");
 		}
+		return nullptr;
 	}
 
 }	

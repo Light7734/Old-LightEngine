@@ -9,8 +9,6 @@
 
 namespace Light {
 
-	const glm::vec3 Camera::s_Up = glm::vec3(0.0f, 1.0f, 0.0f);
-
 	void Camera::ShowDebugLayer()
 	{
 		ImGui::BulletText("position: [%f x %f]", m_Position.x, m_Position.y);
@@ -18,19 +16,19 @@ namespace Light {
 		ImGui::BulletText("aspect ratio: %f", m_AspectRatio);
 	}
 
-	const glm::f32* Camera::GetView()
+	const glm::mat4& Camera::GetView()
 	{
-		m_View = glm::lookAt(glm::vec3(m_Position, 1.0f), glm::vec3(m_Position, 0.0f), s_Up);
-		return glm::value_ptr(m_View);
+		m_View = glm::lookAt(glm::vec3(m_Position, 1.0f), glm::vec3(m_Position, 0.0f), m_Up);
+		return m_View;
 	}
 
-	const glm::f32* Camera::GetProjection()
+	const glm::mat4& Camera::GetProjection()
 	{
 		m_Projection = glm::ortho(-m_AspectRatio * m_ZoomLevel,
 		                           m_AspectRatio * m_ZoomLevel,
 		                                           m_ZoomLevel,
 		                                          -m_ZoomLevel);
-		return glm::value_ptr(m_Projection);
+		return m_Projection;
 	}
 
 }

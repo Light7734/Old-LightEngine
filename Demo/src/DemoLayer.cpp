@@ -32,11 +32,6 @@ void DemoLayer::OnAttach()
 	LT_INFO("|     C     |  Resolution (16:10)  |");
 	LT_INFO("|___________|______________________|");
 
-	float colors[4] = { 0.0f, 0.0f, 0.0f, 1.0f};
-	Light::RenderCommand::SetClearBackbufferColor(colors);
-
-	Light::Blender::Enable();
-
 	Light::LayerStack::AttachLayer(m_QuadsLayer);
 }
 
@@ -47,9 +42,6 @@ void DemoLayer::OnDetatch()
 
 void DemoLayer::OnUserInterfaceUpdate()
 {
-	Light::UserInterface::ShowImGuiDemoWnidow();
-
-
 	ImGui::Begin("DemoLayer");
 
 	if (ImGui::TreeNode("Monitors"))

@@ -10,7 +10,7 @@ namespace Light {
 		std::fstream stream(path);
 		if (!stream.is_open())
 		{
-			LT_CORE_ERROR("FileManager::LoadTextFile: Failed to load text file: {}", path);
+			LT_CORE_ERROR("FileManager::LoadTextFile: failed to load text file: {}", path);
 			return "";
 		}
 
@@ -26,7 +26,7 @@ namespace Light {
 	{
 		unsigned char* pixels = stbi_load(path.c_str(), x, y, channels, 4);
 		if (!pixels)
-			LT_CORE_ERROR("FileManager::LoadTextureFile: Failed to load texture file: {}", path);
+			LT_CORE_ERROR("FileManager::LoadTextureFile: failed to load texture file: {}", path);
 		return pixels;
 	}
 

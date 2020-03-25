@@ -57,13 +57,13 @@ namespace Light {
 		static void Init();
 		static void Terminate();
 
-		// Setters
+		// setters
 		static inline void SetPattern(const char* pattern) { s_GameLogger->set_pattern(pattern); }
 
 		static inline void SetCoreLevel(spdlog::level::level_enum lvl) { s_CoreLogger->set_level(lvl); }
 		static inline void SetGameLevel(spdlog::level::level_enum lvl) { s_GameLogger->set_level(lvl); }
 
-		// Getters
+		// getters
 		static inline std::shared_ptr<spdlog::logger> GetCoreLogger() { return s_CoreLogger; }
 		static inline std::shared_ptr<spdlog::logger> GetGameLogger() { return s_GameLogger; }
 		static inline std::shared_ptr<spdlog::logger> GetFileLogger() { return s_FileLogger; }

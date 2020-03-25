@@ -12,6 +12,7 @@
 
 #include "Layers/Layer.h"
 
+#include "Renderer/Buffers.h"
 #include "Renderer/RenderCommand.h"
 #include "Renderer/Renderer.h"
 
@@ -25,7 +26,7 @@ namespace Light {
 	{
 		Logger::Init();
 
-		LT_CORE_ASSERT(!s_Instance, "Application::Application: Multiple Application instances");
+		LT_CORE_ASSERT(!s_Instance, "Application::Application: multiple Application instances");
 		s_Instance = this;
 	}
 
@@ -33,13 +34,14 @@ namespace Light {
 	{
 		s_Instance = nullptr;
 
-		LT_FILE_INFO("Application::~Application: Total application runtime: {}s", Time::ElapsedTime());
+		LT_FILE_INFO("Application::~Application: total application runtime: {}s", Time::ElapsedTime());
 		Logger::Terminate();
 	}
 
 	void Application::GameLoop()
 	{
 		LT_CORE_ASSERT(m_Window, "Application::GameLoop: Application::m_Window is not initialized");
+		m_LayerStack.HandleQueuedLayers();
 
 		while (!m_Window->IsClosed())
 		{
@@ -47,6 +49,7 @@ namespace Light {
 			RenderCommand::ClearBackbuffer();
 
 
+			// update
 			for (Layer* layer : m_LayerStack)
 				if(layer->IsEnabled()) 
 					layer->OnUpdate(Time::GetDeltaTime());
@@ -54,10 +57,14 @@ namespace Light {
 
 			if (!m_Window->IsMinimized())
 			{
+				// render
+				Renderer::Begin();
 				for (Layer* layer : m_LayerStack)
 					if (layer->IsEnabled())
 						layer->OnRender();
+				Renderer::End();
 
+				// user interface
 				UserInterface::Begin();
 				for (Layer* layer : m_LayerStack)
 					if (layer->IsEnabled())

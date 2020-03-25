@@ -15,7 +15,7 @@ namespace Light {
 	std::unique_ptr<Blender> Blender::s_Context;
 
 	BlendFactor Blender::s_SrcFactor = BlendFactor::SRC_ALPHA;
-	BlendFactor Blender::s_DstFactor = BlendFactor::DST_ALPHA;
+	BlendFactor Blender::s_DstFactor = BlendFactor::SRC_ALPHA_INVERSE;
 
 	bool Blender::b_Enabled = false;
 
@@ -29,12 +29,12 @@ namespace Light {
 			s_Context = std::make_unique<glBlender>();
 			break;
 
-		case GraphicsAPI::Directx:
+		case GraphicsAPI::Directx: LT_DX(
 			s_Context = std::make_unique<dxBlender>();
 			break;
-
+		)
 		default:
-			LT_CORE_ASSERT(false, "Blender::Init: Invalid GraphicsAPI");
+			LT_CORE_ASSERT(false, "Blender::Init: invalid GraphicsAPI");
 		}
 
 		if (b_Enabled)
@@ -43,7 +43,6 @@ namespace Light {
 
 	void Blender::ShowDebugWindow()
 	{
-
 		if (ImGui::BeginCombo("Source factor", FactorToString(s_SrcFactor)))
 		{
 			for (int i = 0; i < 10; i++)

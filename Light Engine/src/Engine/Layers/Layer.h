@@ -14,10 +14,11 @@ namespace Light {
 		std::string m_LayeDebugrName = "DefaultLayerName";
 		bool b_Enabled = true;
 	public:
-		Layer           (            ) = default;
-		Layer           (const Layer&) = delete ;
-		Layer& operator=(const Layer&) = delete ;
-		virtual ~Layer  (            ) = default;
+		Layer() = default;
+		virtual ~Layer() = default;
+
+		Layer(const Layer&) = delete;
+		Layer& operator=(const Layer&) = delete;
 
 		virtual void Enable () { b_Enabled = true ; }
 		virtual void Disable() { b_Enabled = false; }
@@ -25,17 +26,18 @@ namespace Light {
 		virtual void OnAttach () {}
 		virtual void OnDetatch() {}
 
+		virtual void OnRender()                {}
 		virtual void OnUpdate(float DeltaTime) {}
-		virtual void OnRender(               ) {}
-		virtual void OnUserInterfaceUpdate(  ) {}
+		virtual void OnUserInterfaceUpdate() {}
 
 		virtual void ShowDebugWindow() { ImGui::Text("ShowDebugWindow function is not overridden!"); }
 
 		virtual void OnEvent(Event& event) {}
 
-		// Getters
+		// getters
 		inline const std::string& GetName() const { return m_LayeDebugrName; }
 		inline bool IsEnabled() const { return b_Enabled; }
+
 	};
 
 }

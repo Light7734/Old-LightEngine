@@ -40,10 +40,10 @@ namespace Light {
 
 		void ShowDebugWindow();
 
-		// Setters
+		// setters
 		void SetUserPointer(void* userPointer);
 
-		// Getters
+		// getters
 		static std::shared_ptr<Monitor> GetMonitor(unsigned int index);
 
 		static inline std::shared_ptr<Monitor> GetWindowMonitor() { return s_Handles[s_WindowMonitorIndex]; }
@@ -67,11 +67,8 @@ namespace Light {
 		inline int GetIndex() const { return m_Index; }
 		inline bool IsValid() const { return b_Valid; }
 
-		// Operators
-		operator bool() const
-		{
-			return b_Valid && m_Index < s_Count;
-		}
+		// operators
+		inline operator bool() const { return b_Valid && m_Index < s_Count; }
 	private:
 		friend class Window;
 		static void Init();

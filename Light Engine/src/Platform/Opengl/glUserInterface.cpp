@@ -11,21 +11,21 @@ namespace Light {
 
 	glUserInterface::glUserInterface()
 	{
-		// Setup Dear ImGui context
+		// setup ImGui's context
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO();
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;  // Enable Gamepad Controls
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // enable keyboard controls
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;  // enable gamepad controls
 
-		// Setup Dear ImGui style
+		// setup ImGui's style
 		ImGui::StyleColorsDark();
 
 		ImGuiStyle& style = ImGui::GetStyle();
 		style.WindowRounding = 0.0f;
 		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 
-		// Setup Platform/Renderer bindings
+		// setup platform/renderer bindings
 		ImGui_ImplGlfw_InitForOpenGL(Window::GetGlfwHandle(), false);
 		ImGui_ImplOpenGL3_Init("#version 450 core");
 	}

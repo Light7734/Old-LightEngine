@@ -1,6 +1,7 @@
 #include "ltpch.h"
 #include "glGraphicsContext.h"
 
+#include "Core/Monitor.h"
 #include "Core/Window.h"
 
 #include "Debug/Exceptions.h"
@@ -21,11 +22,11 @@ namespace Light {
 		LT_CORE_ASSERT(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress),
 		               "glGraphicsContext::glGraphicsContext: gladLoadGLLoader failed");
 
-		// Set graphics stuff
+		// set configurations and debug callback
 		SetConfigurations(configurations);
 		SetDebugMessageCallback();
 
-		// #todo: Log more information
+		// #todo: log more information
 		LT_CORE_INFO("glGraphicsContext:");
 		LT_CORE_INFO("        Renderer: {}", glGetString(GL_RENDERER));
 		LT_CORE_INFO("        Version : {}", glGetString(GL_VERSION ));
@@ -52,6 +53,11 @@ namespace Light {
 		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
 	}
 
+	void glGraphicsContext::DefaultRenderBuffer()
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
 	void glGraphicsContext::SetConfigurations(const GraphicsConfigurations& configurations)
 	{
 		SetResolution(configurations.resolution);
@@ -63,6 +69,7 @@ namespace Light {
 		std::shared_ptr<Monitor> windowMonitor = Monitor::GetWindowMonitor();
 		std::vector<VideoMode> videoModes = windowMonitor->GetVideoModes();
 
+		// find maximum monitor resolution
 		int maxWidth = 0, maxHeight = 0;
 		for (const auto& videoMode : videoModes)
 		{
@@ -73,6 +80,7 @@ namespace Light {
 				maxHeight = videoMode.height;
 		}
 
+		// make sure the new resolution is not higher than monitor's
 		if (resolution.width > maxWidth || resolution.height > maxHeight)
 		{
 			LT_CORE_ERROR("GraphicsContext::SetResolution: Window's resolution cannot be higher than monitor's: [{}x{}] > [{}x{}]",
@@ -81,12 +89,14 @@ namespace Light {
 			return;
 		}
 
+		// update s_Configurations
 		s_Configurations.resolution = resolution;
 
+		// resize the Window and center it
 		glfwSetWindowSize(m_WindowHandle, resolution.width, resolution.height);
 		Window::Center();
 
-
+		// adjust the viewport
 		glViewport(0, 0, resolution.width, resolution.height);
 	}
 
@@ -99,11 +109,11 @@ namespace Light {
 	void glGraphicsContext::SetDebugMessageCallback()
 	{
 #if   defined LIGHT_DIST
-		// Disable all messages except GL_DEBUG_HIGH_SEVERITY
+		// disable all messages except GL_DEBUG_HIGH_SEVERITY
 		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_FALSE);
 		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_HIGH, 0, nullptr, GL_TRUE);
 #elif defined LIGHT_DEBUG 
-		// Synchronous output will affect the performance, enabled only in debug cfg
+		// synchronous output will affect the performance, enabled only in debug configurations
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 #endif
 
@@ -114,8 +124,8 @@ namespace Light {
 			switch (severity)
 			{
 			case GL_DEBUG_SEVERITY_HIGH: 
-				LT_DBREAK; // Break here so we can see where we are in the Call stack
-				// #todo: determine if we should actually throw glException or not
+				LT_DBREAK; // __debugbreak here so we can see where we are in the call stack
+				// #todo: determine if we should throw glException or not
 				throw glException(source, type, id, msg);
 
 			case GL_DEBUG_SEVERITY_MEDIUM: case GL_DEBUG_SEVERITY_LOW:

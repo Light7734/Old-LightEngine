@@ -41,6 +41,8 @@ namespace Light {
 
 		static bool b_Enabled;
 	public:
+		virtual ~Blender() = default;
+
 		static inline void Enable () { b_Enabled = true ; s_Context->EnableImpl();  }
 		static inline void Disable() { b_Enabled = false; s_Context->DisableImpl(); }
 

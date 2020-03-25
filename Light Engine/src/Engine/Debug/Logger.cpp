@@ -25,10 +25,10 @@ namespace Light {
 		// spdlog doesn't create a folder, so we need to make sure it exists
 		std::filesystem::create_directory("Logs");
 
-		// Set output directory
+		// set output directory
 		InitLogFileOutputDir();
 
-		// Initialize spdlog
+		// initialize spdlog
 		spdlog::set_level(spdlog::level::trace);
 
 		s_CoreLogger = spdlog::stdout_color_mt("<Engine>");

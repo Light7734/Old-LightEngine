@@ -46,15 +46,21 @@ namespace Light {
 		std::unique_ptr<GraphicsContext> m_GraphicsContext;
 	public:
 		Window(const WindowData& data, const GraphicsConfigurations& configurations, GraphicsAPI api);
+		~Window();
+
 		Window(const Window&) = delete;
 		Window& operator=(const Window&) = delete;
-		~Window();
 
 		void HandleEvents();
 
-		// Graphics
+		// graphics
 		static inline void GfxSetApi(GraphicsAPI api, const GraphicsConfigurations& configurations)
-		                   { s_Context->m_GraphicsContext = GraphicsContext::Create(api, configurations); }
+		{ 
+			std::unique_ptr<GraphicsContext> context =  GraphicsContext::Create(api, configurations);
+
+			if(context)
+				s_Context->m_GraphicsContext = std::move(context); 
+		}
 
 		static inline void GfxSetSetConfigurations(const GraphicsConfigurations& configurations)
 		                   { s_Context->m_GraphicsContext->SetConfigurations(configurations); }
@@ -65,7 +71,7 @@ namespace Light {
 		static inline void GfxSetVSync            (bool vsync)
 		                   { s_Context->m_GraphicsContext->SetVSync(vsync); }
 
-		// Setters
+		// setters
 		void SetEventCallbackFunction(std::function<void(Event&)> event_callback_func);
 
 		static void SetTitle(const std::string& title);
@@ -76,7 +82,7 @@ namespace Light {
 		static void Center();
 		static void Close();
 
-		// Getters
+		// getters
 		static inline GLFWwindow* GetGlfwHandle  () { return s_Context->m_GlfwHandle;   }
 		static inline void*       GetNativeHandle() { return s_Context->m_NativeHandle; }
 

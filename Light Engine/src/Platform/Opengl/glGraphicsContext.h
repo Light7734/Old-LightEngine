@@ -22,7 +22,9 @@ namespace Light {
 		void Draw(unsigned int count) override;
 		void DrawIndexed(unsigned int count) override;
 
-		// Setters
+		void DefaultRenderBuffer() override;
+
+		// setters
 		void SetConfigurations(const GraphicsConfigurations& configurations) override;
 		void SetResolution(const Resolution& resolution) override;
 		void SetVSync(bool vSync) override;

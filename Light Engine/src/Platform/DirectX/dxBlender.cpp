@@ -23,6 +23,7 @@ namespace Light {
 			{ BlendFactor::DST_ALPHA_INVERSE, D3D11_BLEND_INV_DEST_ALPHA }})
 	{
 		// Set blend state
+		m_Desc = {};
 		m_Desc.RenderTarget[0].BlendEnable = true;
 		m_Desc.RenderTarget[0].SrcBlend = m_BlendFactorsMap.at(s_SrcFactor);
 		m_Desc.RenderTarget[0].DestBlend = m_BlendFactorsMap.at(s_DstFactor);

@@ -5,38 +5,43 @@
 
 #include "Debug/Exceptions.h"
 
+#include <glm/gtc/type_ptr.hpp>
+
 namespace Light {
 	
 	// ConstantBuffers //
-	dxConstantBuffers::dxConstantBuffers()
+	dxConstantBuffer::dxConstantBuffer(ConstantBufferIndex index, unsigned int size)
+		: m_Index(index)
 	{
-		// Create constant buffers
 		D3D11_BUFFER_DESC bd = {};
 
 		bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 		bd.Usage = D3D11_USAGE_DYNAMIC;
 		bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		bd.ByteWidth = sizeof(glm::mat4) * 2u;
+		bd.ByteWidth = size;
 
 		HRESULT hr;
-		DXC(dxGraphicsContext::GetDevice()->CreateBuffer(&bd, nullptr, &m_ViewProjBuffer));
+		DXC(dxGraphicsContext::GetDevice()->CreateBuffer(&bd, nullptr, &m_Buffer));
 
-		// Bind constant buffers
-		dxGraphicsContext::GetDeviceContext()->VSSetConstantBuffers(CBufferIndex_ViewProjection,
-		                                                            1u,
-		                                                            m_ViewProjBuffer.GetAddressOf());
+		dxGraphicsContext::GetDeviceContext()->VSSetConstantBuffers(index, 1u, m_Buffer.GetAddressOf());
+		dxGraphicsContext::GetDeviceContext()->PSSetConstantBuffers(index, 1u, m_Buffer.GetAddressOf());
 	}
 
-	void dxConstantBuffers::SetViewProjMatrixImpl(const glm::f32* view, const glm::f32* proj)
+	void dxConstantBuffer::Bind()
 	{
-		D3D11_MAPPED_SUBRESOURCE map;
-		dxGraphicsContext::GetDeviceContext()->Map(m_ViewProjBuffer.Get(), NULL, D3D11_MAP_WRITE_DISCARD, NULL, &map);
+		dxGraphicsContext::GetDeviceContext()->VSSetConstantBuffers(m_Index, 1u, m_Buffer.GetAddressOf());
+		dxGraphicsContext::GetDeviceContext()->PSSetConstantBuffers(m_Index, 1u, m_Buffer.GetAddressOf());
+	}
 
-		memcpy(map.pData, view, sizeof(glm::mat4));
-		map.pData = (glm::mat4*)map.pData + 1;
-		memcpy(map.pData, proj, sizeof(glm::mat4));
+	void* dxConstantBuffer::Map()
+	{
+		dxGraphicsContext::GetDeviceContext()->Map(m_Buffer.Get(), NULL, D3D11_MAP_WRITE_DISCARD, NULL, &m_Map);
+		return m_Map.pData;
+	}
 
-		dxGraphicsContext::GetDeviceContext()->Unmap(m_ViewProjBuffer.Get(), NULL);
+	void dxConstantBuffer::UnMap()
+	{
+		dxGraphicsContext::GetDeviceContext()->Unmap(m_Buffer.Get(), NULL);
 	}
 
 	// VertexBuffer //

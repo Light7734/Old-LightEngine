@@ -6,28 +6,25 @@
 
 namespace Light {
 
-	struct glVertexAttributes
+	struct glVertexElementDesc
 	{
 		unsigned int type;
 		unsigned int count;
-		unsigned int size;
+		unsigned int typeSize;
 		unsigned int offset;
 	};
 
 	class glVertexLayout : public VertexLayout
 	{
 	private:
-		std::vector<glVertexAttributes> m_Attributes;
-		unsigned int m_Stride = 0;
+		unsigned int m_ArrayID;
 	public:
-		glVertexLayout(std::initializer_list<std::pair<const char*, VertexType>> initList);
+		glVertexLayout(std::shared_ptr<VertexBuffer> buffer, std::initializer_list<std::pair<const char*, VertexElementType>> elements);
+		~glVertexLayout();
 
-		inline std::vector<glVertexAttributes> GetAttribtues() { return m_Attributes; }
-
-		inline unsigned int GetStride() { return m_Stride; }
+		void Bind() override;
 	private:
-		inline void UpdateStride() { m_Stride += m_Attributes.back().count * m_Attributes.back().size; }
-		glVertexAttributes GetTypeAttributes(VertexType type);
+		glVertexElementDesc glVertexLayout::GetTypeDesc(VertexElementType type, unsigned int offset);
 	};
 
 }

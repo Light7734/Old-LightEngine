@@ -16,8 +16,8 @@ namespace Light {
 		D3DCompile(vertexSource.c_str(), vertexSource.length(), NULL, nullptr, nullptr, "main", "vs_4_0", NULL, NULL, &m_VertexBlob, &vsErr);
 		D3DCompile(pixelSource.c_str() , pixelSource.length() , NULL, nullptr, nullptr, "main", "ps_4_0", NULL, NULL, &ps, &psErr);
 
-		LT_CORE_ASSERT(!vsErr.Get(), "dxShader::dxShader: Vertex shader compile error: {}", (char*)vsErr->GetBufferPointer());
-		LT_CORE_ASSERT(!psErr.Get(), "dxShader::dxShader: Pixel shader compile error: {}", (char*)psErr->GetBufferPointer());
+		LT_CORE_ASSERT(!vsErr.Get(), "dxShader::dxShader: vertex shader compile error: {}", (char*)vsErr->GetBufferPointer());
+		LT_CORE_ASSERT(!psErr.Get(), "dxShader::dxShader: pixel shader compile error: {}", (char*)psErr->GetBufferPointer());
 
 		HRESULT hr;
 		DXC(dxGraphicsContext::GetDevice()->CreateVertexShader(m_VertexBlob->GetBufferPointer(), m_VertexBlob->GetBufferSize(), NULL, &m_VertexShader));

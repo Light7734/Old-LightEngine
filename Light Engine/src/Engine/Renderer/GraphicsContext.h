@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Core/Core.h"
-#include "Core/Monitor.h"
 
 struct GLFWmonitor;
 
@@ -9,14 +8,14 @@ namespace Light {
 
 	enum class AspectRatio
 	{
-		AR_4_3 = 1,
+		AR_4_3,
 		AR_16_9,
 		AR_16_10,
 	};
 
 	enum class GraphicsAPI
 	{
-		Default, Opengl, Directx, // #todo: Metal
+		Default, Opengl, Directx, // #todo: metal
 	};
 
 	struct Resolution
@@ -28,19 +27,19 @@ namespace Light {
 			: width(_width), height(_height), aspectRatio((float)_width / _height)
 		{
 			LT_CORE_ASSERT((aspectRatio == 4.0f / 3.0f) == (ratio == AspectRatio::AR_4_3),
-				"Resolution::Resolution: Invalid aspect ratio: [{}x{}] != 4:3", width, height);
+				"Resolution::Resolution: invalid aspect ratio: [{}x{}] != 4:3", width, height);
 
 			LT_CORE_ASSERT((aspectRatio == 16.0f / 9.0f) == (ratio == AspectRatio::AR_16_9),
-				"Resolution::Resolution: Invalid aspect ratio: [{}x{}] != 16:9", width, height);
+				"Resolution::Resolution: invalid aspect ratio: [{}x{}] != 16:9", width, height);
 
 			LT_CORE_ASSERT((aspectRatio == 16.0f / 10.0f) == (ratio == AspectRatio::AR_16_10),
-				"Resolution::Resolution: Invalid aspect ratio: [{}x{}] != 16:10", width, height);
+				"Resolution::Resolution: invalid aspect ratio: [{}x{}] != 16:10", width, height);
 		}
 
 		Resolution() : width(0), height(0), aspectRatio(0.0f) {}
 
 
-		// Operators
+		// operators
 		operator bool() const
 		{
 			return width && height && (float)width / height == aspectRatio;
@@ -50,7 +49,7 @@ namespace Light {
 	struct GraphicsConfigurations
 	{
 		Resolution resolution;
-		bool vSync = true;
+		bool vSync = true; // #todo: add anti-aliasing
 	};
 
 	class GraphicsContext
@@ -71,12 +70,14 @@ namespace Light {
 		virtual void Draw(unsigned int count) = 0;
 		virtual void DrawIndexed(unsigned int count) = 0;
 
-		// Setters
+		virtual void DefaultRenderBuffer() = 0;
+
+		// setters
 		virtual void SetConfigurations(const GraphicsConfigurations& configurations) = 0;
 		virtual void SetResolution    (const Resolution& resolution                ) = 0;
 		virtual void SetVSync         (bool vsync                                  ) = 0;
 
-		// Getters
+		// getters
 		static inline const GraphicsConfigurations& GetConfigurations() { return s_Configurations; }
 		static inline const GraphicsAPI             GetAPI           () { return s_Api;            }
 		

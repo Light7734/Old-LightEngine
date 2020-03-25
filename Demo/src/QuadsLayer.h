@@ -14,13 +14,19 @@ struct Sprite
 class QuadsLayer : public Light::Layer
 {
 private:
-	Light::Camera m_Camera;
+	std::shared_ptr<Light::Camera> m_Camera;
 	float m_CameraSpeed;
 
-	std::shared_ptr<Light::TextureAtlas> m_TextureAtlas;
-
+	std::shared_ptr<Light::TextureArray> m_TextureArray;
+		
 	std::vector<Sprite> m_Sprites;
 	Sprite* m_SelectedSprite;
+
+	std::shared_ptr<Light::Framebuffer> m_Grayscale;
+	std::shared_ptr<Light::Framebuffer> m_Inverse;
+	std::shared_ptr<Light::Framebuffer> m_Kernel;
+
+	std::shared_ptr<Light::ConstantBuffer> m_KernelData;
 public:
 	QuadsLayer();
 
@@ -39,6 +45,4 @@ private:
 	bool OnButtonRelease(Light::MouseButtonReleasedEvent& event);
 	bool OnMouseScroll  (Light::MouseScrolledEvent& event      );
 	bool OnWindowResize (Light::WindowResizedEvent& event      );
-
-	void DoCollision(Sprite& sprite, Sprite& target);
 };
