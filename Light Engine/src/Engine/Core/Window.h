@@ -5,6 +5,7 @@
 #include "Renderer/GraphicsContext.h"
 
 struct GLFWwindow;
+struct GLFWcursor;
 
 namespace Light {
 
@@ -27,8 +28,11 @@ namespace Light {
 		bool minimized = false;
 	private:
 		friend class Window;
+
 		bool active    = true;
 		bool closed    = false;
+
+		GLFWcursor* cursor = nullptr;
 		
 		std::function<void(Event&)> eventCallback = [](Event&) {};
 	};
@@ -73,6 +77,8 @@ namespace Light {
 
 		// setters
 		void SetEventCallbackFunction(std::function<void(Event&)> event_callback_func);
+
+		static void SetMouseCursor(const std::string& texturePath, unsigned int hotspotX = 0, unsigned int hotspotY = 0);
 
 		static void SetTitle(const std::string& title);
 

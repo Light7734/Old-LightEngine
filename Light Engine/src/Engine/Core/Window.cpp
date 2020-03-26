@@ -8,6 +8,9 @@
 #include "Events/MouseEvents.h"
 #include "Events/WindowEvents.h"
 
+#include "Utility/FileManager.h"
+#include "Renderer/Texture.h"
+
 #if   defined(LIGHT_PLATFORM_WINDOWS)
 	#define GLFW_EXPOSE_NATIVE_WIN32
 
@@ -79,6 +82,21 @@ namespace Light {
 	{
 		s_Context->m_Data.eventCallback = event_callback_func;
 		s_Context->SetGlfwCallbacks();
+	}
+
+	void Window::SetMouseCursor(const std::string& texturePath, unsigned int hotspotX, unsigned int hotspotY)
+	{
+		glfwDestroyCursor(s_Context->m_Data.cursor);
+
+		TextureData tdata;
+		tdata.pixels = FileManager::LoadTextureFile(texturePath, &tdata.width, &tdata.height, &tdata.channels);
+
+		LT_CORE_ASSERT(tdata, "Window::SetMouseCursor: failed to load cursor texture: {}", texturePath);
+		LT_CORE_ASSERT(hotspotX <= tdata.width && hotspotY <= tdata.height, "Window::SetMouseCursor: invalid hotspot position");
+
+		GLFWimage image = {tdata.width, tdata.height, tdata.pixels};
+		s_Context->m_Data.cursor = glfwCreateCursor(&image, hotspotX, hotspotY);
+		glfwSetCursor(s_Context->m_GlfwHandle, s_Context->m_Data.cursor);
 	}
 
 	void Window::SetTitle(const std::string& title)
@@ -239,6 +257,7 @@ namespace Light {
 		{
 			((WindowData*)glfwGetWindowUserPointer(window))->eventCallback(WindowClosedEvent());
 		});
+
 	}
 
 }

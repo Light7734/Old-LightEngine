@@ -17,6 +17,7 @@ namespace Light {
 		ImGuiIO& io = ImGui::GetIO();
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // enable keyboard controls
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;  // enable gamepad controls
+		io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;  // disable mouse cursor change
 
 		// setup ImGui's style
 		ImGui::StyleColorsDark();

@@ -32,6 +32,8 @@ void DemoLayer::OnAttach()
 	LT_INFO("|     C     |  Resolution (16:10)  |");
 	LT_INFO("|___________|______________________|");
 
+	Light::Window::SetMouseCursor("res/cursor.png", 1u, 1u);
+
 	Light::LayerStack::AttachLayer(m_QuadsLayer);
 }
 

@@ -15,21 +15,22 @@ namespace Light {
 
 	dxUserInterface::dxUserInterface()
 	{
-		// Setup Dear ImGui context
+		// setup Dear ImGui context
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; // Enable Gamepad Controls
-		
-		// Setup Dear ImGui style
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // enable Keyboard Controls
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; // enable Gamepad Controls
+		io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;  // disable mouse cursor change
+
+		// setup Dear ImGui style
 		ImGui::StyleColorsDark();
 
 		ImGuiStyle& style = ImGui::GetStyle();
 		style.WindowRounding = 0.0f;
 		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 
-		// Setup Platform/Renderer bindings
+		// setup Platform/Renderer bindings
 		ImGui_ImplWin32_Init(Window::GetNativeHandle());
 		ImGui_ImplDX11_Init(dxGraphicsContext::GetDevice(), dxGraphicsContext::GetDeviceContext());
 	}

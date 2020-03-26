@@ -34,7 +34,7 @@ namespace Light {
 
 		sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 
-		sd.SampleDesc.Count   = 1u;
+		sd.SampleDesc.Count   = 4u;
 		sd.SampleDesc.Quality = 0u;
 
 		sd.Windowed = true;
@@ -45,6 +45,7 @@ namespace Light {
 		flags = D3D11_CREATE_DEVICE_DEBUG;
 #endif
 		// create device and swap chain
+
 		DXC( D3D11CreateDeviceAndSwapChain
 		(   nullptr,
 			D3D_DRIVER_TYPE_HARDWARE,
