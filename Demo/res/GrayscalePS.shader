@@ -22,7 +22,7 @@ SamplerState linearSampler : register(s0);
 
 float4 main(float2 TexCoords : TEXCOORDS) : SV_TARGET
 {
-	float3 colors = frameTexture.Sample(linearSampler, TexCoords).rgb;
+	float3 colors = frameTexture.Sample(linearSampler, float2(TexCoords.x, 1.0f - TexCoords.y)).rgb;
 	float avg = 0.2126 * colors.r + 0.7152 * colors.g + 0.0722 * colors.b;
 	return float4(avg, avg, avg, 1.0f);
 }

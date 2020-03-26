@@ -5,6 +5,9 @@
 
 Demo::Demo()
 {
+	// seed rand
+	srand(time(NULL));
+
 	// create window data
 	Light::WindowData wd;
 	wd.title       = "Demo";

@@ -1,61 +1,97 @@
 #include "DemoLayer.h"
+
 #include "QuadsLayer.h"
+#include "PostProcessLayer.h"
 
 DemoLayer::DemoLayer()
+	: m_CameraSpeed(525)
 {
 	m_LayeDebugrName = "DemoLayer";
-	m_QuadsLayer = new QuadsLayer;
+
+	m_Camera = std::make_shared<Light::Camera>(glm::vec2(500.0f, 500.0f), Light::GraphicsContext::GetAspectRatio(), 1000.0f);
+
+	m_QuadsLayer = new QuadsLayer(m_Camera);
+	m_PostProcessLayer = new PostProcessLayer;
 }
 
 void DemoLayer::OnAttach()
 {
-	LT_TRACE("Attached DemoLayer");
+	LT_TRACE("Attached: {}", m_LayeDebugrName);
 
-	LT_INFO(" __________________________________");
-	LT_INFO("|    KEY    |        ACTION        |");
-	LT_INFO("|-----------|----------------------|");
-	LT_INFO("|    ESC    |         Exit         |");
-	LT_INFO("|     1     |  BorderlessWindowed  |");
-	LT_INFO("|     2     |       Windowed       |");
-	LT_INFO("|     3     |      Fullscreen      |");
-	LT_INFO("|-----------|----------------------|");
-	LT_INFO("|     W     |     Camera: Up       |");
-	LT_INFO("|     A     |     Camera: Left     |");
-	LT_INFO("|     S     |     Camera: Down     |");
-	LT_INFO("|     D     |     Camera: Right    |");
-	LT_INFO("|-----------|----------------------|");
-	LT_INFO("|     E     |    GraphicsAPI:GL    |");
-	LT_INFO("|     R     |    GraphicsAPI:DX    |");
-	LT_INFO("|-----------|----------------------|");
-	LT_INFO("|     Z     |  Resolution (4:3)    |");
-	LT_INFO("|     X     |  Resolution (16:9)   |");
-	LT_INFO("|     C     |  Resolution (16:10)  |");
-	LT_INFO("|___________|______________________|");
+	Light::Renderer::SetCamera(m_Camera);
 
 	Light::Window::SetMouseCursor("res/cursor.png", 1u, 1u);
 
 	Light::LayerStack::AttachLayer(m_QuadsLayer);
+	Light::LayerStack::AttachLayer(m_PostProcessLayer);
 }
 
 void DemoLayer::OnDetatch()
 {
-	LT_TRACE("Detatched DemoLayer");
+	LT_TRACE("Detatched: {}", m_LayeDebugrName);
+}
+
+void DemoLayer::OnUpdate(float DeltaTime)
+{
+	if (Light::Input::GetKey(KEY_A))
+		m_Camera->MoveX(-m_CameraSpeed * DeltaTime);
+	if (Light::Input::GetKey(KEY_D))
+		m_Camera->MoveX(m_CameraSpeed * DeltaTime);
+
+	if (Light::Input::GetKey(KEY_W))
+		m_Camera->MoveY(-m_CameraSpeed * DeltaTime);
+	if (Light::Input::GetKey(KEY_S))
+		m_Camera->MoveY(m_CameraSpeed * DeltaTime);
 }
 
 void DemoLayer::OnUserInterfaceUpdate()
 {
 	ImGui::Begin("DemoLayer");
 
-	if (ImGui::TreeNode("Monitors"))
+	if (ImGui::TreeNode("Keyboard map"))
 	{
-		Light::Monitor::ShowDebugWindowAll();
+		ImGui::Text(" __________________________________");
+		ImGui::Text("|    KEY    |        ACTION        |");
+		ImGui::Text("|-----------|----------------------|");
+		ImGui::Text("|    ESC    |         Exit         |");
+		ImGui::Text("|     1     |  BorderlessWindowed  |");
+		ImGui::Text("|     2     |       Windowed       |");
+		ImGui::Text("|     3     |      Fullscreen      |");
+		ImGui::Text("|-----------|----------------------|");
+		ImGui::Text("|     W     |     Camera: Up       |");
+		ImGui::Text("|     A     |     Camera: Left     |");
+		ImGui::Text("|     S     |     Camera: Down     |");
+		ImGui::Text("|     D     |     Camera: Right    |");
+		ImGui::Text("|-----------|----------------------|");
+		ImGui::Text("|     E     |    GraphicsAPI:GL    |");
+		ImGui::Text("|     R     |    GraphicsAPI:DX    |");
+		ImGui::Text("|-----------|----------------------|");
+		ImGui::Text("|     Z     |  Resolution (4:3)    |");
+		ImGui::Text("|     X     |  Resolution (16:9)   |");
+		ImGui::Text("|     C     |  Resolution (16:10)  |");
+		ImGui::Text("|___________|______________________|");
+
+		ImGui::TreePop();
+	} 
+	ImGui::Separator();
+
+	if (ImGui::TreeNode("Mouse map"))
+	{
+		ImGui::Text(" _______________________________________");
+		ImGui::Text("|     BUTTON    |        ACTION        |");
+		ImGui::Text("|---------------|----------------------|");
+		ImGui::Text("|  LEFT_BUTTON  |      Drag Sprite     |");
+		ImGui::Text("|---------------|----------------------|");
+		ImGui::Text("|  CTRL + WHEEL |      Zoom In/Out     |");
+		ImGui::Text("|_______________|______________________|");
+
 		ImGui::TreePop();
 	}
 	ImGui::Separator();
 
-	if (ImGui::TreeNode("Input"))
+	if (ImGui::TreeNode("Monitors"))
 	{
-		Light::Input::ShowDebugWindow();
+		Light::Monitor::ShowDebugWindowAll();
 		ImGui::TreePop();
 	}
 	ImGui::Separator();
@@ -67,6 +103,21 @@ void DemoLayer::OnUserInterfaceUpdate()
 	}
 	ImGui::Separator();
 
+	if (ImGui::TreeNode("Blender"))
+	{
+		Light::Blender::ShowDebugWindow();
+		ImGui::TreePop();
+	}
+	ImGui::Separator();
+
+	if (ImGui::TreeNode("Camera"))
+	{
+		m_Camera->ShowDebugLayer();
+		ImGui::BulletText("speed: %f", m_CameraSpeed);
+		ImGui::TreePop();
+	}
+	ImGui::Separator();
+
 	if (ImGui::TreeNode("GraphicsContext"))
 	{
 		Light::GraphicsContext::ShowDebugWindow();
@@ -74,11 +125,12 @@ void DemoLayer::OnUserInterfaceUpdate()
 	}
 	ImGui::Separator();
 
-	if (ImGui::TreeNode("Blender"))
+	if (ImGui::TreeNode("Input"))
 	{
-		Light::Blender::ShowDebugWindow();
+		Light::Input::ShowDebugWindow();
 		ImGui::TreePop();
 	}
+	ImGui::Separator();
 
 	ImGui::End();
 }
@@ -90,6 +142,9 @@ void DemoLayer::OnEvent(Light::Event& event)
 
 	Light::Dispatcher dispatcher(event); 
 	dispatcher.Dispatch<Light::KeyboardKeyPressedEvent>(LT_EVENT_FN(DemoLayer::OnKeyPress));
+	dispatcher.Dispatch<Light::MouseScrolledEvent>(LT_EVENT_FN(DemoLayer::OnMouseScroll));
+
+	dispatcher.Dispatch<Light::WindowResizedEvent>(LT_EVENT_FN(DemoLayer::OnWindowResize));
 }
 
 bool DemoLayer::OnKeyPress(Light::KeyboardKeyPressedEvent& event)
@@ -103,7 +158,16 @@ bool DemoLayer::OnKeyPress(Light::KeyboardKeyPressedEvent& event)
 		                         Light::GraphicsContext::GetConfigurations());
 
 		Light::LayerStack::DetatchLayer(m_QuadsLayer);
+		Light::LayerStack::DetatchLayer(m_PostProcessLayer);
+
+		delete m_QuadsLayer;
+		delete m_PostProcessLayer;
+
+		m_QuadsLayer = new QuadsLayer(m_Camera);
+		m_PostProcessLayer = new PostProcessLayer;
+
 		Light::LayerStack::AttachLayer(m_QuadsLayer);
+		Light::LayerStack::AttachLayer(m_PostProcessLayer);
 	}
 
 	if (event.GetKey() == KEY_Z)
@@ -157,4 +221,18 @@ bool DemoLayer::OnKeyPress(Light::KeyboardKeyPressedEvent& event)
 		Light::Window::SetDisplayMode(Light::DisplayMode::Fullscreen);
 
 	return true;
+}
+
+bool DemoLayer::OnWindowResize(Light::WindowResizedEvent& event)
+{
+	m_Camera->SetProjection(Light::GraphicsContext::GetAspectRatio(), m_Camera->GetZoomLevel());
+	return false;
+}
+
+bool DemoLayer::OnMouseScroll(Light::MouseScrolledEvent& event)
+{
+	if (Light::Input::GetKey(KEY_LEFT_CONTROL))
+		m_Camera->Zoom(event.GetOffset() * 25);
+
+	return false;
 }

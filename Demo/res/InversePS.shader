@@ -25,6 +25,6 @@ SamplerState linearSampler : register(s0)
 
 float4 main(float2 TexCoords : TEXCOORDS) : SV_TARGET
 {
-	return float4(1.0f - frameTexture.Sample(linearSampler, TexCoords).rgb, 1.0f);
+	return float4(1.0f - frameTexture.Sample(linearSampler, float2(TexCoords.x, 1.0f - TexCoords.y)).rgb, 1.0f);
 }
 -HLSL
