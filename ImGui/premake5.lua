@@ -9,6 +9,8 @@ project "ImGui"
 	targetdir (TargetDir)
 	objdir    (ObjectDir)
 
+	warnings "off"
+
 	defines "_CRT_SECURE_NO_WARNINGS"
 	
     files "%{prj.location}/**.**"

@@ -51,6 +51,11 @@
 #include "Events/MouseEvents.h"
 // ---------------------------
 
+// Font ----------------------
+#include "Font/Font.h"
+#include "Font/FontManager.h"
+// ---------------------------
+
 // Input ---------------------
 #include "Input/Input.h"
 #include "Input/InputCodes.h"

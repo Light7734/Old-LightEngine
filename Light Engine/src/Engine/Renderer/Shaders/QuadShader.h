@@ -71,7 +71,7 @@ uniform sampler2DArray u_TextureArray;
 
 void main()
 {
-	FSOutFragColor = texture(u_TextureArray, FragmentIn.TexCoords);
+	FSOutFragColor = texture(u_TextureArray, FragmentIn.TexCoords) * FragmentIn.Color;
 }
 -GLSL
 

@@ -8,11 +8,11 @@ QuadsLayer::QuadsLayer(std::shared_ptr<Light::Camera> camera)
 	// create texture array and load an atlas
 	m_TextureArray = Light::TextureArray::Create(1u);
 
-	m_TextureArray->CreateAtlas("atlas", "res/atlas.png", "res/atlas.txt");
+	m_TextureArray->CreateSliceWithAtlas("res/atlas.png", "QuadsLayer atlas", "res/atlas.txt");
 
 	// create texture atlas to extract coordinates of texture array's slices
 	std::shared_ptr<Light::TextureAtlas> textureAtlas;
-	textureAtlas = m_TextureArray->GetAtlas("atlas");
+	textureAtlas = m_TextureArray->GetAtlas("QuadsLayer atlas");
 	Light::TextureCoordinates* boxCoords = textureAtlas->GetCoordinates("box");
 
 	// create sprites
@@ -28,7 +28,6 @@ QuadsLayer::QuadsLayer(std::shared_ptr<Light::Camera> camera)
 
 		m_Sprites.push_back(sprite);
 	}
-
 }
 
 void QuadsLayer::OnAttach()
@@ -38,7 +37,7 @@ void QuadsLayer::OnAttach()
 
 void QuadsLayer::OnDetatch()
 {
-	LT_TRACE("Detatched: {}", m_LayeDebugrName);
+	LT_TRACE("Detached: {}", m_LayeDebugrName);
 }
 
 void QuadsLayer::OnUpdate(float DeltaTime)
@@ -87,11 +86,11 @@ bool QuadsLayer::OnButtonPress(Light::MouseButtonPressedEvent& event)
 	}
 
 	m_SelectedSprite = bestMatch;
-	return true;
+	return false;
 }
 
 bool QuadsLayer::OnButtonRelease(Light::MouseButtonReleasedEvent& event)
 {
 	m_SelectedSprite = nullptr;
-	return true;
+	return false;
 }

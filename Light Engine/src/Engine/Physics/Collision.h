@@ -6,6 +6,8 @@
 
 namespace Light {
 
+	// #todo: either replace the Physics folder with a physic library or start improving the physics system
+
 	// AABB - AABB
 	bool CheckCollision(const glm::vec2& rectOnePos, const glm::vec2& rectOneSize,
 	                    const glm::vec2& rectTwoPos, const glm::vec2& rectTwoSize,

@@ -39,14 +39,14 @@ namespace Light {
 		}
 	}
 
-	std::shared_ptr<TextureArray> TextureArray::Create(unsigned int slices)
+	std::shared_ptr<TextureArray> TextureArray::Create(unsigned int slices, unsigned int channels /* = 4 */)
 	{
 		switch (GraphicsContext::GetAPI())
 		{
 		case GraphicsAPI::Opengl:
-			return std::make_shared<glTextureArray>(slices);
+			return std::make_shared<glTextureArray>(slices, channels);
 		case GraphicsAPI::Directx:LT_DX(
-			return std::make_shared<dxTextureArray>(slices);)
+			return std::make_shared<dxTextureArray>(slices, channels);)
 		default:
 			LT_CORE_ASSERT(false, "invalid GraphicsAPI");
 		}

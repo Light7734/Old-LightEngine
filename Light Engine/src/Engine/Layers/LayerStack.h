@@ -14,29 +14,35 @@ namespace Light {
 		static LayerStack* s_Instance;
 
 		static std::vector<Layer*> s_Layers;
-		static std::vector<Layer*> s_PushedLayers;
-		static std::vector<Layer*> s_PoppedLayers;
 
-		static bool b_LayersQueued;
+		static std::vector<Layer*>::iterator s_Current;
+
+		static std::vector<Layer*>::iterator s_Begin;
+		static std::vector<Layer*>::iterator s_End;
+
+		// static std::vector<Layer*>::reverse_iterator s_rBegin;
+		// static std::vector<Layer*>::reverse_iterator s_rEnd;
 	public:
 		LayerStack();
 		~LayerStack();
 
 		static void AttachLayer(Layer* layer);
-		static void DetatchLayer(Layer* layer);
+		static void DetachLayer(Layer* layer);
 
 		static void ShowDebugWindow();
 
-		void HandleQueuedLayers();
-
 		// getters
-		static unsigned int GetSize() { return static_cast<unsigned int>(s_Layers.size()); }
+		static unsigned long GetSize() { return s_Layers.size(); }
+		static bool IsEmpty() { return s_Layers.empty(); }
 
-		std::vector<Layer*>::iterator begin() { return s_Layers.begin(); }
-		std::vector<Layer*>::iterator end() { return s_Layers.end(); }
+		void next() { ++s_Current; }
+		void previous() { --s_Current; }
 
-		std::vector<Layer*>::reverse_iterator rbegin() { return s_Layers.rbegin(); }
-		std::vector<Layer*>::reverse_iterator rend() { return s_Layers.rend(); }
+		const std::vector<Layer*>::iterator& begin() { s_Current = s_Begin; return s_Current; }
+		const std::vector<Layer*>::iterator& end() { return s_End; }
+
+		const std::vector<Layer*>::iterator& rbegin() { s_Current = s_End; return s_Current; }
+		const std::vector<Layer*>::iterator& rend() { return s_Begin; }
 	};
 
 }

@@ -2,6 +2,7 @@
 
 #include "QuadsLayer.h"
 #include "PostProcessLayer.h"
+#include "TextLayer.h"
 
 DemoLayer::DemoLayer()
 	: m_CameraSpeed(525)
@@ -12,6 +13,7 @@ DemoLayer::DemoLayer()
 
 	m_QuadsLayer = new QuadsLayer(m_Camera);
 	m_PostProcessLayer = new PostProcessLayer;
+	m_TextLayer = new TextLayer;
 }
 
 void DemoLayer::OnAttach()
@@ -24,11 +26,12 @@ void DemoLayer::OnAttach()
 
 	Light::LayerStack::AttachLayer(m_QuadsLayer);
 	Light::LayerStack::AttachLayer(m_PostProcessLayer);
+	Light::LayerStack::AttachLayer(m_TextLayer);
 }
 
 void DemoLayer::OnDetatch()
 {
-	LT_TRACE("Detatched: {}", m_LayeDebugrName);
+	LT_TRACE("Detached: {}", m_LayeDebugrName);
 }
 
 void DemoLayer::OnUpdate(float DeltaTime)
@@ -113,7 +116,7 @@ void DemoLayer::OnUserInterfaceUpdate()
 	if (ImGui::TreeNode("Camera"))
 	{
 		m_Camera->ShowDebugLayer();
-		ImGui::BulletText("speed: %f", m_CameraSpeed);
+		ImGui::BulletText("speed %.2f", m_CameraSpeed);
 		ImGui::TreePop();
 	}
 	ImGui::Separator();
@@ -157,17 +160,21 @@ bool DemoLayer::OnKeyPress(Light::KeyboardKeyPressedEvent& event)
 		Light::Window::GfxSetApi(event.GetKey() == KEY_E ? Light::GraphicsAPI::Opengl : Light::GraphicsAPI::Directx,
 		                         Light::GraphicsContext::GetConfigurations());
 
-		Light::LayerStack::DetatchLayer(m_QuadsLayer);
-		Light::LayerStack::DetatchLayer(m_PostProcessLayer);
+		Light::LayerStack::DetachLayer(m_QuadsLayer);
+		Light::LayerStack::DetachLayer(m_PostProcessLayer);
+		Light::LayerStack::DetachLayer(m_TextLayer);
 
 		delete m_QuadsLayer;
 		delete m_PostProcessLayer;
+		delete m_TextLayer;
 
 		m_QuadsLayer = new QuadsLayer(m_Camera);
 		m_PostProcessLayer = new PostProcessLayer;
+		m_TextLayer = new TextLayer;
 
 		Light::LayerStack::AttachLayer(m_QuadsLayer);
 		Light::LayerStack::AttachLayer(m_PostProcessLayer);
+		Light::LayerStack::AttachLayer(m_TextLayer);
 	}
 
 	if (event.GetKey() == KEY_Z)

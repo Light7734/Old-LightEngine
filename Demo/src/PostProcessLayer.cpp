@@ -29,12 +29,12 @@ PostProcessLayer::PostProcessLayer()
 
 void PostProcessLayer::OnAttach()
 {
-	LT_CORE_TRACE("Attached: {}", m_LayeDebugrName);
+	LT_TRACE("Attached: {}", m_LayeDebugrName);
 }
 
 void PostProcessLayer::OnDetatch()
 {
-	LT_CORE_TRACE("Detatched: {}", m_LayeDebugrName);
+	LT_TRACE("Detached: {}", m_LayeDebugrName);
 }
 
 void PostProcessLayer::ShowDebugWindow()

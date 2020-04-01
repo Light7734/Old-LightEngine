@@ -4,12 +4,14 @@
 
 class QuadsLayer;
 class PostProcessLayer;
+class TextLayer;
 
 class DemoLayer : public Light::Layer
 {
 private:	
 	QuadsLayer* m_QuadsLayer;
 	PostProcessLayer* m_PostProcessLayer;
+	TextLayer* m_TextLayer;
 
 	std::shared_ptr<Light::Camera> m_Camera;
 	float m_CameraSpeed;

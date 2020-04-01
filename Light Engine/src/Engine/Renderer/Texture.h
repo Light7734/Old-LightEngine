@@ -55,14 +55,27 @@ namespace Light {
 
 		virtual ~TextureArray() = default;
 
-		static std::shared_ptr<TextureArray> Create(unsigned int slices);
+		static std::shared_ptr<TextureArray> Create(unsigned int slices, unsigned int channels = 4);
 
-		inline std::shared_ptr<TextureAtlas> GetAtlas(const std::string& name) { return m_Atlases[name]; }
+		virtual void UpdateSubTexture(unsigned int xoffset, unsigned int yoffset, unsigned int zoffset, unsigned int width, unsigned int height, void* pixels) = 0;
 
-		virtual void CreateAtlas(const std::string& name, const std::string& texturePath, const std::string& atlasPath) = 0;
-		virtual void DeleteAtlas(const std::string& name) = 0;
+		virtual void GenerateMips() = 0;
+
+		virtual void CreateSliceWithAtlas(const std::string& texturePath, const std::string& atlasName, const std::string& atlasPath) = 0;
+
+		// #todo: this is not very safe because we can accidentally pass sliceIndex of a SliceWithTexture
+		virtual unsigned int CreateSlice(const std::string& texturePath) = 0;
+
+		virtual unsigned int CreateSlice(unsigned int width, unsigned int height, void* pixels) = 0;
+
+		virtual void DeleteSliceWithAtlas(const std::string& atlasName) = 0;
+
+		virtual void DeleteSlice(unsigned int sliceIndex) = 0;
 
 		virtual void Bind() = 0;
+
+
+		inline std::shared_ptr<TextureAtlas> GetAtlas(const std::string& name) { return m_Atlases[name]; }
 	};
 
 }

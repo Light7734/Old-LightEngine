@@ -41,38 +41,33 @@ namespace Light {
 	void Application::GameLoop()
 	{
 		LT_CORE_ASSERT(m_Window, "Application::GameLoop: Application::m_Window is not initialized");
-		m_LayerStack.HandleQueuedLayers();
 
 		while (!m_Window->IsClosed())
 		{
 			Time::CalculateDeltaTime();
 			RenderCommand::ClearBackbuffer();
 
-
 			// update
-			for (Layer* layer : m_LayerStack)
-				if(layer->IsEnabled()) 
-					layer->OnUpdate(Time::GetDeltaTime());
-			m_LayerStack.HandleQueuedLayers();
+			for (const auto& it = m_LayerStack.begin(); it != m_LayerStack.end(); m_LayerStack.next())
+				if ((*it)->IsEnabled())
+					(*it)->OnUpdate(Time::GetDeltaTime());
 
 			if (!m_Window->IsMinimized())
 			{
 				// render
 				Renderer::Begin();
-				for (Layer* layer : m_LayerStack)
-					if (layer->IsEnabled())
-						layer->OnRender();
+				for (const auto& it = m_LayerStack.begin(); it != m_LayerStack.end(); m_LayerStack.next())
+					if ((*it)->IsEnabled())
+						(*it)->OnRender();
 				Renderer::End();
 
 				// user interface
 				UserInterface::Begin();
-				for (Layer* layer : m_LayerStack)
-					if (layer->IsEnabled())
-						layer->OnUserInterfaceUpdate();
-				m_LayerStack.HandleQueuedLayers();
+				for (const auto& it = m_LayerStack.begin(); it != m_LayerStack.end(); m_LayerStack.next())
+					if ((*it)->IsEnabled())
+						(*it)->OnUserInterfaceUpdate();
 				UserInterface::End();
 			}
-
 
 			m_Window->HandleEvents();
 			RenderCommand::SwapBuffers();
@@ -87,8 +82,10 @@ namespace Light {
 		if(event.GetEventType() == EventType::WindowMoved)
 			Monitor::OnWindowMove();
 
-		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)
+		for (const auto& it = m_LayerStack.rbegin(); it != m_LayerStack.rend();)
 		{
+			m_LayerStack.previous();
+
 			if ((*it)->IsEnabled())
 			{
 				(*it)->OnEvent(event);

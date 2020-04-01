@@ -9,6 +9,8 @@ project "glad"
 	targetdir (TargetDir)
 	objdir    (ObjectDir)
 
+	warnings "off"
+
 	files
 	{
 		"%{prj.location}/**.c"         ,

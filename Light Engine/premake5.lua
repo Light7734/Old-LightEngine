@@ -22,6 +22,7 @@ project "Light Engine"
 		"glfw"         ,
 		"glad"         ,
 		"ImGui"        ,
+		"freetype"     ,
         "spdlog"       ,
         "opengl32.lib" ,
     }
@@ -32,7 +33,8 @@ project "Light Engine"
 		"%{prj.location}/src/"              ,
 		"%{wks.location}/glfw/include"      ,
 		"%{wks.location}/glad/"             ,
-		"%{wks.location}/ImGui/"             ,
+		"%{wks.location}/ImGui/"            ,
+		"%{wks.location}/freetype/"           ,
 		"%{wks.location}/spdlog/"           ,
 		"%{wks.location}/Dependencies/glm/" ,
     }

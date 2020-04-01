@@ -11,7 +11,7 @@ namespace Light {
 	class Layer
 	{
 	protected:
-		std::string m_LayeDebugrName = "DefaultLayerName";
+		std::string m_LayeDebugrName = "UnassignedLayerName";
 		bool b_Enabled = true;
 	public:
 		Layer() = default;

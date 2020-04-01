@@ -5,6 +5,8 @@
 #include "RenderCommand.h"
 #include "Renderer.h"
 
+#include "Font/FontManager.h"
+
 #include "UserInterface/UserInterface.h"
 
 #ifdef LIGHT_PLATFORM_WINDOWS
@@ -53,6 +55,7 @@ namespace Light {
 			Blender::Init();
 			Renderer::Init();
 			UserInterface::Init();
+			FontManager::Init();
 
 			return std::move(context);
 		}
@@ -64,6 +67,7 @@ namespace Light {
 			Blender::Init();
 			Renderer::Init();
 			UserInterface::Init();
+			FontManager::Init();
 
 			return std::move(context);
 		})
