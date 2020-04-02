@@ -12,6 +12,8 @@ namespace Light {
 	dxTextureArray::dxTextureArray(unsigned int slices, unsigned int channels)
 		: m_Channels(channels)
 	{
+		LT_PROFILE_FUNC();
+
 		m_Format =
 			m_Channels == 1 ? DXGI_FORMAT_R8_UNORM       : 
 			m_Channels == 2 ? DXGI_FORMAT_R8G8_UNORM     :
@@ -27,6 +29,8 @@ namespace Light {
 
 	void dxTextureArray::CreateSliceWithAtlas(const std::string& texturePath, const std::string& atlasName, const std::string& atlasPath)
 	{
+		LT_PROFILE_FUNC();
+
 		TextureData data;
 		data.pixels = FileManager::LoadTextureFile(texturePath, &data.width, &data.height, &data.channels);
 
@@ -90,6 +94,8 @@ namespace Light {
 
 	unsigned int dxTextureArray::CreateSlice(const std::string& texturePath)
 	{
+		LT_PROFILE_FUNC();
+
 		TextureData data;
 		data.pixels = FileManager::LoadTextureFile(texturePath, &data.width, &data.height, &data.channels);
 
@@ -155,6 +161,8 @@ namespace Light {
 
 	unsigned int dxTextureArray::CreateSlice(unsigned int width, unsigned int height, void* pixels)
 	{
+		LT_PROFILE_FUNC();
+
 		// first atlas? initialize texture array
 		if (!m_Width)
 		{
@@ -234,6 +242,8 @@ namespace Light {
 
 	void dxTextureArray::UpdateSubTexture(unsigned int xoffset, unsigned int yoffset, unsigned int zoffset, unsigned int width, unsigned int height, void* pixels)
 	{
+		LT_PROFILE_FUNC();
+
 		D3D11_BOX box;
 		box.left = xoffset;
 		box.right = xoffset + width;
@@ -252,6 +262,7 @@ namespace Light {
 
 	void dxTextureArray::GenerateMips()
 	{
+		LT_PROFILE_FUNC();
 		dxGraphicsContext::GetDeviceContext()->GenerateMips(m_SRV.Get());
 	}
 
@@ -261,13 +272,3 @@ namespace Light {
 	}
 
 }
-
-
-// 		dxGraphicsContext::GetDeviceContext()->UpdateSubresource(m_Texture.Get(),
-// 		                                                         D3D11CalcSubresource(0u, m_AvailableSlots.back(), m_MipLevels),
-// 		                                                         nullptr,
-// 		                                                         data.pixels,
-// 		                                                         data.width * 4,
-// 		                                                         data.width * data.height * 4);
-// 
-// 		dxGraphicsContext::GetDeviceContext()->GenerateMips(m_SRV.Get());

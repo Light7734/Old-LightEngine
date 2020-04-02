@@ -15,6 +15,8 @@ namespace Light {
 	TextureAtlas::TextureAtlas(const std::string& name, const std::string& path, unsigned int sliceIndex)
 		: m_Name(name), m_Index(sliceIndex)
 	{
+		LT_PROFILE_FUNC();
+
 		std::string data = FileManager::LoadTextFile(path);
 
 		std::stringstream stream(data);
@@ -41,6 +43,8 @@ namespace Light {
 
 	std::shared_ptr<TextureArray> TextureArray::Create(unsigned int slices, unsigned int channels /* = 4 */)
 	{
+		LT_PROFILE_FUNC();
+
 		switch (GraphicsContext::GetAPI())
 		{
 		case GraphicsAPI::Opengl:

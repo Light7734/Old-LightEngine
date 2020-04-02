@@ -12,6 +12,8 @@ namespace Light {
 
 	std::shared_ptr<Light::ConstantBuffer> ConstantBuffer::Create(ConstantBufferIndex index, unsigned int size)
 	{
+		LT_PROFILE_FUNC();
+
 		switch (GraphicsContext::GetAPI())
 		{
 		case GraphicsAPI::Opengl:
@@ -27,6 +29,8 @@ namespace Light {
 
 	std::shared_ptr<VertexBuffer> VertexBuffer::Create(float* vertices, unsigned int size, unsigned int stride)
 	{
+		LT_PROFILE_FUNC();
+
 		switch (GraphicsContext::GetAPI())
 		{
 		case GraphicsAPI::Opengl:
@@ -40,6 +44,8 @@ namespace Light {
 
 	std::shared_ptr<Light::IndexBuffer> IndexBuffer::Create(unsigned int* indices, unsigned int size)
 	{
+		LT_PROFILE_FUNC();
+
 		switch (GraphicsContext::GetAPI())
 		{
 		case GraphicsAPI::Opengl:

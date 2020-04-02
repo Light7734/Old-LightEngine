@@ -23,6 +23,8 @@ namespace Light {
 
 	LayerStack::~LayerStack()
 	{
+		LT_PROFILE_FUNC();
+
 		for (Layer* layer : s_Layers)
 		{
 			layer->OnDetatch();
@@ -32,6 +34,8 @@ namespace Light {
 
 	void LayerStack::AttachLayer(Layer* layer)
 	{
+		LT_PROFILE_FUNC();
+
 		bool empty = s_Layers.empty();
 
 		if (empty || std::find(s_Layers.begin(), s_Layers.end(), layer) == s_Layers.end())
@@ -59,6 +63,8 @@ namespace Light {
 
 	void LayerStack::DetachLayer(Layer* layer)
 	{
+		LT_PROFILE_FUNC();
+
 		if(s_Layers.empty())
 			{ LT_CORE_ERROR("LayerStack::DetachLayer: LayerStack is empty"); return; }
 

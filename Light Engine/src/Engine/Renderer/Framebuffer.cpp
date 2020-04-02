@@ -12,6 +12,8 @@ namespace Light {
 
 	std::shared_ptr<Framebuffer> Framebuffer::Create(const std::string& vertex, const std::string& fragment)
 	{
+		LT_PROFILE_FUNC();
+
 		switch (GraphicsContext::GetAPI())
 		{
 		case GraphicsAPI::Opengl:

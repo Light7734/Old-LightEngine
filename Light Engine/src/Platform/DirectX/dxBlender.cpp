@@ -22,6 +22,8 @@ namespace Light {
 			{ BlendFactor::DST_ALPHA        , D3D11_BLEND_DEST_ALPHA     },
 			{ BlendFactor::DST_ALPHA_INVERSE, D3D11_BLEND_INV_DEST_ALPHA }})
 	{
+		LT_PROFILE_FUNC();
+
 		// Set blend state
 		m_Desc = {};
 		m_Desc.RenderTarget[0].BlendEnable = true;

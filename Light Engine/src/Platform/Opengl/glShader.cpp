@@ -7,6 +7,8 @@ namespace Light {
 
 	glShader::glShader(const std::string& vertexSource, const std::string& fragmentSource)
 	{
+		LT_PROFILE_FUNC();
+
 		// create program
 		m_ShaderID = glCreateProgram();
 
@@ -46,6 +48,7 @@ namespace Light {
 
 	glShader::~glShader()
 	{
+		LT_PROFILE_FUNC();
 		glDeleteProgram(m_ShaderID);
 	}
 
@@ -56,6 +59,8 @@ namespace Light {
 
 	void glShader::AssignSamplersSlots(const std::string& fragmentSource)
 	{
+		LT_PROFILE_FUNC();
+
 		int index = 0;
 		std::stringstream stream(fragmentSource);
 		std::string line;

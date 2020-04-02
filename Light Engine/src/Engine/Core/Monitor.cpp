@@ -19,13 +19,17 @@ namespace Light {
 	// video mode
 	VideoMode::VideoMode(const GLFWvidmode* mode)
 	{
-		static_assert(sizeof(GLFWvidmode) == sizeof(VideoMode), "bruh");
+		LT_PROFILE_FUNC();
+
+		static_assert(sizeof(GLFWvidmode) == sizeof(VideoMode));
 		memcpy(this, mode, sizeof(this));
 	}
 
 	// monitor
 	void Monitor::Init()
 	{
+		LT_PROFILE_FUNC();
+
 		s_Monitors = glfwGetMonitors(&s_Count);
 
 		LT_CORE_ASSERT(s_Count, "Monitor::Init: no monitors are connected or an error has been occurd");
@@ -46,6 +50,8 @@ namespace Light {
 
 		glfwSetMonitorCallback([](GLFWmonitor* monitor, int event) 
 		{
+			LT_PROFILE_SCOPE("glfwMonitorCallback");
+
 			if (event == GLFW_DISCONNECTED)
 			{
 				s_Handles.back()->m_Index = 0;
@@ -66,12 +72,16 @@ namespace Light {
 	Monitor::Monitor(int index)
 		: m_Index(index), b_Valid(true)
 	{
+		LT_PROFILE_FUNC();
+
 		if (index >= s_Count)
 			{ LT_CORE_ERROR("Monitor::Monitor: index out of range"); b_Valid = false;}
 	}
 
 	void Monitor::OnWindowMove()
 	{
+		LT_PROFILE_FUNC();
+
 		GLFWmonitor* windowMonitor = glfwGetWindowMonitor(Window::GetGlfwHandle());
 
 		for (int i = 0; i < s_Count; i++)

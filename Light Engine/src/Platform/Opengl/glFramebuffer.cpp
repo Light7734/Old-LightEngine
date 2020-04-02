@@ -12,6 +12,8 @@ namespace Light {
 
 	glFramebuffer::glFramebuffer(const std::string& vertex, const std::string& fragment)
 	{
+		LT_PROFILE_FUNC();
+
 		m_Shader = Shader::Create(vertex, fragment);
 
 		// create framebuffer and color texture
@@ -44,6 +46,8 @@ namespace Light {
 
 	glFramebuffer::~glFramebuffer()
 	{
+		LT_PROFILE_FUNC();
+
 		glDeleteTextures(1, &m_ColorTextureID);
 		glDeleteFramebuffers(1, &m_FrameBufferID);
 	}
@@ -62,6 +66,8 @@ namespace Light {
 
 	void glFramebuffer::Resize(unsigned int width, unsigned int height)
 	{
+		LT_PROFILE_FUNC();
+
 		glBindTexture(GL_TEXTURE_2D, m_ColorTextureID);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, NULL, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 	}

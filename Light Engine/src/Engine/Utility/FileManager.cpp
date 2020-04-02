@@ -7,6 +7,8 @@ namespace Light {
 
 	std::string FileManager::LoadTextFile(const std::string& path)
 	{
+		LT_PROFILE_FUNC();
+
 		std::fstream stream(path);
 		if (!stream.is_open())
 		{
@@ -24,6 +26,8 @@ namespace Light {
 
 	unsigned char* FileManager::LoadTextureFile(const std::string& path, int* x, int* y, int* channels)
 	{
+		LT_PROFILE_FUNC();
+
 		unsigned char* pixels = stbi_load(path.c_str(), x, y, channels, 4);
 		if (!pixels)
 			LT_CORE_ERROR("FileManager::LoadTextureFile: failed to load texture file: {}", path);

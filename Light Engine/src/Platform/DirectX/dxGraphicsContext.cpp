@@ -12,6 +12,8 @@ namespace Light {
 
 	dxGraphicsContext::dxGraphicsContext(const GraphicsConfigurations& configurations)
 	{
+		LT_PROFILE_FUNC();
+
 		HRESULT hr;
 		s_Instance = this;
 		s_Configurations = configurations;
@@ -144,12 +146,16 @@ namespace Light {
 
 	void dxGraphicsContext::SetConfigurations(const GraphicsConfigurations& configurations)
 	{
+		LT_PROFILE_FUNC();
+
 		SetResolution(configurations.resolution);
 		SetVSync(configurations.vSync);
 	}
 
 	void dxGraphicsContext::SetResolution(const Resolution& resolution)
 	{
+		LT_PROFILE_FUNC();
+
 		std::shared_ptr<Monitor> windowMonitor = Monitor::GetWindowMonitor();
 		std::vector<VideoMode> videoModes = windowMonitor->GetVideoModes();
 

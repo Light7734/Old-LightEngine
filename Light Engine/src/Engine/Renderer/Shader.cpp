@@ -14,6 +14,8 @@ namespace Light {
 
 	std::shared_ptr<Light::Shader> Shader::Create(const std::string& vertex, const std::string& fragment)
 	{
+		LT_PROFILE_FUNC();
+
 		// figure out whether given string is the source or the path to the source
 		bool vsSourceInFile = vertex.find('\n') == std::string::npos;
 		bool fsSourceInFile = fragment.find('\n') == std::string::npos;
@@ -48,6 +50,8 @@ namespace Light {
 
 	void Shader::ExtractShaderSource(std::string& src, const std::string& delim)
 	{
+		LT_PROFILE_FUNC();
+
 		size_t begDelimPos, endDelimPos;
 		
 		begDelimPos = src.find("+" + delim) + 5;

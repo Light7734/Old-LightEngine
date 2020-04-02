@@ -11,6 +11,8 @@ namespace Light {
 	Font::Font(std::shared_ptr<TextureArray> textureArray, const std::string& path, unsigned int size)
 		: m_SliceIndex(0), m_TextureArrayRef(textureArray)
 	{
+		LT_PROFILE_FUNC();
+
 		// load font
 		FT_Library library;
 		FT_Face face;
@@ -75,6 +77,8 @@ namespace Light {
 
 	Font::~Font()
 	{
+		LT_PROFILE_FUNC();
+
 		m_TextureArrayRef->DeleteSlice(m_SliceIndex);
 	}
 

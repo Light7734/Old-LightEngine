@@ -1,8 +1,8 @@
 #pragma once
 
 // Engine
-
-
+#include "Debug/Logger.h"
+#include "Debug/Benchmark/Instrumentor.h"
 
 // Platform
 #ifdef _WIN32

@@ -24,6 +24,8 @@ namespace Light {
 
 	std::unique_ptr<GraphicsContext> GraphicsContext::Create(GraphicsAPI api, const GraphicsConfigurations& configurations)
 	{
+		LT_PROFILE_FUNC();
+
 		// don't re-initialize the same graphics api
 		if (s_Api == api && api != GraphicsAPI::Default)
 		{

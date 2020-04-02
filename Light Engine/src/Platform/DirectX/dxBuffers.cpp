@@ -13,6 +13,8 @@ namespace Light {
 	dxConstantBuffer::dxConstantBuffer(ConstantBufferIndex index, unsigned int size)
 		: m_Index(index)
 	{
+		LT_PROFILE_FUNC();
+
 		D3D11_BUFFER_DESC bd = {};
 
 		bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
@@ -48,6 +50,8 @@ namespace Light {
 	dxVertexBuffer::dxVertexBuffer(float* vertices, unsigned int size, unsigned int stride)
 		: m_Stride(stride)
 	{
+		LT_PROFILE_FUNC();
+
 		D3D11_BUFFER_DESC bd = {};
 		D3D11_SUBRESOURCE_DATA sd = {};
 
@@ -83,6 +87,8 @@ namespace Light {
 	// IndexBuffer //
 	dxIndexBuffer::dxIndexBuffer(unsigned int* indices, unsigned int size)
 	{
+		LT_PROFILE_FUNC();
+
 		D3D11_BUFFER_DESC bd = {};
 		D3D11_SUBRESOURCE_DATA sd = {};
 

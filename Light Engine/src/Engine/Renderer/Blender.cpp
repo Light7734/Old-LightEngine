@@ -21,6 +21,8 @@ namespace Light {
 
 	void Blender::Init()
 	{
+		LT_PROFILE_FUNC();
+
 		s_Context.reset();
 
 		switch (GraphicsContext::GetAPI())

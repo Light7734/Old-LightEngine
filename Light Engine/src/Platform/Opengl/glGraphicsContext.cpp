@@ -16,6 +16,8 @@ namespace Light {
 	glGraphicsContext::glGraphicsContext(const GraphicsConfigurations& configurations)
 		: m_WindowHandle(Window::GetGlfwHandle())
 	{
+		LT_PROFILE_FUNC();
+
 		s_Configurations = configurations;
 
 		glfwMakeContextCurrent(m_WindowHandle);
@@ -60,12 +62,16 @@ namespace Light {
 
 	void glGraphicsContext::SetConfigurations(const GraphicsConfigurations& configurations)
 	{
+		LT_PROFILE_FUNC();
+
 		SetResolution(configurations.resolution);
 		SetVSync(configurations.vSync);
 	}
 	
 	void glGraphicsContext::SetResolution(const Resolution& resolution)
 	{
+		LT_PROFILE_FUNC();
+
 		std::shared_ptr<Monitor> windowMonitor = Monitor::GetWindowMonitor();
 		std::vector<VideoMode> videoModes = windowMonitor->GetVideoModes();
 
@@ -102,6 +108,8 @@ namespace Light {
 
 	void glGraphicsContext::SetVSync(bool vSync)
 	{
+		LT_PROFILE_FUNC();
+
 		glfwSwapInterval(vSync);
 		s_Configurations.vSync = vSync;
 	}

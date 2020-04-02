@@ -11,6 +11,8 @@ namespace Light {
 
 	dxFramebuffer::dxFramebuffer(const std::string& vertex, const std::string& pixel)
 	{
+		LT_PROFILE_FUNC();
+
 		HRESULT hr;
 
 		// Create shader 
@@ -62,6 +64,8 @@ namespace Light {
 
 	void dxFramebuffer::Resize(unsigned int width, unsigned int height)
 	{
+		LT_PROFILE_FUNC();
+
 		HRESULT hr;
 
 		D3D11_TEXTURE2D_DESC texture2dDesc;

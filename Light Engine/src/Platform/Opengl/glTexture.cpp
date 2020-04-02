@@ -10,6 +10,8 @@ namespace Light {
 	glTextureArray::glTextureArray(unsigned int slices, unsigned int channels)
 		: m_Channels(channels)
 	{
+		LT_PROFILE_FUNC();
+
 		// set the format and validate it
 		m_Format = 
 			channels == 4 ? GL_RGBA :
@@ -38,22 +40,15 @@ namespace Light {
 
 	glTextureArray::~glTextureArray()
 	{
+		LT_PROFILE_FUNC();
+
 		glDeleteTextures(1, &m_ArrayID);
-	}
-
-	void glTextureArray::UpdateSubTexture(unsigned int xoffset, unsigned int yoffset, unsigned int zoffset, unsigned int width, unsigned int height, void* pixels)
-	{
-		glPixelStorei(GL_UNPACK_ALIGNMENT, m_Channels);
-		glTextureSubImage3D(m_ArrayID, 0, xoffset, yoffset, zoffset, width, height, 1, m_Format, GL_UNSIGNED_BYTE, pixels);
-	}
-
-	void glTextureArray::GenerateMips()
-	{
-		glGenerateTextureMipmap(m_ArrayID);
 	}
 
 	void glTextureArray::CreateSliceWithAtlas(const std::string& texturePath, const std::string& atlasName, const std::string& atlasPath)
 	{
+		LT_PROFILE_FUNC();
+
 		// load texture
 		TextureData data;
 		data.pixels = FileManager::LoadTextureFile(texturePath, &data.width, &data.height, &data.channels);
@@ -95,6 +90,8 @@ namespace Light {
 
 	unsigned int glTextureArray::CreateSlice(const std::string& texturePath)
 	{
+		LT_PROFILE_FUNC();
+
 		// load texture
 		TextureData data;
 		data.pixels = FileManager::LoadTextureFile(texturePath, &data.width, &data.height, &data.channels);
@@ -137,6 +134,8 @@ namespace Light {
 
 	unsigned int glTextureArray::CreateSlice(unsigned int width, unsigned int height, void* pixels)
 	{
+		LT_PROFILE_FUNC();
+
 		// first slice? initialize width & height and specify the storage requirements
 		if (!m_Width)
 		{
@@ -193,6 +192,20 @@ namespace Light {
 	void glTextureArray::DeleteSlice(unsigned int sliceIndex)
 	{
 		m_AvailableSlots.push_back(sliceIndex);
+	}
+
+	void glTextureArray::UpdateSubTexture(unsigned int xoffset, unsigned int yoffset, unsigned int zoffset, unsigned int width, unsigned int height, void* pixels)
+	{
+		LT_PROFILE_FUNC();
+
+		glPixelStorei(GL_UNPACK_ALIGNMENT, m_Channels);
+		glTextureSubImage3D(m_ArrayID, 0, xoffset, yoffset, zoffset, width, height, 1, m_Format, GL_UNSIGNED_BYTE, pixels);
+	}
+
+	void glTextureArray::GenerateMips()
+	{
+		LT_PROFILE_FUNC();
+		glGenerateTextureMipmap(m_ArrayID);
 	}
 
 	void glTextureArray::Bind()

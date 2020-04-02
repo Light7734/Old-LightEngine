@@ -11,6 +11,8 @@ namespace Light {
 	glConstantBuffer::glConstantBuffer(ConstantBufferIndex index, unsigned int size)
 		: m_Index(index)
 	{
+		LT_PROFILE_FUNC();
+
 		glCreateBuffers(1, &m_BufferID);
 		glNamedBufferData(m_BufferID, size, NULL, GL_DYNAMIC_DRAW);
 
@@ -19,6 +21,7 @@ namespace Light {
 
 	glConstantBuffer::~glConstantBuffer()
 	{
+		LT_PROFILE_FUNC();
 		glDeleteBuffers(1, &m_BufferID);
 	}
 
@@ -40,12 +43,15 @@ namespace Light {
 	// VertexBuffer //
 	glVertexBuffer::glVertexBuffer(float* vertices, unsigned int size)
 	{
+		LT_PROFILE_FUNC();
+
 		glCreateBuffers(1, &m_BufferID);
 		glNamedBufferData(m_BufferID, size, vertices, GL_DYNAMIC_DRAW);
 	}
 
 	glVertexBuffer::~glVertexBuffer()
 	{
+		LT_PROFILE_FUNC();
 		glDeleteBuffers(1, &m_BufferID);
 	}
 
@@ -67,12 +73,15 @@ namespace Light {
 	// IndexBuffer //
 	glIndexBuffer::glIndexBuffer(unsigned int* indices, unsigned int size)
 	{
+		LT_PROFILE_FUNC();
+
 		glCreateBuffers(1, &m_BufferID);
 		glNamedBufferData(m_BufferID, size, indices, GL_STATIC_DRAW);
 	}
 
 	glIndexBuffer::~glIndexBuffer()
 	{
+		LT_PROFILE_FUNC();
 		glDeleteBuffers(1, &m_BufferID);
 	}
 

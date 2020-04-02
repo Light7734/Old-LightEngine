@@ -20,6 +20,7 @@ namespace Light {
 			{ BlendFactor::DST_ALPHA        , GL_DST_ALPHA           },
 			{ BlendFactor::DST_ALPHA_INVERSE, GL_ONE_MINUS_DST_ALPHA }})
 	{
+		LT_PROFILE_FUNC();
 		glBlendFunc(m_BlendFactorsMap.at(s_SrcFactor), m_BlendFactorsMap.at(s_DstFactor));
 	}
 

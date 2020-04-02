@@ -14,6 +14,8 @@ namespace Light {
 	                                                   std::shared_ptr<VertexBuffer> buffer,
 	                                                   std::initializer_list<std::pair<const char*, VertexElementType>> elements)
 	{
+		LT_PROFILE_FUNC();
+
 		switch (GraphicsContext::GetAPI())
 		{
 		case GraphicsAPI::Opengl:

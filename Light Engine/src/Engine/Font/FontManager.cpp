@@ -9,16 +9,20 @@ namespace Light {
 
 	void FontManager::LoadFont(const std::string& name, const std::string& path, unsigned int size)
 	{
+		LT_PROFILE_FUNC();
 		m_Fonts[name] = std::make_shared<Font>(m_TextureArray, path, size);
 	}
 
 	void FontManager::RemoveFont(const std::string& name)
 	{
+		LT_PROFILE_FUNC();
 		m_Fonts.erase(name);
 	}
 
 	void FontManager::Init()
 	{
+		LT_PROFILE_FUNC();
+
 		m_Fonts.clear();
 		m_TextureArray.reset();
 

@@ -67,13 +67,13 @@ namespace Light {
 		}
 
 		static inline void GfxSetSetConfigurations(const GraphicsConfigurations& configurations)
-		                   { s_Context->m_GraphicsContext->SetConfigurations(configurations); }
+		                   { LT_PROFILE_FUNC(); s_Context->m_GraphicsContext->SetConfigurations(configurations); }
 
 		static inline void GfxSetResolution       (const Resolution& resolution)
-		                   { s_Context->m_GraphicsContext->SetResolution(resolution); }
+		                   { LT_PROFILE_FUNC(); s_Context->m_GraphicsContext->SetResolution(resolution); }
 
 		static inline void GfxSetVSync            (bool vsync)
-		                   { s_Context->m_GraphicsContext->SetVSync(vsync); }
+		                   { LT_PROFILE_FUNC(); s_Context->m_GraphicsContext->SetVSync(vsync); }
 
 		// setters
 		void SetEventCallbackFunction(std::function<void(Event&)> event_callback_func);

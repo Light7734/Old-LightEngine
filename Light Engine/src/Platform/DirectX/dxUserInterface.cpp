@@ -15,6 +15,8 @@ namespace Light {
 
 	dxUserInterface::dxUserInterface()
 	{
+		LT_PROFILE_FUNC();
+
 		// setup Dear ImGui context
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
@@ -37,6 +39,8 @@ namespace Light {
 
 	dxUserInterface::~dxUserInterface()
 	{
+		LT_PROFILE_FUNC();
+
 		ImGui_ImplDX11_Shutdown();
 		ImGui_ImplWin32_Shutdown();
 		ImGui::DestroyContext();

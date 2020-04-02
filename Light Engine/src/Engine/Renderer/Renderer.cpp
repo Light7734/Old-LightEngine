@@ -36,6 +36,8 @@ namespace Light {
 
 	void Renderer::Init()
 	{
+		LT_PROFILE_FUNC();
+
 		// camera
 		if (!s_Camera)
 			s_Camera = std::make_shared<Camera>(glm::vec2(0.0f, 0.0f), GraphicsContext::GetResolution().aspectRatio, 1000.0f);

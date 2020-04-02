@@ -9,6 +9,8 @@ namespace Light {
 	glVertexLayout::glVertexLayout(std::shared_ptr<VertexBuffer> buffer,
 	                               std::initializer_list<std::pair<const char*, VertexElementType>> elements)
 	{
+		LT_PROFILE_FUNC();
+
 		// assertion
 		LT_CORE_ASSERT(std::dynamic_pointer_cast<glVertexBuffer>(buffer),
 		               "glVertexlayout::glVertexLayout: failed to cast VertexBuffer to glVertexBuffer");
@@ -42,6 +44,7 @@ namespace Light {
 
 	glVertexLayout::~glVertexLayout()
 	{
+		LT_PROFILE_FUNC();
 		glDeleteVertexArrays(1, &m_ArrayID);
 	}
 

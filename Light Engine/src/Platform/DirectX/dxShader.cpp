@@ -11,6 +11,8 @@ namespace Light {
 
 	dxShader::dxShader(const std::string& vertexSource, const std::string& pixelSource)
 	{
+		LT_PROFILE_FUNC();
+
 		Microsoft::WRL::ComPtr<ID3DBlob> ps = nullptr, vsErr = nullptr, psErr = nullptr;
 
 		D3DCompile(vertexSource.c_str(), vertexSource.length(), NULL, nullptr, nullptr, "main", "vs_4_0", NULL, NULL, &m_VertexBlob, &vsErr);

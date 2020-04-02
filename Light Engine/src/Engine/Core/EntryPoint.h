@@ -25,10 +25,17 @@ int main()
 
 	try
 	{
+		// create
+		LT_PROFILE_SESSION_BEGIN("Create.json");
 		app = Light::CreateApplication();
+		LT_PROFILE_SESSION_END();
+
 		LT_CORE_ASSERT(app, "main: Light::Application is not initialized");
 
+		// game loop
+		LT_PROFILE_SESSION_BEGIN("GameLoop.json");
 		app->GameLoop();
+		LT_PROFILE_SESSION_END();
 	}
 	catch (Light::FailedAssertion fa)
 	{
@@ -46,6 +53,10 @@ int main()
 		exitCode = -3;
 	}
 
+	// delete
+	LT_PROFILE_SESSION_BEGIN("Delete.json");
 	delete app;
+	LT_PROFILE_SESSION_END();
+
 	return exitCode;
 }

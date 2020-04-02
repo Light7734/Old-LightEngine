@@ -19,6 +19,8 @@ namespace Light {
 
 	void UserInterface::Init()
 	{
+		LT_PROFILE_FUNC();
+
 		s_Context.reset();
 
 		switch (GraphicsContext::GetAPI())
@@ -39,6 +41,8 @@ namespace Light {
 
 	void UserInterface::ShowImGuiDemoWnidow()
 	{
+		LT_PROFILE_FUNC();
+
 		static bool show_demo_window = true;
 		ImGui::ShowDemoWindow(&show_demo_window);
 	}

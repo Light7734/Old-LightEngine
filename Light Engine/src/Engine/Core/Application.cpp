@@ -24,6 +24,8 @@ namespace Light {
 
 	Application::Application()
 	{
+		LT_PROFILE_FUNC();
+
 		Logger::Init();
 
 		LT_CORE_ASSERT(!s_Instance, "Application::Application: multiple Application instances");
@@ -32,6 +34,8 @@ namespace Light {
 
 	Application::~Application()
 	{
+		LT_PROFILE_FUNC();
+
 		s_Instance = nullptr;
 
 		LT_FILE_INFO("Application::~Application: total application runtime: {}s", Time::ElapsedTime());
@@ -40,37 +44,56 @@ namespace Light {
 
 	void Application::GameLoop()
 	{
+		LT_PROFILE_FUNC();
 		LT_CORE_ASSERT(m_Window, "Application::GameLoop: Application::m_Window is not initialized");
 
 		while (!m_Window->IsClosed())
 		{
 			Time::CalculateDeltaTime();
-			RenderCommand::ClearBackbuffer();
 
-			// update
-			for (const auto& it = m_LayerStack.begin(); it != m_LayerStack.end(); m_LayerStack.next())
-				if ((*it)->IsEnabled())
-					(*it)->OnUpdate(Time::GetDeltaTime());
+			{
+				// update
+				LT_PROFILE_SCOPE("Application::GameLoop::OnUpdate");
+				for (const auto& it = m_LayerStack.begin(); it != m_LayerStack.end(); m_LayerStack.next())
+					if ((*it)->IsEnabled())
+						(*it)->OnUpdate(Time::GetDeltaTime());
+			}
 
 			if (!m_Window->IsMinimized())
 			{
-				// render
-				Renderer::Begin();
-				for (const auto& it = m_LayerStack.begin(); it != m_LayerStack.end(); m_LayerStack.next())
-					if ((*it)->IsEnabled())
-						(*it)->OnRender();
-				Renderer::End();
+				{
+					// render
+					LT_PROFILE_SCOPE("Application::GameLoop::OnRender");
+					Renderer::Begin();
+					for (const auto& it = m_LayerStack.begin(); it != m_LayerStack.end(); m_LayerStack.next())
+						if ((*it)->IsEnabled())
+							(*it)->OnRender();
+					Renderer::End();
+				}
 
-				// user interface
-				UserInterface::Begin();
-				for (const auto& it = m_LayerStack.begin(); it != m_LayerStack.end(); m_LayerStack.next())
-					if ((*it)->IsEnabled())
-						(*it)->OnUserInterfaceUpdate();
-				UserInterface::End();
+				{
+					// user interface
+					LT_PROFILE_SCOPE("Application::GameLoop::OnUserInterface");
+					UserInterface::Begin();
+					for (const auto& it = m_LayerStack.begin(); it != m_LayerStack.end(); m_LayerStack.next())
+						if ((*it)->IsEnabled())
+							(*it)->OnUserInterfaceUpdate();
+					UserInterface::End();
+				}
 			}
 
-			m_Window->HandleEvents();
-			RenderCommand::SwapBuffers();
+			{
+				// handle event
+				LT_PROFILE_SCOPE("Application::GameLoop::HandleEvents");
+				m_Window->HandleEvents();
+			}
+
+			{
+				// swap buffers and clear buffer
+				LT_PROFILE_SCOPE("Application::GameLoop::RenderCommand");
+				RenderCommand::SwapBuffers();
+				RenderCommand::ClearBackbuffer();
+			}
 		}
 	}
 

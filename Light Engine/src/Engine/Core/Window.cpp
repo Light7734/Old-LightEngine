@@ -31,6 +31,8 @@ namespace Light {
 	Window::Window(const WindowData& data, const GraphicsConfigurations& configurations, GraphicsAPI api)
 		: m_Data(data)
 	{
+		LT_PROFILE_FUNC();
+
 		LT_CORE_ASSERT(!s_Context, "Window::Window: multiple Window instances");
 		LT_CORE_ASSERT(glfwInit(), "Window::Window: call to glfwInit() failed");
 		s_Context = this;
@@ -69,6 +71,8 @@ namespace Light {
 
 	Window::~Window()
 	{
+		LT_PROFILE_FUNC();
+
 		glfwDestroyWindow(m_GlfwHandle);
 		glfwTerminate();
 	}
@@ -80,12 +84,16 @@ namespace Light {
 
 	void Window::SetEventCallbackFunction(std::function<void(Event&)> event_callback_func)
 	{
+		LT_PROFILE_FUNC();
+
 		s_Context->m_Data.eventCallback = event_callback_func;
 		s_Context->SetGlfwCallbacks();
 	}
 
 	void Window::SetMouseCursor(const std::string& texturePath, unsigned int hotspotX, unsigned int hotspotY)
 	{
+		LT_PROFILE_FUNC();
+
 		glfwDestroyCursor(s_Context->m_Data.cursor);
 
 		TextureData tdata;
@@ -101,12 +109,16 @@ namespace Light {
 
 	void Window::SetTitle(const std::string& title)
 	{
+		LT_PROFILE_FUNC();
+
 		glfwSetWindowTitle(s_Context->m_GlfwHandle, title.c_str());
 		s_Context->m_Data.title = title;
 	}
 
 	void Window::SetDisplayMode(DisplayMode mode)
 	{
+		LT_PROFILE_FUNC();
+
 		switch (mode)
 		{
 		case DisplayMode::Fullscreen:
@@ -145,6 +157,8 @@ namespace Light {
 
 	void Window::SetVisibility(bool visible)
 	{
+		LT_PROFILE_FUNC();
+
 		if (visible)
 			glfwShowWindow(s_Context->m_GlfwHandle);
 		else
@@ -155,6 +169,8 @@ namespace Light {
 
 	void Window::Center()	
 	{
+		LT_PROFILE_FUNC();
+
 		auto monitor = glfwGetPrimaryMonitor();
 		auto mode = glfwGetVideoMode(monitor);
 
@@ -175,6 +191,8 @@ namespace Light {
 
 	void Window::SetGlfwCallbacks()
 	{
+		LT_PROFILE_FUNC();
+
 		glfwSetErrorCallback([](int code, const char* error) 
 		{
 			// #todo: improve:

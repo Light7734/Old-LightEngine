@@ -10,6 +10,8 @@ namespace Light {
 
 	dxVertexLayout::dxVertexLayout(std::shared_ptr<Shader> shader, std::initializer_list<std::pair<const char*, VertexElementType>> elements)
 	{
+		LT_PROFILE_FUNC();
+
 		// elements desc
 		std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementsDesc;
 		inputElementsDesc.reserve(elements.size());
