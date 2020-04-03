@@ -22,7 +22,7 @@ namespace Light {
 		Camera(const glm::vec2& position, float aspectRatio, float zoomLevel)
 			: m_Up(0.0f, 1.0f, 0.0f), m_Position(position), m_AspectRatio(aspectRatio), m_ZoomLevel(zoomLevel) {}
 
-		void ShowDebugLayer();
+		void ShowDebugWindow();
 
 		// getters
 		const glm::mat4& GetView();

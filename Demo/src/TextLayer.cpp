@@ -2,6 +2,7 @@
 
 TextLayer::TextLayer()
 {
+	LT_PROFILE_FUNC();
 	m_LayeDebugrName = "TextLayer";
 
 	Light::FontManager::LoadFont("arial", "res/arial.ttf", 24);
@@ -43,14 +44,17 @@ void TextLayer::OnRender()
 
 void TextLayer::ShowDebugWindow()
 {
+	ImGui::BulletText("arial");
 	ImGui::PushID("arial");
 	m_Arial.ShowDebugWindow();
 	ImGui::PopID();
 
+	ImGui::BulletText("comic");
 	ImGui::PushID("comic");
 	m_Comic.ShowDebugWindow();
 	ImGui::PopID();
 
+	ImGui::BulletText("impact");
 	ImGui::PushID("impact");
 	m_Impact.ShowDebugWindow();
 	ImGui::PopID();

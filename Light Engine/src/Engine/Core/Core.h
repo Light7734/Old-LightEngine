@@ -30,7 +30,7 @@
 
 // benchmark
 #if !defined(LIGHT_DIST) && !defined(DISABLE_LIGHT_BENCHMARKING)
-	#define LT_PROFILE_SCOPE(name) InstrumentationTimer timer##__LINE__(name) 
+	#define LT_PROFILE_SCOPE(name) ::Light::InstrumentationTimer timer##__LINE__(name) 
 	#define LT_PROFILE_FUNC() LT_PROFILE_SCOPE(__FUNCSIG__)
 
 	#define LT_PROFILE_SESSION_BEGIN(filePath) ::Light::Instrumentor::Get().BeginSession(filePath) 

@@ -9,7 +9,7 @@
 
 namespace Light {
 
-	void Camera::ShowDebugLayer()
+	void Camera::ShowDebugWindow()
 	{
 		ImGui::DragFloat2("position", &m_Position.x, 15.0f, NULL, NULL, "%.2f");
 		ImGui::DragFloat("zoom level", &m_ZoomLevel, 1.0f, NULL, NULL, "%.1f");
