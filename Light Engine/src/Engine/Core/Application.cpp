@@ -32,6 +32,20 @@ namespace Light {
 		s_Instance = this;
 	}
 
+
+	void Application::AttachLayer(Layer* layer)
+	{
+		s_Instance->m_LayerStack.AttachLayer(layer);
+		layer->OnAttach();
+	}
+
+
+	void Application::DetachLayer(Layer* layer)
+	{
+		s_Instance->m_LayerStack.DetachLayer(layer);
+		layer->OnDetatch();
+	}
+
 	Application::~Application()
 	{
 		LT_PROFILE_FUNC();

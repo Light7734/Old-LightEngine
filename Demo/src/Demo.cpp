@@ -33,7 +33,7 @@ Demo::Demo()
 	
 	Light::Blender::Enable();
 
-	Light::LayerStack::AttachLayer(new DemoLayer);
+	Light::Application::AttachLayer(new DemoLayer);
 }
 
 Demo::~Demo()

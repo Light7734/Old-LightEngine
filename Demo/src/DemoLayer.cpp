@@ -24,9 +24,9 @@ void DemoLayer::OnAttach()
 
 	Light::Window::SetMouseCursor("res/cursor.png", 1u, 1u);
 
-	Light::LayerStack::AttachLayer(m_QuadsLayer);
-	Light::LayerStack::AttachLayer(m_PostProcessLayer);
-	Light::LayerStack::AttachLayer(m_TextLayer);
+	Light::Application::AttachLayer(m_QuadsLayer);
+	Light::Application::AttachLayer(m_PostProcessLayer);
+	Light::Application::AttachLayer(m_TextLayer);
 }
 
 void DemoLayer::OnDetatch()
@@ -101,7 +101,7 @@ void DemoLayer::OnUserInterfaceUpdate()
 
 	if (ImGui::TreeNode("Layers"))
 	{
-		Light::LayerStack::ShowDebugWindow();
+		Light::Application::ShowDebugWindow();
 		ImGui::TreePop();
 	}
 	ImGui::Separator();
@@ -115,7 +115,7 @@ void DemoLayer::OnUserInterfaceUpdate()
 
 	if (ImGui::TreeNode("Camera"))
 	{
-		m_Camera->ShowDebugLayer();
+		m_Camera->ShowDebugWindow();
 		ImGui::BulletText("speed %.2f", m_CameraSpeed);
 		ImGui::TreePop();
 	}
@@ -160,9 +160,9 @@ bool DemoLayer::OnKeyPress(Light::KeyboardKeyPressedEvent& event)
 		Light::Window::GfxSetApi(event.GetKey() == KEY_E ? Light::GraphicsAPI::Opengl : Light::GraphicsAPI::Directx,
 		                         Light::GraphicsContext::GetConfigurations());
 
-		Light::LayerStack::DetachLayer(m_QuadsLayer);
-		Light::LayerStack::DetachLayer(m_PostProcessLayer);
-		Light::LayerStack::DetachLayer(m_TextLayer);
+		Light::Application::DetachLayer(m_QuadsLayer);
+		Light::Application::DetachLayer(m_PostProcessLayer);
+		Light::Application::DetachLayer(m_TextLayer);
 
 		delete m_QuadsLayer;
 		delete m_PostProcessLayer;
@@ -172,9 +172,9 @@ bool DemoLayer::OnKeyPress(Light::KeyboardKeyPressedEvent& event)
 		m_PostProcessLayer = new PostProcessLayer;
 		m_TextLayer = new TextLayer;
 
-		Light::LayerStack::AttachLayer(m_QuadsLayer);
-		Light::LayerStack::AttachLayer(m_PostProcessLayer);
-		Light::LayerStack::AttachLayer(m_TextLayer);
+		Light::Application::AttachLayer(m_QuadsLayer);
+		Light::Application::AttachLayer(m_PostProcessLayer);
+		Light::Application::AttachLayer(m_TextLayer);
 	}
 
 	if (event.GetKey() == KEY_Z)

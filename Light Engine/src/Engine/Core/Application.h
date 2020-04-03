@@ -25,8 +25,13 @@ namespace Light {
 		Application(const Application&) = delete;
 		Application& operator=(const Application&) = delete;
 
+		static void AttachLayer(Layer* layer);
+		static void DetachLayer(Layer* layer);
+
 		void GameLoop();
 		void OnEvent(Event& event);
+
+		static inline void ShowDebugWindow() { s_Instance->m_LayerStack.ShowDebugWindow(); };
 	private:
 		bool OnWindowClosedEvent(WindowClosedEvent& event);
 	};
