@@ -24,6 +24,14 @@ project "freetype"
 		"%{prj.location}/premake5.lua" ,
 	}
 
+	excludes 
+	{
+		"%{prj.location}/gzip/infblock.c",
+		"%{prj.location}/gzip/infcodes.c",
+		"%{prj.location}/gzip/inflate.c",
+		"%{prj.location}/gzip/infutil.c",
+	}
+
 	includedirs
 	{
 		"%{prj.location}/",
