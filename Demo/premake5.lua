@@ -20,19 +20,32 @@ project "Demo"
         "Light Engine" ,
         "spdlog"       ,
         "opengl32.lib" ,
+		"irrKlang.lib" ,
     }
 
     includedirs
     {
-		"%{wks.location}/Light Engine/src/Engine/" ,
-		"%{wks.location}/Light Engine/src"         ,
-		"%{wks.location}/glfw/include"             ,
-		"%{wks.location}/glad/"                    ,
-		"%{wks.location}/ImGui/"                   ,
-		"%{wks.location}/spdlog/"                  ,
-		"%{wks.location}/Dependencies/glm/"        ,
+		"%{wks.location}/Light Engine/src/Engine/"      ,
+		"%{wks.location}/Light Engine/src"              ,
+		"%{wks.location}/glfw/include"                  ,
+		"%{wks.location}/glad/"                         ,
+		"%{wks.location}/ImGui/"                        ,
+		"%{wks.location}/spdlog/"                       ,
+		"%{wks.location}/Dependencies/glm/"             ,
+		"%{wks.location}/Dependencies/irrKlang/include" ,
     }
 
+	libdirs
+	{
+		"%{wks.location}/Dependencies/irrKlang/lib" ,
+	}
+
+	prebuildcommands
+	{
+		"copy \"%{wks.location}\\Dependencies\\irrKlang\\lib\\ikpFlac.dll\" \""  .. "%{prj.location}" .. "\"" ,
+		"copy \"%{wks.location}\\Dependencies\\irrKlang\\lib\\ikpMP3.dll\" \""   .. "%{prj.location}" .. "\"" ,
+		"copy \"%{wks.location}\\Dependencies\\irrKlang\\lib\\irrKlang.dll\" \"" .. "%{prj.location}" .. "\"" ,
+	}
 
     -- Configurations
     filter "configurations:debug"
@@ -47,6 +60,12 @@ project "Demo"
         runtime  "release"
 
     filter "configurations:distribution"
+		postbuildcommands
+		{
+			"copy \"%{wks.location}\\Dependencies\\irrKlang\\lib\\ikpFlac.dll\" \""  .. TargetDir .. "\"" ,
+			"copy \"%{wks.location}\\Dependencies\\irrKlang\\lib\\ikpMP3.dll\" \""   .. TargetDir .. "\"" ,
+			"copy \"%{wks.location}\\Dependencies\\irrKlang\\lib\\irrKlang.dll\" \"" .. TargetDir .. "\"" ,
+		}
        defines "LIGHT_DIST"
        optimize "on"
        runtime  "release"

@@ -32,6 +32,10 @@
 
 // Engine ===============================================
 
+// Audio ---------------------
+#include "Audio/AudioEngine.h"
+// ---------------------------
+
 // Core ----------------------
 #include "Core/Application.h"
 #include "Core/Monitor.h"

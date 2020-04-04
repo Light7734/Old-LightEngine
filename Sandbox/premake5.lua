@@ -17,9 +17,9 @@ project "Sandbox"
 
     links
     {
-        "Light Engine" ,
-        "spdlog"       ,
-        "opengl32.lib" ,
+		"Light Engine" ,
+		"spdlog"       ,
+		"opengl32.lib" ,
     }
 
     includedirs
@@ -31,21 +31,35 @@ project "Sandbox"
 		"%{wks.location}/ImGui/"                   ,
 		"%{wks.location}/spdlog/"                  ,
 		"%{wks.location}/Dependencies/glm/"        ,
+		"%{wks.location}/Dependencies/irrKlang/include" ,
+	}
+
+	prebuildcommands
+	{
+		"copy \"%{wks.location}\\Dependencies\\irrKlang\\lib\\ikpFlac.dll\" \""  .. "%{prj.location}" .. "\"" ,
+		"copy \"%{wks.location}\\Dependencies\\irrKlang\\lib\\ikpMP3.dll\" \""   .. "%{prj.location}" .. "\"" ,
+		"copy \"%{wks.location}\\Dependencies\\irrKlang\\lib\\irrKlang.dll\" \"" .. "%{prj.location}" .. "\"" ,
 	}
 
     -- Configurations
     filter "configurations:debug"
-        defines  "LIGHT_DEBUG"
-        optimize "debug"
-        runtime  "debug"
-        symbols  "on"
+		defines  "LIGHT_DEBUG"
+		optimize "debug"
+		runtime  "debug"
+		symbols  "on"
 
     filter "configurations:release"
-        defines "LIGHT_RELEASE"
-        optimize "on"
-        runtime  "release"
+		defines "LIGHT_RELEASE"
+		optimize "on"
+		runtime  "release"
 
     filter "configurations:distribution"
-       defines "LIGHT_DIST"
-       optimize "on"
-       runtime  "release"
+		postbuildcommands
+		{
+			"copy \"%{wks.location}\\Dependencies\\irrKlang\\lib\\ikpFlac.dll\" \""  .. TargetDir .. "\"" ,
+			"copy \"%{wks.location}\\Dependencies\\irrKlang\\lib\\ikpMP3.dll\" \""   .. TargetDir .. "\"" ,
+			"copy \"%{wks.location}\\Dependencies\\irrKlang\\lib\\irrKlang.dll\" \"" .. TargetDir .. "\"" ,
+		}
+		defines "LIGHT_DIST"
+		optimize "on"
+		runtime  "release"

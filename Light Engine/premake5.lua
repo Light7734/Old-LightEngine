@@ -25,19 +25,26 @@ project "Light Engine"
 		"freetype"     ,
         "spdlog"       ,
         "opengl32.lib" ,
+		"irrKlang.lib" ,
     }
 
     includedirs
     {
-		"%{prj.location}/src/Engine/"       ,
-		"%{prj.location}/src/"              ,
-		"%{wks.location}/glfw/include"      ,
-		"%{wks.location}/glad/"             ,
-		"%{wks.location}/ImGui/"            ,
-		"%{wks.location}/freetype/"           ,
-		"%{wks.location}/spdlog/"           ,
-		"%{wks.location}/Dependencies/glm/" ,
+		"%{prj.location}/src/Engine/"                   ,
+		"%{prj.location}/src/"                          ,
+		"%{wks.location}/glfw/include"                  ,
+		"%{wks.location}/glad/"                         ,
+		"%{wks.location}/ImGui/"                        ,
+		"%{wks.location}/freetype/"                     ,
+		"%{wks.location}/spdlog/"                       ,
+		"%{wks.location}/Dependencies/glm/"             ,
+		"%{wks.location}/Dependencies/irrKlang/include" ,
     }
+
+	libdirs
+	{
+		"%{wks.location}/Dependencies/irrKlang/lib" ,
+	}
 
 
 	-- Operating System
