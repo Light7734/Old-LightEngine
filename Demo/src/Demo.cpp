@@ -13,9 +13,10 @@ public:
 
 Demo::Demo()
 {
+	LT_PROFILE_FUNC();
+
 	// seed rand
 	srand(time(NULL));
-
 
 	// create window data
 	Light::WindowData wd;

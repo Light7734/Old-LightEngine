@@ -3,6 +3,8 @@
 PostProcessLayer::PostProcessLayer()
 	: m_GrayscaleAttached(false), m_InverseAttached(false), m_KernelAttached(false)
 {
+	LT_PROFILE_FUNC();
+
 	m_LayeDebugrName = "PostProcessLayer";
 
 	// create framebuffers

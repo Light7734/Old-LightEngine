@@ -3,6 +3,7 @@
 TextLayer::TextLayer()
 {
 	LT_PROFILE_FUNC();
+
 	m_LayeDebugrName = "TextLayer";
 
 	Light::FontManager::LoadFont("arial", "res/arial.ttf", 24);

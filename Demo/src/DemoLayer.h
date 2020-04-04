@@ -2,6 +2,7 @@
 
 #include <LightEngine.h>
 
+class AudioLayer;
 class QuadsLayer;
 class PostProcessLayer;
 class TextLayer;
@@ -9,6 +10,7 @@ class TextLayer;
 class DemoLayer : public Light::Layer
 {
 private:	
+	AudioLayer* m_AudioLayer;
 	QuadsLayer* m_QuadsLayer;
 	PostProcessLayer* m_PostProcessLayer;
 	TextLayer* m_TextLayer;

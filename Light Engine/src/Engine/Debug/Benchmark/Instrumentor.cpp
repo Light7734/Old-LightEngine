@@ -8,6 +8,12 @@ namespace Light {
 	{
 	}
 
+	Instrumentor& Instrumentor::Get()
+	{
+		static Instrumentor instance;
+		return instance;
+	}
+
 	void Instrumentor::BeginSession(const std::string& filepath /* = "results.json" */)
 	{
 		m_OutputStream.open(filepath);
@@ -48,12 +54,6 @@ namespace Light {
 	void Instrumentor::WriteFooter()
 	{
 		m_OutputStream << "]}";
-	}
-
-	Instrumentor& Instrumentor::Get()
-	{
-		static Instrumentor instance;
-		return instance;
 	}
 
 	InstrumentationTimer::InstrumentationTimer(const char* name)

@@ -1,5 +1,6 @@
 #include "DemoLayer.h"
 
+#include "AudioLayer.h"
 #include "QuadsLayer.h"
 #include "PostProcessLayer.h"
 #include "TextLayer.h"
@@ -7,10 +8,13 @@
 DemoLayer::DemoLayer()
 	: m_CameraSpeed(525)
 {
+	LT_PROFILE_FUNC();
+
 	m_LayeDebugrName = "DemoLayer";
 
 	m_Camera = std::make_shared<Light::Camera>(glm::vec2(500.0f, 500.0f), Light::GraphicsContext::GetAspectRatio(), 1000.0f);
 
+	m_AudioLayer = new AudioLayer;
 	m_QuadsLayer = new QuadsLayer(m_Camera);
 	m_PostProcessLayer = new PostProcessLayer;
 	m_TextLayer = new TextLayer;
@@ -24,6 +28,7 @@ void DemoLayer::OnAttach()
 
 	Light::Window::SetMouseCursor("res/cursor.png", 1u, 1u);
 
+	Light::Application::AttachLayer(m_AudioLayer);
 	Light::Application::AttachLayer(m_QuadsLayer);
 	Light::Application::AttachLayer(m_PostProcessLayer);
 	Light::Application::AttachLayer(m_TextLayer);

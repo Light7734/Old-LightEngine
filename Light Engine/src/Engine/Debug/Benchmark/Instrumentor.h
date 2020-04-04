@@ -28,14 +28,14 @@ namespace Light {
 	private:
 		Instrumentor();
 	public:
+		static Instrumentor& Get();
+
 		void BeginSession(const std::string& filepath = "results.json");
 		void EndSession();
 
 		void WriteProfile(const ProfileResult& result);
 		void WriteHeader();
 		void WriteFooter();
-
-		static Instrumentor& Get();
 	};
 
 	class InstrumentationTimer

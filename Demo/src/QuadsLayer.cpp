@@ -3,6 +3,8 @@
 QuadsLayer::QuadsLayer(std::shared_ptr<Light::Camera> camera)
 	: m_Camera(camera), m_SelectedSprite(nullptr)
 {
+	LT_PROFILE_FUNC();
+
 	m_LayeDebugrName = "QuadsLayer";
 
 	// create texture array and load an atlas
