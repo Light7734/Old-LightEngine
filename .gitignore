@@ -6,8 +6,12 @@
 # Engine's profiling output
 *.json
 
-# ImGui .ini file
+# for ImGui .ini file
 *.ini
+
+# dll files
+Demo/*.dll
+Sandbox/*.dll
 
 # User-specific files
 *.rsuser
