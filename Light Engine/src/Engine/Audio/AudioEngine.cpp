@@ -13,6 +13,9 @@ namespace Light {
 	AudioEngine::~AudioEngine()
 	{
 		m_Engine->drop();
+
+		for (const auto& element : m_AudioSources)
+			element.second->drop();
 	}
 
 	AudioEngine& AudioEngine::Get()
@@ -21,34 +24,42 @@ namespace Light {
 		return engine;
 	}
 
-	void AudioEngine::PlayAudio2D(const char* path)
+	Audio* AudioEngine::PlayAudio2D(const char* path, bool playLooped, bool startPaused, bool track)
 	{
-		m_Engine->play2D(path);
+		return m_Engine->play2D(path, playLooped, startPaused, track);
 	}
 
-	void AudioEngine::PlayAudio3D(const char* path, const glm::vec3& position)
+	Audio* AudioEngine::PlayAudio2D(AudioSource* source, bool playLooped, bool startPaused, bool track)
 	{
-		m_Engine->play3D(path, vec3df(position.x, position.y, position.z));
+		return m_Engine->play2D(source, playLooped, startPaused, track);
 	}
 
-	void AudioEngine::LoadAudio2D(const char* name, const char* path, bool loops /*= false*/, bool startPaused /*= true*/)
+	Audio* AudioEngine::PlayAudio3D(const char* path, const glm::vec3& position, bool playLooped, bool startPaused, bool track)
 	{
-		m_Audios[name] = m_Engine->play2D(path, loops, startPaused, true);
+		return m_Engine->play3D(path, vec3df(position.x, position.y, position.z), playLooped, startPaused, track);
 	}
 
-	void AudioEngine::LoadAudio3D(const char* name, const char* path, const glm::vec3& position, bool loops /*= false*/, bool startPaused /*= true*/)
+	Audio* AudioEngine::PlayAudio3D(AudioSource* source, const glm::vec3& position, bool playLooped, bool startPaused, bool track)
 	{
-		m_Audios[name] = m_Engine->play3D(path, vec3df(position.x, position.y, position.z), loops, startPaused, true);
+		return m_Engine->play3D(source, { position.x, position.y, position.z }, playLooped, startPaused, track);
 	}
 
-	void AudioEngine::DestroyAudio(const char* name)
+	AudioSource* AudioEngine::LoadAudio(const char* name, const char* path)
 	{
-		if (m_Audios[name])
-			m_Audios[name]->drop();
+		if (m_AudioSources[name])
+			LT_CORE_WARN("AudioEngine::LoadAudio2D: overwriting Audio source: '{}'", name);
+
+		return m_AudioSources[name] = m_Engine->addSoundSourceFromFile(path);
+	}
+
+	void AudioEngine::DeleteAudio(const char* name)
+	{
+		if (m_AudioSources[name])
+			m_AudioSources[name]->drop();
 		else
 			LT_CORE_ERROR("AudioEngine::DestroyAudio: audio name does not exists: {}", name);
 
-		m_Audios.erase(name);
+		m_AudioSources.erase(name);
 	}
 
 	void AudioEngine::StopAllSounds()

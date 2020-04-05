@@ -3,9 +3,7 @@
 AudioLayer::AudioLayer()
 {
 	m_LayeDebugrName = "AudioLayer";
-
-	Light::AudioEngine::Get().LoadAudio2D("getout", "res/getout.ogg", true);
-	m_Music = Light::AudioEngine::Get().GetAudio("getout");
+	m_Music = Light::AudioEngine::Get().PlayAudio2D("res/getout.ogg", true, true);
 }
 
 void AudioLayer::OnAttach()

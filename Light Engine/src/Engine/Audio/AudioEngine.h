@@ -8,13 +8,14 @@
 
 namespace Light{
 
+	typedef irrklang::ISoundSource AudioSource;
 	typedef irrklang::ISound Audio;
 
 	class AudioEngine
 	{
 	private:
 		irrklang::ISoundEngine* m_Engine;
-		std::unordered_map<std::string, Audio*> m_Audios;
+		std::unordered_map<std::string, AudioSource*> m_AudioSources;
 	private:
 		AudioEngine();
 	public:
@@ -22,21 +23,24 @@ namespace Light{
 
 		static AudioEngine& Get();
 
-		void PlayAudio2D(const char* path);
-		void PlayAudio3D(const char* path, const glm::vec3& position);
+		Audio* PlayAudio2D(const char* path, bool playLooped = false, bool startPaused = false, bool track = false);
+		Audio* PlayAudio3D(const char* path, const glm::vec3& position, bool playLooped = false, bool startPaused = false, bool track = false);
 
-		void LoadAudio2D(const char* name, const char* path, bool loops = false, bool startPaused = true);
-		void LoadAudio3D(const char* name, const char* path, const glm::vec3& position, bool loops = false, bool startPaused = true);
+		Audio* PlayAudio2D(AudioSource* source, bool playLooped = false, bool startPaused = false, bool track = false);
+		Audio* PlayAudio3D(AudioSource* source, const glm::vec3& position, bool playLooped = false, bool startPaused = false, bool track = false);
 
-		void DestroyAudio(const char* name);
+		AudioSource* LoadAudio(const char* name, const char* path);
+
+		void DeleteAudio(const char* name);
 
 		void StopAllSounds();
 		void SetAllSoundsPaused(bool paused = true);
 
 		void SetMasterVolume(float volume);
+
 		float GetMasterVolume();
 
-		inline Audio* GetAudio(const char* name) { return m_Audios[name]; }
+		inline AudioSource* GetAudio(const char* name) { return m_AudioSources[name]; }
 	};
 
 }
