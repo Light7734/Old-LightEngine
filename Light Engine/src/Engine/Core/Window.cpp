@@ -49,12 +49,11 @@ namespace Light {
 		                                nullptr);
 		LT_CORE_ASSERT(m_GlfwHandle, "Window::Window: call to glfwCreateWindow() failed");
 
+		glfwSetWindowUserPointer(m_GlfwHandle, &m_Data);
+
 		Center();
 		if(data.minimized)
 			glfwIconifyWindow(m_GlfwHandle);
-
-		glfwSetWindowUserPointer(m_GlfwHandle, &m_Data);
-
 
 		// set native window handle
 #		ifdef GLFW_EXPOSE_NATIVE_WIN32
@@ -63,10 +62,9 @@ namespace Light {
 			#error Light engine only supports Windows for now
 #		endif
 
-
-		// init stuff
+		// initialize window dependent classes
 		Monitor::Init();
-		GfxSetApi(api, configurations);
+		GraphicsContext::CreateContext(api, configurations);
 	}
 
 	Window::~Window()

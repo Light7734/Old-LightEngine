@@ -57,24 +57,6 @@ namespace Light {
 
 		void HandleEvents();
 
-		// graphics
-		static inline void GfxSetApi(GraphicsAPI api, const GraphicsConfigurations& configurations)
-		{ 
-			std::unique_ptr<GraphicsContext> context =  GraphicsContext::Create(api, configurations);
-
-			if(context)
-				s_Context->m_GraphicsContext = std::move(context); 
-		}
-
-		static inline void GfxSetSetConfigurations(const GraphicsConfigurations& configurations)
-		                   { LT_PROFILE_FUNC(); s_Context->m_GraphicsContext->SetConfigurations(configurations); }
-
-		static inline void GfxSetResolution       (const Resolution& resolution)
-		                   { LT_PROFILE_FUNC(); s_Context->m_GraphicsContext->SetResolution(resolution); }
-
-		static inline void GfxSetVSync            (bool vsync)
-		                   { LT_PROFILE_FUNC(); s_Context->m_GraphicsContext->SetVSync(vsync); }
-
 		// setters
 		void SetEventCallbackFunction(std::function<void(Event&)> event_callback_func);
 

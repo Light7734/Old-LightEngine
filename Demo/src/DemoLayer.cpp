@@ -128,7 +128,7 @@ void DemoLayer::OnUserInterfaceUpdate()
 
 	if (ImGui::TreeNode("GraphicsContext"))
 	{
-		Light::GraphicsContext::ShowDebugWindow();
+		Light::GraphicsContext::Get()->ShowDebugWindow();
 		ImGui::TreePop();
 	}
 	ImGui::Separator();
@@ -162,8 +162,8 @@ bool DemoLayer::OnKeyPress(Light::KeyboardKeyPressedEvent& event)
 
 	if (event.GetKey() == KEY_E || event.GetKey() == KEY_R)
 	{
-		Light::Window::GfxSetApi(event.GetKey() == KEY_E ? Light::GraphicsAPI::Opengl : Light::GraphicsAPI::Directx,
-		                         Light::GraphicsContext::GetConfigurations());
+		Light::GraphicsContext::CreateContext(event.GetKey() == KEY_E ? Light::GraphicsAPI::Opengl : Light::GraphicsAPI::Directx,
+		                                      Light::GraphicsContext::GetConfigurations());
 
 		Light::Application::DetachLayer(m_QuadsLayer);
 		Light::Application::DetachLayer(m_PostProcessLayer);
@@ -193,7 +193,7 @@ bool DemoLayer::OnKeyPress(Light::KeyboardKeyPressedEvent& event)
 			{ 1400, 1050, Light::AspectRatio::AR_4_3 },
 		};
 
-		Light::Window::GfxSetResolution(res[++index % std::size(res)]);
+		Light::GraphicsContext::Get()->SetResolution(res[++index % std::size(res)]);
 	}
 
 	if (event.GetKey() == KEY_X)
@@ -206,7 +206,7 @@ bool DemoLayer::OnKeyPress(Light::KeyboardKeyPressedEvent& event)
 			{ 1920, 1080 , Light::AspectRatio::AR_16_9 },
 		};
 
-		Light::Window::GfxSetResolution(res[++index % std::size(res)]);
+		Light::GraphicsContext::Get()->SetResolution(res[++index % std::size(res)]);
 	}
 
 	if (event.GetKey() == KEY_C)
@@ -220,7 +220,7 @@ bool DemoLayer::OnKeyPress(Light::KeyboardKeyPressedEvent& event)
 			{ 1680, 1050 ,Light::AspectRatio::AR_16_10 },
 		};
 
-		Light::Window::GfxSetResolution(res[++index % std::size(res)]);
+		Light::GraphicsContext::Get()->SetResolution(res[++index % std::size(res)]);
 	}
 
 	if (event.GetKey() == KEY_1)

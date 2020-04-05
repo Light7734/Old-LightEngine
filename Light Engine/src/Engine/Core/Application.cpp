@@ -59,7 +59,9 @@ namespace Light {
 	void Application::GameLoop()
 	{
 		LT_PROFILE_FUNC();
+
 		LT_CORE_ASSERT(m_Window, "Application::GameLoop: Application::m_Window is not initialized");
+		LT_CORE_ASSERT(m_LayerStack.GetSize(), "Application::GameLoop: LayerStack has no attached layers");
 
 		while (!m_Window->IsClosed())
 		{

@@ -16,7 +16,7 @@ namespace Light {
 
 		HRESULT hr;
 		s_Instance = this;
-		s_Configurations = configurations;
+		m_Configurations = configurations;
 
 		// create swap chain's descriptor
 		DXGI_SWAP_CHAIN_DESC sd = { 0 };
@@ -26,8 +26,8 @@ namespace Light {
 		sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 		sd.BufferCount = 1u;
 
-		sd.BufferDesc.Width  = s_Configurations.resolution.width;
-		sd.BufferDesc.Height = s_Configurations.resolution.height;
+		sd.BufferDesc.Width  = m_Configurations.resolution.width;
+		sd.BufferDesc.Height = m_Configurations.resolution.height;
 		sd.BufferDesc.RefreshRate.Denominator = NULL;
 		sd.BufferDesc.RefreshRate.Numerator   = NULL;
 		sd.BufferDesc.Format           = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -125,7 +125,7 @@ namespace Light {
 
 	void dxGraphicsContext::SwapBuffers()
 	{
-		m_SwapChain->Present(s_Configurations.vSync, NULL);
+		m_SwapChain->Present(m_Configurations.vSync, NULL);
 	}
 
 	void dxGraphicsContext::ClearBackbuffer(float colors[4])
@@ -177,7 +177,7 @@ namespace Light {
 			return;
 		}
 
-		s_Configurations.resolution = resolution;
+		m_Configurations.resolution = resolution;
 
 		glfwSetWindowSize(Window::GetGlfwHandle(), resolution.width, resolution.height);
 		Window::Center();
@@ -219,7 +219,7 @@ namespace Light {
 
 	void dxGraphicsContext::SetVSync(bool vSync)
 	{
-		s_Configurations.vSync = vSync;
+		m_Configurations.vSync = vSync;
 	}
 
 	void dxGraphicsContext::DefaultRenderBuffer()

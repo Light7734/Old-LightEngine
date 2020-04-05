@@ -1,6 +1,8 @@
 #include <LightEngine.h>
 #include <Core/EntryPoint.h>
 
+class dummyLayer : public Light::Layer {};
+
 class Sandbox : public Light::Application
 {
 public:
@@ -19,6 +21,8 @@ public:
 		// create window and set callback function
 		m_Window = std::make_unique<Light::Window>(wd, gc, Light::GraphicsAPI::Default);
 		m_Window->SetEventCallbackFunction(LT_EVENT_FN(Light::Application::OnEvent));
+
+		Light::Application::AttachLayer(new dummyLayer());
 	}
 };
 

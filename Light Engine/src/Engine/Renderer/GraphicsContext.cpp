@@ -18,21 +18,19 @@
 
 namespace Light {
 
-	GraphicsConfigurations GraphicsContext::s_Configurations;
-
+	std::unique_ptr<GraphicsContext> GraphicsContext::s_Context = nullptr;
 	GraphicsAPI GraphicsContext::s_Api = GraphicsAPI::Default;
 
-	std::unique_ptr<GraphicsContext> GraphicsContext::Create(GraphicsAPI api, const GraphicsConfigurations& configurations)
+	void GraphicsContext::CreateContext(GraphicsAPI api, const GraphicsConfigurations& configurations)
 	{
 		LT_PROFILE_FUNC();
 
 		// don't re-initialize the same graphics api
 		if (s_Api == api && api != GraphicsAPI::Default)
 		{
-			LT_CORE_ERROR("GraphicsContext::Create: re-initializing same graphics api is not allowed, api: {}", api);
-			return nullptr;
+			LT_CORE_ERROR("GraphicsContext::CreateContext: re-initializing same graphics api is not allowed, api: {}", api);
+			return;
 		}
-
 
 		// if api is 'Default', find the preferred graphics api based on platform
 		if (api == GraphicsAPI::Default)
@@ -45,37 +43,21 @@ namespace Light {
 		}
 		else
 			s_Api = api;
-		
 
-		switch (s_Api)
-		{
-		case GraphicsAPI::Opengl:
-		{
-			std::unique_ptr<glGraphicsContext> context = std::make_unique<glGraphicsContext>(configurations);
+		// create GraphicsContext
+		if (s_Api == GraphicsAPI::Opengl)
+			s_Context = std::make_unique<glGraphicsContext>(configurations); // opengl
+		LT_DX(else if (s_Api == GraphicsAPI::Directx)
+			s_Context = std::make_unique<dxGraphicsContext>(configurations);) // directx
+		else
+			LT_CORE_ASSERT(false, "GraphicsContext::CreateContext: invalid GraphicsAPI");
 
-			RenderCommand::SetGraphicsContext(context.get());
-			Blender::Init();
-			Renderer::Init();
-			UserInterface::Init();
-			FontManager::Init();
-
-			return std::move(context);
-		}
-		case GraphicsAPI::Directx: LT_DX(
-		{
-			std::unique_ptr<dxGraphicsContext> context = std::make_unique<dxGraphicsContext>(configurations);
-
-			RenderCommand::SetGraphicsContext(context.get());
-			Blender::Init();
-			Renderer::Init();
-			UserInterface::Init();
-			FontManager::Init();
-
-			return std::move(context);
-		})
-		default:
-			LT_CORE_ASSERT(false, "GraphicsContext::Create: invalid GraphicsAPI");
-		}
+		// initialize GraphicsContext dependent classes
+		RenderCommand::SetGraphicsContext(s_Context.get());
+		Blender::Init();
+		Renderer::Init();
+		UserInterface::Init();
+		FontManager::Init();
 	}
 
 	void GraphicsContext::ShowDebugWindow()
@@ -83,10 +65,9 @@ namespace Light {
 		ImGui::BulletText("graphics api: %s", s_Api == GraphicsAPI::Opengl  ? "opengl"  :
 		                                      s_Api == GraphicsAPI::Directx ? "directx" : "");
 
-
-		ImGui::BulletText("resolution: [%d x %d]", s_Configurations.resolution.width, s_Configurations.resolution.height);
-		ImGui::BulletText("aspect ratio: %f", s_Configurations.resolution.aspectRatio);
-		ImGui::BulletText("v-sync: %s", s_Configurations.vSync ? "on" : "off");
+		ImGui::BulletText("resolution: [%d x %d]", m_Configurations.resolution.width, m_Configurations.resolution.height);
+		ImGui::BulletText("aspect ratio: %f", m_Configurations.resolution.aspectRatio);
+		ImGui::BulletText("v-sync: %s", m_Configurations.vSync ? "on" : "off");
 		// #todo: properties...
 	}
 

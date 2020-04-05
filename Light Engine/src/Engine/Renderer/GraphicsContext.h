@@ -49,19 +49,25 @@ namespace Light {
 	struct GraphicsConfigurations
 	{
 		Resolution resolution;
-		bool vSync = true; // #todo: add anti-aliasing
+		bool vSync = true;
+		// #todo: add anti-aliasing
 	};
 
 	class GraphicsContext
 	{
 	private:
+		static std::unique_ptr<GraphicsContext> s_Context;
 		static GraphicsAPI s_Api;
 	protected:
-		static GraphicsConfigurations s_Configurations;
+		GraphicsConfigurations m_Configurations;
 	public:
 		virtual ~GraphicsContext() = default;
-		
-		static void ShowDebugWindow();
+
+		static void CreateContext(GraphicsAPI api, const GraphicsConfigurations& configurations);
+
+		static inline GraphicsContext* Get() { return s_Context.get(); }
+
+		void ShowDebugWindow();
 
 		virtual void SwapBuffers() = 0;
 
@@ -74,20 +80,17 @@ namespace Light {
 
 		// setters
 		virtual void SetConfigurations(const GraphicsConfigurations& configurations) = 0;
-		virtual void SetResolution    (const Resolution& resolution                ) = 0;
-		virtual void SetVSync         (bool vsync                                  ) = 0;
+		virtual void SetResolution(const Resolution& resolution) = 0;
+		virtual void SetVSync(bool vsync) = 0;
 
 		// getters
-		static inline const GraphicsConfigurations& GetConfigurations() { return s_Configurations; }
-		static inline const GraphicsAPI             GetAPI           () { return s_Api;            }
-		
-		static inline const Resolution& GetResolution() { return s_Configurations.resolution; }
-		static inline float GetAspectRatio() { return s_Configurations.resolution.aspectRatio; }
+		static inline const GraphicsConfigurations& GetConfigurations() { return s_Context->m_Configurations; }
+		static inline const GraphicsAPI GetAPI() { return s_Api; }
 
-		static inline bool IsVSync() { return s_Configurations.vSync; }
-	private:
-		friend class Window;
-		static std::unique_ptr<GraphicsContext> Create(GraphicsAPI api, const GraphicsConfigurations& configurations);
+		static inline const Resolution& GetResolution() { return s_Context->m_Configurations.resolution; }
+		static inline float GetAspectRatio() { return s_Context->m_Configurations.resolution.aspectRatio; }
+
+		static inline bool IsVSync() { return s_Context->m_Configurations.vSync; }
 	};
 
 }

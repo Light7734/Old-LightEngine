@@ -18,7 +18,7 @@ namespace Light {
 	{
 		LT_PROFILE_FUNC();
 
-		s_Configurations = configurations;
+		m_Configurations = configurations;
 
 		glfwMakeContextCurrent(m_WindowHandle);
 		LT_CORE_ASSERT(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress),
@@ -95,8 +95,8 @@ namespace Light {
 			return;
 		}
 
-		// update s_Configurations
-		s_Configurations.resolution = resolution;
+		// update configurations
+		m_Configurations.resolution = resolution;
 
 		// resize the Window and center it
 		glfwSetWindowSize(m_WindowHandle, resolution.width, resolution.height);
@@ -111,7 +111,7 @@ namespace Light {
 		LT_PROFILE_FUNC();
 
 		glfwSwapInterval(vSync);
-		s_Configurations.vSync = vSync;
+		m_Configurations.vSync = vSync;
 	}
 
 	void glGraphicsContext::SetDebugMessageCallback()
@@ -135,7 +135,7 @@ namespace Light {
 				LT_DBREAK; // __debugbreak here so we can see where we are in the call stack
 				// #todo: determine if we should throw glException or not
 				throw glException(source, type, id, msg);
-
+					
 			case GL_DEBUG_SEVERITY_MEDIUM: case GL_DEBUG_SEVERITY_LOW:
 				LT_CORE_WARN("glMessageCallback: Severity: {} :: Source: {} :: Type: {} :: ID: {}",
 				             glToString::DebugMsgSeverity(severity),
