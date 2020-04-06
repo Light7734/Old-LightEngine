@@ -14,12 +14,13 @@ namespace Light {
 		const std::unordered_map<BlendFactor, int> m_BlendFactorsMap;
 	public:
 		glBlender();
+		~glBlender();
 
-		void EnableImpl() override;
-		void DisableImpl() override;
+		void Enable() override;
+		void Disable() override;
 
-		void SetSrcFactorImpl(BlendFactor factor) override;
-		void SetDstFactorImpl(BlendFactor factor) override;
+		void SetSrcFactor(BlendFactor factor) override;
+		void SetDstFactor(BlendFactor factor) override;
 	};
 
 }

@@ -12,8 +12,8 @@ namespace Light {
 		glUserInterface();
 		~glUserInterface();
 
-		void BeginImpl() override;
-		void EndImpl() override;
+		void Begin() override;
+		void End() override;
 	};
 
 }

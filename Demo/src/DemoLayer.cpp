@@ -26,7 +26,7 @@ void DemoLayer::OnAttach()
 
 	Light::Renderer::SetCamera(m_Camera);
 
-	Light::Window::SetMouseCursor("res/cursor.png", 1u, 1u);
+	Light::Window::Get()->SetMouseCursor("res/cursor.png", 1u, 1u);
 
 	Light::Application::AttachLayer(m_AudioLayer);
 	Light::Application::AttachLayer(m_QuadsLayer);
@@ -113,7 +113,7 @@ void DemoLayer::OnUserInterfaceUpdate()
 
 	if (ImGui::TreeNode("Blender"))
 	{
-		Light::Blender::ShowDebugWindow();
+		Light::Blender::Get()->ShowDebugWindow();
 		ImGui::TreePop();
 	}
 	ImGui::Separator();
@@ -158,7 +158,7 @@ void DemoLayer::OnEvent(Light::Event& event)
 bool DemoLayer::OnKeyPress(Light::KeyboardKeyPressedEvent& event)
 {
 	if (event.GetKey() == KEY_ESCAPE)
-		Light::Window::Close();
+		Light::Window::Get()->Close();
 
 	if (event.GetKey() == KEY_E || event.GetKey() == KEY_R)
 	{
@@ -224,13 +224,13 @@ bool DemoLayer::OnKeyPress(Light::KeyboardKeyPressedEvent& event)
 	}
 
 	if (event.GetKey() == KEY_1)
-		Light::Window::SetDisplayMode(Light::DisplayMode::BorderlessWindowed);
+		Light::Window::Get()->SetDisplayMode(Light::DisplayMode::BorderlessWindowed);
 
 	if (event.GetKey() == KEY_2)
-		Light::Window::SetDisplayMode(Light::DisplayMode::Windowed);
+		Light::Window::Get()->SetDisplayMode(Light::DisplayMode::Windowed);
 
 	if (event.GetKey() == KEY_3)
-		Light::Window::SetDisplayMode(Light::DisplayMode::Fullscreen);
+		Light::Window::Get()->SetDisplayMode(Light::DisplayMode::Fullscreen);
 
 	return true;
 }

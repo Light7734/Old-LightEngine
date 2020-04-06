@@ -21,27 +21,42 @@ namespace Light {
 			{ BlendFactor::DST_ALPHA_INVERSE, GL_ONE_MINUS_DST_ALPHA }})
 	{
 		LT_PROFILE_FUNC();
-		glBlendFunc(m_BlendFactorsMap.at(s_SrcFactor), m_BlendFactorsMap.at(s_DstFactor));
+
+		// parent class members
+		m_SrcFactor = BlendFactor::SRC_ALPHA;
+		m_DstFactor = BlendFactor::SRC_ALPHA_INVERSE;
+		b_Enabled = false;
+
+		glBlendFunc(m_BlendFactorsMap.at(m_SrcFactor), m_BlendFactorsMap.at(m_DstFactor));
 	}
 
-	void glBlender::EnableImpl()
+	glBlender::~glBlender()
 	{
+		Disable();
+	}
+
+	void glBlender::Enable()
+	{
+		b_Enabled = true;
 		glEnable(GL_BLEND);
 	}
 
-	void glBlender::DisableImpl()
+	void glBlender::Disable()
 	{
+		b_Enabled = false;
 		glDisable(GL_BLEND);
 	}
 
-	void glBlender::SetSrcFactorImpl(BlendFactor factor)
+	void glBlender::SetSrcFactor(BlendFactor factor)
 	{
-		glBlendFunc(m_BlendFactorsMap.at(factor), m_BlendFactorsMap.at(s_DstFactor));
+		m_SrcFactor = factor;
+		glBlendFunc(m_BlendFactorsMap.at(factor), m_BlendFactorsMap.at(m_DstFactor));
 	}
 
-	void glBlender::SetDstFactorImpl(BlendFactor factor)
+	void glBlender::SetDstFactor(BlendFactor factor)
 	{
-		glBlendFunc(m_BlendFactorsMap.at(s_SrcFactor), m_BlendFactorsMap.at(factor));
+		m_DstFactor = factor;
+		glBlendFunc(m_BlendFactorsMap.at(m_SrcFactor), m_BlendFactorsMap.at(factor));
 	}
 
 }

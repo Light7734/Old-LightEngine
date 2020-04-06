@@ -100,7 +100,7 @@ namespace Light {
 
 		// resize the Window and center it
 		glfwSetWindowSize(m_WindowHandle, resolution.width, resolution.height);
-		Window::Center();
+		Window::Get()->Center();
 
 		// adjust the viewport
 		glViewport(0, 0, resolution.width, resolution.height);

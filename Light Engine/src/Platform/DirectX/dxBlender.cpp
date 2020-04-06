@@ -8,7 +8,8 @@
 namespace Light {
 
 	dxBlender::dxBlender()
-		: m_BlendFactorsMap({
+		: m_BlendFactorsMap
+			({
 			{ BlendFactor::ZERO, D3D11_BLEND_ZERO },
 			{ BlendFactor::ONE , D3D11_BLEND_ONE  },
 			
@@ -24,11 +25,16 @@ namespace Light {
 	{
 		LT_PROFILE_FUNC();
 
+		// parent class members
+		m_SrcFactor = BlendFactor::SRC_ALPHA;
+		m_DstFactor = BlendFactor::SRC_ALPHA_INVERSE;
+		b_Enabled = false;
+
 		// Set blend state
 		m_Desc = {};
 		m_Desc.RenderTarget[0].BlendEnable = true;
-		m_Desc.RenderTarget[0].SrcBlend = m_BlendFactorsMap.at(s_SrcFactor);
-		m_Desc.RenderTarget[0].DestBlend = m_BlendFactorsMap.at(s_DstFactor);
+		m_Desc.RenderTarget[0].SrcBlend = m_BlendFactorsMap.at(m_SrcFactor);
+		m_Desc.RenderTarget[0].DestBlend = m_BlendFactorsMap.at(m_DstFactor);
 		m_Desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
 		m_Desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
 		m_Desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
@@ -39,18 +45,22 @@ namespace Light {
 		DXC(dxGraphicsContext::GetDevice()->CreateBlendState(&m_Desc, &m_State));
 	}
 
-	void dxBlender::EnableImpl()
+	void dxBlender::Enable()
 	{
+		b_Enabled = true;
 		dxGraphicsContext::GetDeviceContext()->OMSetBlendState(m_State.Get(), 0, 0xffffffff);
 	}
 
-	void dxBlender::DisableImpl()
+	void dxBlender::Disable()
 	{
+		b_Enabled = false;
 		dxGraphicsContext::GetDeviceContext()->OMSetBlendState(nullptr, 0, 0xffffffff);
 	}
 
-	void dxBlender::SetSrcFactorImpl(BlendFactor factor)
+	void dxBlender::SetSrcFactor(BlendFactor factor)
 	{
+		m_SrcFactor = factor;
+
 		m_Desc.RenderTarget->SrcBlend = m_BlendFactorsMap.at(factor);
 		dxGraphicsContext::GetDevice()->CreateBlendState(&m_Desc, &m_State);
 
@@ -58,8 +68,10 @@ namespace Light {
 			dxGraphicsContext::GetDeviceContext()->OMSetBlendState(m_State.Get(), 0, 0xffffffff);
 	}
 
-	void dxBlender::SetDstFactorImpl(BlendFactor factor)
+	void dxBlender::SetDstFactor(BlendFactor factor)
 	{
+		m_DstFactor = factor;
+
 		m_Desc.RenderTarget->DestBlend = m_BlendFactorsMap.at(factor);
 		dxGraphicsContext::GetDevice()->CreateBlendState(&m_Desc, &m_State);
 

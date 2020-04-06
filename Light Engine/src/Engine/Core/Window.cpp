@@ -84,15 +84,15 @@ namespace Light {
 	{
 		LT_PROFILE_FUNC();
 
-		s_Context->m_Data.eventCallback = event_callback_func;
-		s_Context->SetGlfwCallbacks();
+		m_Data.eventCallback = event_callback_func;
+		SetGlfwCallbacks();
 	}
 
 	void Window::SetMouseCursor(const std::string& texturePath, unsigned int hotspotX, unsigned int hotspotY)
 	{
 		LT_PROFILE_FUNC();
 
-		glfwDestroyCursor(s_Context->m_Data.cursor);
+		glfwDestroyCursor(m_Data.cursor);
 
 		TextureData tdata;
 		tdata.pixels = FileManager::LoadTextureFile(texturePath, &tdata.width, &tdata.height, &tdata.channels);
@@ -101,16 +101,16 @@ namespace Light {
 		LT_CORE_ASSERT(hotspotX <= tdata.width && hotspotY <= tdata.height, "Window::SetMouseCursor: invalid hotspot position");
 
 		GLFWimage image = {tdata.width, tdata.height, tdata.pixels};
-		s_Context->m_Data.cursor = glfwCreateCursor(&image, hotspotX, hotspotY);
-		glfwSetCursor(s_Context->m_GlfwHandle, s_Context->m_Data.cursor);
+		m_Data.cursor = glfwCreateCursor(&image, hotspotX, hotspotY);
+		glfwSetCursor(m_GlfwHandle, m_Data.cursor);
 	}
 
 	void Window::SetTitle(const std::string& title)
 	{
 		LT_PROFILE_FUNC();
 
-		glfwSetWindowTitle(s_Context->m_GlfwHandle, title.c_str());
-		s_Context->m_Data.title = title;
+		glfwSetWindowTitle(m_GlfwHandle, title.c_str());
+		m_Data.title = title;
 	}
 
 	void Window::SetDisplayMode(DisplayMode mode)
@@ -121,28 +121,28 @@ namespace Light {
 		{
 		case DisplayMode::Fullscreen:
 		{
-			glfwSetWindowAttrib(s_Context->m_GlfwHandle, GLFW_DECORATED, true);
+			glfwSetWindowAttrib(m_GlfwHandle, GLFW_DECORATED, true);
 
-			glfwSetWindowMonitor(s_Context->m_GlfwHandle, glfwGetPrimaryMonitor(), 0, 0,
+			glfwSetWindowMonitor(m_GlfwHandle, glfwGetPrimaryMonitor(), 0, 0,
 			                     GraphicsContext::GetConfigurations().resolution.width,
 			                     GraphicsContext::GetConfigurations().resolution.height, 0);
 
-			s_Context->m_Data.eventCallback(WindowRestoredEvent());
+			m_Data.eventCallback(WindowRestoredEvent());
 			break;
 		}
 
 		case DisplayMode::Windowed: case DisplayMode::BorderlessWindowed:
 		{
 
-			glfwSetWindowAttrib(s_Context->m_GlfwHandle, GLFW_DECORATED, mode == DisplayMode::Windowed);
+			glfwSetWindowAttrib(m_GlfwHandle, GLFW_DECORATED, mode == DisplayMode::Windowed);
 
-			glfwSetWindowMonitor(s_Context->m_GlfwHandle,
+			glfwSetWindowMonitor(m_GlfwHandle,
 			                     mode == DisplayMode::Fullscreen ? glfwGetPrimaryMonitor() : nullptr,
 			                     0, 0,
 			                     GraphicsContext::GetConfigurations().resolution.width,
 			                     GraphicsContext::GetConfigurations().resolution.height, 0);
 
-			s_Context->m_Data.eventCallback(WindowRestoredEvent());
+			m_Data.eventCallback(WindowRestoredEvent());
 			break;
 		}
 		default:
@@ -150,7 +150,7 @@ namespace Light {
 		}
 
 		Center();
-		s_Context->m_Data.displayMode = mode;
+		m_Data.displayMode = mode;
 	}
 
 	void Window::SetVisibility(bool visible)
@@ -158,11 +158,11 @@ namespace Light {
 		LT_PROFILE_FUNC();
 
 		if (visible)
-			glfwShowWindow(s_Context->m_GlfwHandle);
+			glfwShowWindow(m_GlfwHandle);
 		else
-			glfwHideWindow(s_Context->m_GlfwHandle);
+			glfwHideWindow(m_GlfwHandle);
 
-		s_Context->m_Data.visible = visible;
+		m_Data.visible = visible;
 	}
 
 	void Window::Center()	
@@ -176,15 +176,15 @@ namespace Light {
 		int windowWidth, windowHeight;
 
 		glfwGetMonitorPos(monitor,                  &monitorX   , &monitorY    );
-		glfwGetWindowSize(s_Context->m_GlfwHandle, &windowWidth, &windowHeight);
+		glfwGetWindowSize(m_GlfwHandle, &windowWidth, &windowHeight);
 
-		glfwSetWindowPos(s_Context->m_GlfwHandle, monitorX + (mode->width  - windowWidth ) / 2,
+		glfwSetWindowPos(m_GlfwHandle, monitorX + (mode->width  - windowWidth ) / 2,
 		                                           monitorY + (mode->height - windowHeight) / 2);
 	}
 
 	void Window::Close()
 	{
-		s_Context->m_Data.closed = true;
+		m_Data.closed = true;
 	}
 
 	void Window::SetGlfwCallbacks()

@@ -90,11 +90,11 @@ namespace Light {
 				{
 					// user interface
 					LT_PROFILE_SCOPE("Application::GameLoop::OnUserInterface");
-					UserInterface::Begin();
+					UserInterface::Get()->Begin();
 					for (const auto& it = m_LayerStack.begin(); it != m_LayerStack.end(); m_LayerStack.next())
 						if ((*it)->IsEnabled())
 							(*it)->OnUserInterfaceUpdate();
-					UserInterface::End();
+					UserInterface::Get()->End();
 				}
 			}
 

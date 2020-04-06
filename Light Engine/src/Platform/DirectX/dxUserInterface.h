@@ -12,8 +12,8 @@ namespace Light {
 		dxUserInterface();
 		~dxUserInterface();
 
-		void BeginImpl() override;
-		void EndImpl() override;
+		void Begin() override;
+		void End() override;
 	};
 
 }

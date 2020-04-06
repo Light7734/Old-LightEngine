@@ -42,14 +42,14 @@ namespace Light {
 		ImGui::DestroyContext();
 	}
 
-	void glUserInterface::BeginImpl()
+	void glUserInterface::Begin()
 	{
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 	}
 
-	void glUserInterface::EndImpl()
+	void glUserInterface::End()
 	{
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

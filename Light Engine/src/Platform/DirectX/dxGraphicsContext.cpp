@@ -93,8 +93,8 @@ namespace Light {
 		// if we are in fullscreen mode, we go windowed and back to fullscreen
 		if (Window::GetDisplayMode() == DisplayMode::Fullscreen)
 		{
-			Window::SetDisplayMode(DisplayMode::Windowed);
-			Window::SetDisplayMode(DisplayMode::Fullscreen);
+			Window::Get()->SetDisplayMode(DisplayMode::Windowed);
+			Window::Get()->SetDisplayMode(DisplayMode::Fullscreen);
 		}
 
 		// log some information about dx context //
@@ -180,7 +180,7 @@ namespace Light {
 		m_Configurations.resolution = resolution;
 
 		glfwSetWindowSize(Window::GetGlfwHandle(), resolution.width, resolution.height);
-		Window::Center();
+		Window::Get()->Center();
 
 		HRESULT hr;
 

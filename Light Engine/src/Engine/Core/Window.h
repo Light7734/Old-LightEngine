@@ -55,20 +55,22 @@ namespace Light {
 		Window(const Window&) = delete;
 		Window& operator=(const Window&) = delete;
 
+		static inline Window* Get() { return s_Context; }
+
 		void HandleEvents();
 
 		// setters
 		void SetEventCallbackFunction(std::function<void(Event&)> event_callback_func);
 
-		static void SetMouseCursor(const std::string& texturePath, unsigned int hotspotX = 0, unsigned int hotspotY = 0);
+		void SetMouseCursor(const std::string& texturePath, unsigned int hotspotX = 0, unsigned int hotspotY = 0);
 
-		static void SetTitle(const std::string& title);
+		void SetTitle(const std::string& title);
 
-		static void SetDisplayMode(DisplayMode mode);
+		void SetDisplayMode(DisplayMode mode);
 
-		static void SetVisibility(bool visible);
-		static void Center();
-		static void Close();
+		void SetVisibility(bool visible);
+		void Center();
+		void Close();
 
 		// getters
 		static inline GLFWwindow* GetGlfwHandle  () { return s_Context->m_GlfwHandle;   }
@@ -80,10 +82,10 @@ namespace Light {
 
 		static inline bool IsInitialized() { return s_Context; }
 
-		static inline bool IsClosed   () { return  s_Context->m_Data.closed   ; }
-		static inline bool IsMinimized() { return  s_Context->m_Data.minimized; }
-		static inline bool IsVisible  () { return  s_Context->m_Data.visible  ; }
-		static inline bool IsActive   () { return  s_Context->m_Data.active   ; }
+		static inline bool IsClosed() { return s_Context->m_Data.closed; }
+		static inline bool IsMinimized() { return s_Context->m_Data.minimized; }
+		static inline bool IsVisible() { return s_Context->m_Data.visible; }
+		static inline bool IsActive() { return s_Context->m_Data.active; }
 	private:
 		void SetGlfwCallbacks();
 	};

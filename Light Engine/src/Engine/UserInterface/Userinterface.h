@@ -11,13 +11,12 @@ namespace Light {
 	public:
 		virtual ~UserInterface() = default;
 
-		static inline void Begin() { s_Context->BeginImpl(); };
-		static inline void End  () { s_Context->EndImpl();   };
+		static inline UserInterface* Get() { return s_Context.get(); }
 
-		static void ShowImGuiDemoWnidow();
+		virtual void Begin() = 0;
+		virtual void End  () = 0;
 
-		virtual void BeginImpl() = 0;
-		virtual void EndImpl() = 0;
+		void ShowImGuiDemoWnidow();
 	private:
 		friend class GraphicsContext;
 		static void Init();

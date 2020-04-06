@@ -19,11 +19,11 @@ namespace Light {
 	public:
 		dxBlender();
 
-		void EnableImpl() override;
-		void DisableImpl() override;
+		void Enable() override;
+		void Disable() override;
 
-		void SetSrcFactorImpl(BlendFactor factor);
-		void SetDstFactorImpl(BlendFactor factor);
+		void SetSrcFactor(BlendFactor factor);
+		void SetDstFactor(BlendFactor factor);
 	};
 
 }

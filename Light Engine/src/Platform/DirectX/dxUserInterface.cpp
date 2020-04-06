@@ -46,14 +46,14 @@ namespace Light {
 		ImGui::DestroyContext();
 	}
 
-	void dxUserInterface::BeginImpl()
+	void dxUserInterface::Begin()
 	{
 		ImGui_ImplDX11_NewFrame();
 		ImGui_ImplWin32_NewFrame();
 		ImGui::NewFrame();
 	}
 
-	void dxUserInterface::EndImpl()
+	void dxUserInterface::End()
 	{
 		ImGui::Render();
 		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());

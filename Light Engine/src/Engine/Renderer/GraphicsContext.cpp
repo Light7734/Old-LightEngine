@@ -44,6 +44,7 @@ namespace Light {
 		else
 			s_Api = api;
 
+
 		// create GraphicsContext
 		if (s_Api == GraphicsAPI::Opengl)
 			s_Context = std::make_unique<glGraphicsContext>(configurations); // opengl

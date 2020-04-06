@@ -14,11 +14,6 @@ namespace Light {
 
 	std::unique_ptr<Blender> Blender::s_Context;
 
-	BlendFactor Blender::s_SrcFactor = BlendFactor::SRC_ALPHA;
-	BlendFactor Blender::s_DstFactor = BlendFactor::SRC_ALPHA_INVERSE;
-
-	bool Blender::b_Enabled = false;
-
 	void Blender::Init()
 	{
 		LT_PROFILE_FUNC();
@@ -38,14 +33,11 @@ namespace Light {
 		default:
 			LT_CORE_ASSERT(false, "Blender::Init: invalid GraphicsAPI");
 		}
-
-		if (b_Enabled)
-			s_Context->Enable();
 	}
 
 	void Blender::ShowDebugWindow()
 	{
-		if (ImGui::BeginCombo("Source factor", FactorToString(s_SrcFactor)))
+		if (ImGui::BeginCombo("Source factor", FactorToString(m_SrcFactor)))
 		{
 			for (int i = 0; i < 10; i++)
 				if (ImGui::Selectable(FactorToString((BlendFactor)i), false))
@@ -54,7 +46,7 @@ namespace Light {
 			ImGui::EndCombo();
 		}
 
-		if (ImGui::BeginCombo("Destination Factor", FactorToString(s_DstFactor)))
+		if (ImGui::BeginCombo("Destination Factor", FactorToString(m_DstFactor)))
 		{
 			for (int i = 0; i < 10; i++)
 				if (ImGui::Selectable(FactorToString((BlendFactor)i), false))

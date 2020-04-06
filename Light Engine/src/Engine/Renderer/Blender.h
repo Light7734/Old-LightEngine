@@ -36,33 +36,32 @@ namespace Light {
 	private:
 		static std::unique_ptr<Blender> s_Context;
 	protected:
-		static BlendFactor s_SrcFactor;
-		static BlendFactor s_DstFactor;
+		BlendFactor m_SrcFactor;
+		BlendFactor m_DstFactor;
 
-		static bool b_Enabled;
+		bool b_Enabled;
 	public:
+		static inline Blender* Get() { return s_Context.get(); }
+
 		virtual ~Blender() = default;
 
-		static inline void Enable () { b_Enabled = true ; s_Context->EnableImpl();  }
-		static inline void Disable() { b_Enabled = false; s_Context->DisableImpl(); }
+		virtual void Enable () = 0;
+		virtual void Disable() = 0;
 
-		static inline void SetSrcFactor(BlendFactor factor) { s_SrcFactor = factor; s_Context->SetSrcFactorImpl(factor); }
-		static inline void SetDstFactor(BlendFactor factor) { s_DstFactor = factor; s_Context->SetDstFactorImpl(factor); }
+		virtual void SetSrcFactor(BlendFactor factor) = 0;
+		virtual void SetDstFactor(BlendFactor factor) = 0;
 
-		static void ShowDebugWindow();
+		void ShowDebugWindow();
 
-		static inline bool IsEnabled() { return b_Enabled; }
+		static inline BlendFactor GetSrcFactor() { return s_Context->m_SrcFactor; }
+		static inline BlendFactor GetDstFactor() { return s_Context->m_DstFactor; }
 
-		virtual void EnableImpl() = 0;
-		virtual void DisableImpl() = 0;
-
-		virtual void SetSrcFactorImpl(BlendFactor factor) = 0;
-		virtual void SetDstFactorImpl(BlendFactor factor) = 0;
+		static inline bool IsEnabled() { return s_Context->b_Enabled; }
 	private:
 		friend class GraphicsContext;
 		static void Init();
 
-		static const char* FactorToString(BlendFactor factor);
+		const char* FactorToString(BlendFactor factor);
 	};
 
 }
