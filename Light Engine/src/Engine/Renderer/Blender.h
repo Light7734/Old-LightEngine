@@ -38,8 +38,6 @@ namespace Light {
 	protected:
 		BlendFactor m_SrcFactor;
 		BlendFactor m_DstFactor;
-
-		bool b_Enabled;
 	public:
 		static inline Blender* Get() { return s_Context.get(); }
 
@@ -50,13 +48,6 @@ namespace Light {
 
 		virtual void SetSrcFactor(BlendFactor factor) = 0;
 		virtual void SetDstFactor(BlendFactor factor) = 0;
-
-		void ShowDebugWindow();
-
-		static inline BlendFactor GetSrcFactor() { return s_Context->m_SrcFactor; }
-		static inline BlendFactor GetDstFactor() { return s_Context->m_DstFactor; }
-
-		static inline bool IsEnabled() { return s_Context->b_Enabled; }
 	private:
 		friend class GraphicsContext;
 		static void Init();

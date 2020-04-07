@@ -8,27 +8,25 @@
 namespace Light {
 
 	dxBlender::dxBlender()
-		: m_BlendFactorsMap
-			({
-			{ BlendFactor::ZERO, D3D11_BLEND_ZERO },
-			{ BlendFactor::ONE , D3D11_BLEND_ONE  },
-			
-			{ BlendFactor::SRC_COLOR        , D3D11_BLEND_SRC_COLOR     },
-			{ BlendFactor::SRC_COLOR_INVERSE, D3D11_BLEND_INV_SRC_COLOR },
-			{ BlendFactor::SRC_ALPHA        , D3D11_BLEND_SRC_ALPHA     },
-			{ BlendFactor::SRC_ALPHA_INVERSE, D3D11_BLEND_INV_SRC_ALPHA },
-			
-			{ BlendFactor::DST_COLOR        , D3D11_BLEND_DEST_COLOR     },
-			{ BlendFactor::DST_COLOR_INVERSE, D3D11_BLEND_INV_DEST_COLOR },
-			{ BlendFactor::DST_ALPHA        , D3D11_BLEND_DEST_ALPHA     },
-			{ BlendFactor::DST_ALPHA_INVERSE, D3D11_BLEND_INV_DEST_ALPHA }})
+		: m_BlendFactorsMap({ { BlendFactor::ZERO, D3D11_BLEND_ZERO },
+							  { BlendFactor::ONE , D3D11_BLEND_ONE  },
+
+							  { BlendFactor::SRC_COLOR        , D3D11_BLEND_SRC_COLOR     },
+							  { BlendFactor::SRC_COLOR_INVERSE, D3D11_BLEND_INV_SRC_COLOR },
+							  { BlendFactor::SRC_ALPHA        , D3D11_BLEND_SRC_ALPHA     },
+							  { BlendFactor::SRC_ALPHA_INVERSE, D3D11_BLEND_INV_SRC_ALPHA },
+
+							  { BlendFactor::DST_COLOR        , D3D11_BLEND_DEST_COLOR     },
+							  { BlendFactor::DST_COLOR_INVERSE, D3D11_BLEND_INV_DEST_COLOR },
+							  { BlendFactor::DST_ALPHA        , D3D11_BLEND_DEST_ALPHA     },
+							  { BlendFactor::DST_ALPHA_INVERSE, D3D11_BLEND_INV_DEST_ALPHA } }),
+
+		m_SrcFactor(BlendFactor::SRC_ALPHA),
+		m_DstFactor(BlendFactor::SRC_ALPHA_INVERSE),
+		b_Enabled(false)
+
 	{
 		LT_PROFILE_FUNC();
-
-		// parent class members
-		m_SrcFactor = BlendFactor::SRC_ALPHA;
-		m_DstFactor = BlendFactor::SRC_ALPHA_INVERSE;
-		b_Enabled = false;
 
 		// Set blend state
 		m_Desc = {};

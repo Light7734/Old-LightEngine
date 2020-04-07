@@ -12,6 +12,9 @@ namespace Light {
 	{
 	private:
 		const std::unordered_map<BlendFactor, int> m_BlendFactorsMap;
+
+		BlendFactor m_SrcFactor;
+		BlendFactor m_DstFactor;
 	public:
 		glBlender();
 		~glBlender();

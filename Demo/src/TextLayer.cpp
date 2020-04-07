@@ -38,7 +38,9 @@ void TextLayer::OnDetatch()
 
 void TextLayer::OnRender()
 {
-	Light::Renderer::DrawString("The quick brown fox jumps over the lazy dog [ arial ]", m_Arial.font, m_Arial.position, m_Arial.scale, m_Arial.tint);
+	Light::Blender::Get()->Enable();
+
+	 Light::Renderer::DrawString("The quick brown fox jumps over the lazy dog [ arial ]", m_Arial.font, m_Arial.position, m_Arial.scale, m_Arial.tint);
 	Light::Renderer::DrawString("The quick brown fox jumps over the lazy dog [ comics ]", m_Comic.font, m_Comic.position, m_Comic.scale, m_Comic.tint);
 	Light::Renderer::DrawString("The quick brown fox jumps over the lazy dog [ impact ]", m_Impact.font, m_Impact.position, m_Impact.scale, m_Impact.tint);
 }

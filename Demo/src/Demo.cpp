@@ -31,8 +31,6 @@ Demo::Demo()
 	// create window and set callback function
 	m_Window = std::make_unique<Light::Window>(wd, gc, Light::GraphicsAPI::Directx);
 	m_Window->SetEventCallbackFunction(LT_EVENT_FN(Light::Application::OnEvent));
-	
-	Light::Blender::Get()->Enable();
 
 	Light::Application::AttachLayer(new DemoLayer);
 }

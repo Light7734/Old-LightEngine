@@ -16,6 +16,11 @@ namespace Light {
 
 		Microsoft::WRL::ComPtr<ID3D11BlendState> m_State;
 		D3D11_BLEND_DESC m_Desc;
+
+		BlendFactor m_SrcFactor;
+		BlendFactor m_DstFactor;
+
+		bool b_Enabled;
 	public:
 		dxBlender();
 

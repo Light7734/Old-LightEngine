@@ -111,13 +111,6 @@ void DemoLayer::OnUserInterfaceUpdate()
 	}
 	ImGui::Separator();
 
-	if (ImGui::TreeNode("Blender"))
-	{
-		Light::Blender::Get()->ShowDebugWindow();
-		ImGui::TreePop();
-	}
-	ImGui::Separator();
-
 	if (ImGui::TreeNode("Camera"))
 	{
 		m_Camera->ShowDebugWindow();

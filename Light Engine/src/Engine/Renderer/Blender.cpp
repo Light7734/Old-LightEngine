@@ -35,36 +35,6 @@ namespace Light {
 		}
 	}
 
-	void Blender::ShowDebugWindow()
-	{
-		if (ImGui::BeginCombo("Source factor", FactorToString(m_SrcFactor)))
-		{
-			for (int i = 0; i < 10; i++)
-				if (ImGui::Selectable(FactorToString((BlendFactor)i), false))
-					SetSrcFactor((BlendFactor)i);
-
-			ImGui::EndCombo();
-		}
-
-		if (ImGui::BeginCombo("Destination Factor", FactorToString(m_DstFactor)))
-		{
-			for (int i = 0; i < 10; i++)
-				if (ImGui::Selectable(FactorToString((BlendFactor)i), false))
-					SetDstFactor((BlendFactor)i);
-
-			ImGui::EndCombo();
-		}
-
-
-		ImGui::Text("%s", b_Enabled ? "enabled" : "disabled");
-
-		if (ImGui::Button("enable"))
-			Enable();
-		ImGui::SameLine();
-		if (ImGui::Button("disable"))
-			Disable();
-	}
-
 	const char* Blender::FactorToString(BlendFactor factor)
 	{
 		switch (factor)
