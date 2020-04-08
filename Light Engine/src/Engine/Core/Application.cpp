@@ -80,11 +80,11 @@ namespace Light {
 				{
 					// render
 					LT_PROFILE_SCOPE("Application::GameLoop::OnRender");
-					Renderer::Begin();
+					Renderer::BeginFrame();
 					for (const auto& it = m_LayerStack.begin(); it != m_LayerStack.end(); m_LayerStack.next())
 						if ((*it)->IsEnabled())
 							(*it)->OnRender();
-					Renderer::End();
+					Renderer::EndFrame();
 				}
 
 				{

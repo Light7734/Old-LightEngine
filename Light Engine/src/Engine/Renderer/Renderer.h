@@ -61,7 +61,8 @@ namespace Light {
 		static std::shared_ptr<VertexBuffer> s_FramebufferVertices;
 		static std::shared_ptr<VertexLayout> s_FramebufferLayout;
 	public:
-		static void Begin();
+		static void BeginFrame();
+		static void BeginLayer();
 
 		// basic quad
 		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const TextureCoordinates* uv, const glm::vec4& tint);
@@ -70,7 +71,8 @@ namespace Light {
 		static void DrawString(const std::string& text, const std::shared_ptr<Font>& font,
 		                       const glm::vec2& position, float scale, const glm::vec4& tint);
 
-		static void End();
+		static void EndLayer();
+		static void EndFrame();
 
 		// frame buffers
 		static void AddFramebuffer(std::shared_ptr<Framebuffer> framebuffer);

@@ -136,8 +136,16 @@ namespace Light {
 		//================== TEXT RENDERER ==================//
 	}
 
-	void Renderer::Begin()
+	void Renderer::BeginFrame()
 	{
+
+	}
+
+	void Renderer::BeginLayer()
+	{
+		if (!s_Framebuffers.empty())
+			s_Framebuffers[0]->BindAsTarget();
+
 		s_QuadRenderer.mapCurrent = (float*)s_QuadRenderer.vertexBuffer->Map();
 		s_QuadRenderer.mapEnd = s_QuadRenderer.mapCurrent + LT_MAX_BASIC_SPRITES * 9 * 4;
 
@@ -152,9 +160,8 @@ namespace Light {
 		{
 			LT_CORE_ERROR("Renderer::DrawQuad: calls to this function exceeded its limit: {}", LT_MAX_BASIC_SPRITES);
 
-			// #todo: make private End, Begin functions for each renderer
-			End();
-			Begin();
+			EndLayer();
+			BeginLayer();
 		}
 
 
@@ -238,9 +245,8 @@ namespace Light {
 			{
 				LT_CORE_ERROR("Renderer::DrawString: calls to this function exceeded its limit: {}", LT_MAX_TEXT_SPRITES);
 
-				// #todo: make private End, Begin functions for each renderer
-				End();
-				Begin();
+				EndLayer();
+				BeginLayer();
 			}
 
 
@@ -317,7 +323,7 @@ namespace Light {
 		}
 	}
 
-	void Renderer::End()
+	void Renderer::EndLayer()
 	{
 		// set view projection buffer
 		glm::mat4* map = (glm::mat4*)s_ViewProjBuffer->Map();
@@ -329,11 +335,7 @@ namespace Light {
 		s_QuadRenderer.vertexBuffer->UnMap();
 		s_TextRenderer.vertexBuffer->UnMap();
 
-		// set the first framebuffer as render target if we have any
-		if (!s_Framebuffers.empty())
-			s_Framebuffers[0]->BindAsTarget();
-
-
+		// #todo: right now all texts will be rendered after basic quads, implement something to make them render in order they are called.
 		//=============== BASIC QUAD RENDERER ===============//
 		if (s_QuadRenderer.quadCount)
 		{
@@ -365,8 +367,10 @@ namespace Light {
 			s_TextRenderer.quadCount = 0;
 		}
 		//================== TEXT RENDERER ==================//
+	}
 
-
+	void Renderer::EndFrame()
+	{
 		// handle the framebuffers
 		if (!s_Framebuffers.empty())
 		{

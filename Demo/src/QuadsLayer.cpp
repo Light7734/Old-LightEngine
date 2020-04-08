@@ -52,8 +52,10 @@ void QuadsLayer::OnRender()
 {
 	m_TextureArray->Bind();
 
+	Light::Renderer::BeginLayer();
 	for (const auto& sprite : m_Sprites)
 		Light::Renderer::DrawQuad(sprite.position, sprite.size, sprite.coordinates, sprite.tint);
+	Light::Renderer::EndLayer();
 }
 
 void QuadsLayer::OnEvent(Light::Event& event)
