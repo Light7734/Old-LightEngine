@@ -138,14 +138,18 @@ namespace Light {
 
 	void Renderer::BeginFrame()
 	{
+		// set view projection buffer
+		glm::mat4* map = (glm::mat4*)s_ViewProjBuffer->Map();
+		*(map + 0) = s_Camera->GetView();
+		*(map + 1) = s_Camera->GetProjection();
+		s_ViewProjBuffer->UnMap();
 
+		if (!s_Framebuffers.empty())
+			s_Framebuffers[0]->BindAsTarget();
 	}
 
 	void Renderer::BeginLayer()
 	{
-		if (!s_Framebuffers.empty())
-			s_Framebuffers[0]->BindAsTarget();
-
 		s_QuadRenderer.mapCurrent = (float*)s_QuadRenderer.vertexBuffer->Map();
 		s_QuadRenderer.mapEnd = s_QuadRenderer.mapCurrent + LT_MAX_BASIC_SPRITES * 9 * 4;
 
@@ -232,8 +236,7 @@ namespace Light {
 		s_QuadRenderer.quadCount++;
 	}
 
-	void Renderer::DrawString(const std::string& text, const std::shared_ptr<Font>& font,
-	                          const glm::vec2& position, float scale, const glm::vec4& tint)
+	void Renderer::DrawString(const std::string& text, const std::shared_ptr<Font>& font, const glm::vec2& position, float scale, const glm::vec4& tint)
 	{
 		unsigned int advance = 0;
 
@@ -325,12 +328,6 @@ namespace Light {
 
 	void Renderer::EndLayer()
 	{
-		// set view projection buffer
-		glm::mat4* map = (glm::mat4*)s_ViewProjBuffer->Map();
-		*(map + 0) = s_Camera->GetView();
-		*(map + 1) = s_Camera->GetProjection();
-		s_ViewProjBuffer->UnMap();
-
 		// unmap vertex buffers
 		s_QuadRenderer.vertexBuffer->UnMap();
 		s_TextRenderer.vertexBuffer->UnMap();

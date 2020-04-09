@@ -8,12 +8,12 @@ AudioLayer::AudioLayer()
 
 void AudioLayer::OnAttach()
 {
-	LT_TRACE("Attached Layer: {}", m_LayeDebugrName);
+	LT_TRACE("Attached: {}", m_LayeDebugrName);
 }
 
 void AudioLayer::OnDetach()
 {
-	LT_TRACE("Detached Layer: {}", m_LayeDebugrName);
+	LT_TRACE("Detached: {}", m_LayeDebugrName);
 }
 
 void AudioLayer::ShowDebugWindow()

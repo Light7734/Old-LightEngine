@@ -68,8 +68,7 @@ namespace Light {
 		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const TextureCoordinates* uv, const glm::vec4& tint);
 
 		// draw text
-		static void DrawString(const std::string& text, const std::shared_ptr<Font>& font,
-		                       const glm::vec2& position, float scale, const glm::vec4& tint);
+		static void DrawString(const std::string& text, const std::shared_ptr<Font>& font, const glm::vec2& position, float scale, const glm::vec4& tint);
 
 		static void EndLayer();
 		static void EndFrame();
