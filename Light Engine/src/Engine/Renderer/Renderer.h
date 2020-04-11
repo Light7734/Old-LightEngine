@@ -12,6 +12,7 @@ namespace Light {
 	class VertexBuffer;
 	class IndexBuffer;
 	class Framebuffer;
+	class MSAA;
 
 	class Font;
 
@@ -53,13 +54,17 @@ namespace Light {
 		static TextRenderer s_TextRenderer;
 
 		// camera
-		static std::shared_ptr<Camera> s_Camera;
 		static std::shared_ptr<ConstantBuffer> s_ViewProjBuffer;
+		static std::shared_ptr<Camera> s_Camera;
 
 		// framebuffers
 		static std::vector<std::shared_ptr<Framebuffer>> s_Framebuffers;
 		static std::shared_ptr<VertexBuffer> s_FramebufferVertices;
 		static std::shared_ptr<VertexLayout> s_FramebufferLayout;
+
+		// MSAA
+		static std::shared_ptr<MSAA> s_MSAA;
+		static bool s_MSAAEnabled;
 	public:
 		static void BeginFrame();
 		static void BeginLayer();
@@ -81,7 +86,10 @@ namespace Light {
 		static inline void SetCamera(std::shared_ptr<Camera> camera) { s_Camera = camera; }
 	private:
 		friend class GraphicsContext;
-		static void Init();
+		static void Init(unsigned int MSAASampleCount, bool MSAA);
+
+		static void SetMSAA(bool enabled);
+		static void SetMSAASampleCount(unsigned int sampleCount);
 	};
 
 }

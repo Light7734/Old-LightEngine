@@ -46,6 +46,8 @@ namespace Light {
 
 
 		// create GraphicsContext
+		s_Context.reset();
+
 		if (s_Api == GraphicsAPI::Opengl)
 			s_Context = std::make_unique<glGraphicsContext>(configurations); // opengl
 		LT_DX(else if (s_Api == GraphicsAPI::Directx)
@@ -54,11 +56,11 @@ namespace Light {
 			LT_CORE_ASSERT(false, "GraphicsContext::CreateContext: invalid GraphicsAPI");
 
 		// initialize GraphicsContext dependent classes
+		Renderer::Init(configurations.MSAASampleCount, configurations.MSAAEnabled);
 		RenderCommand::SetGraphicsContext(s_Context.get());
-		Blender::Init();
-		Renderer::Init();
-		UserInterface::Init();
 		FontManager::Init();
+		Blender::Init();
+		UserInterface::Init();
 	}
 
 	void GraphicsContext::ShowDebugWindow()
@@ -70,6 +72,19 @@ namespace Light {
 		ImGui::BulletText("aspect ratio: %f", m_Configurations.resolution.aspectRatio);
 		ImGui::BulletText("v-sync: %s", m_Configurations.vSync ? "on" : "off");
 		// #todo: properties...
+	}
+
+
+	void GraphicsContext::SetMSAA(bool enabled)
+	{
+		m_Configurations.MSAAEnabled = enabled;
+		Renderer::SetMSAA(enabled);
+	}
+
+	void GraphicsContext::SetMSAASampleCount(unsigned int sampleCount)
+	{
+		m_Configurations.MSAASampleCount = sampleCount;
+		Renderer::SetMSAASampleCount(sampleCount);
 	}
 
 }

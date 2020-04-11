@@ -36,7 +36,7 @@ namespace Light {
 
 		sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 
-		sd.SampleDesc.Count   = 4u;
+		sd.SampleDesc.Count   = 1u;
 		sd.SampleDesc.Quality = 0u;
 
 		sd.Windowed = true;

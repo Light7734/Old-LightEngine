@@ -16,8 +16,8 @@ namespace Light {
 	private:
 		std::shared_ptr<Shader> m_Shader;
 
-		unsigned int m_FrameBufferID;
-		unsigned int m_ColorTextureID;
+		unsigned int m_BufferID;
+		unsigned int m_TextureID;
 	public:
 		glFramebuffer(const std::string& vertex, const std::string& fragment);
 		~glFramebuffer();

@@ -4,6 +4,7 @@
 #include "Buffers.h"
 #include "Framebuffer.h"
 #include "Camera.h"
+#include "MSAA.h"
 #include "RenderCommand.h"
 #include "Shader.h"
 #include "Texture.h"
@@ -21,26 +22,21 @@
 namespace Light {
 
 	Renderer::BasicQuadRenderer Renderer::s_QuadRenderer;
-
-	Light::Renderer::TextRenderer Renderer::s_TextRenderer;
+	Renderer::TextRenderer Renderer::s_TextRenderer;
 
 	std::vector<std::shared_ptr<Framebuffer>> Renderer::s_Framebuffers;
-
 	std::shared_ptr<VertexBuffer> Renderer::s_FramebufferVertices;
-
 	std::shared_ptr<VertexLayout> Renderer::s_FramebufferLayout;
 
+	std::shared_ptr<ConstantBuffer> Renderer::s_ViewProjBuffer;
 	std::shared_ptr<Camera> Renderer::s_Camera;
 
-	std::shared_ptr<ConstantBuffer> Renderer::s_ViewProjBuffer;
+	std::shared_ptr<MSAA> Renderer::s_MSAA;
+	bool Renderer::s_MSAAEnabled = false;
 
-	void Renderer::Init()
+	void Renderer::Init(unsigned int MSAASampleCount, bool MSAA)
 	{
 		LT_PROFILE_FUNC();
-
-		// camera
-		if (!s_Camera)
-			s_Camera = std::make_shared<Camera>(glm::vec2(0.0f, 0.0f), GraphicsContext::GetResolution().aspectRatio, 1000.0f);
 
 		// framebuffers
 		s_Framebuffers.clear();
@@ -63,6 +59,13 @@ namespace Light {
 		// view projection buffer
 		s_ViewProjBuffer = ConstantBuffer::Create(ConstantBufferIndex_ViewProjection, sizeof(glm::mat4) * 2);
 
+		// camera
+		if (!s_Camera)
+			s_Camera = std::make_shared<Camera>(glm::vec2(0.0f, 0.0f), GraphicsContext::GetResolution().aspectRatio, 1000.0f);
+
+		// MSAA
+		SetMSAA(MSAA);
+		SetMSAASampleCount(MSAASampleCount);
 
 		// renderers
 		unsigned int* indices = nullptr;
@@ -98,11 +101,12 @@ namespace Light {
 
 		s_QuadRenderer.indexBuffer = IndexBuffer::Create(indices, LT_MAX_BASIC_SPRITES * sizeof(unsigned int) * 6);
 
+		// free memory
 		delete[] indices;
 		//=============== BASIC QUAD RENDERER ===============//
 
 		//================== TEXT RENDERER ==================//
-				// indices
+		// indices
 		indices = new unsigned int [LT_MAX_BASIC_SPRITES * 6];
 		offset = 0;
 
@@ -131,7 +135,7 @@ namespace Light {
 
 		s_TextRenderer.indexBuffer = IndexBuffer::Create(indices, LT_MAX_TEXT_SPRITES * sizeof(unsigned int) * 6);
 
-
+		// free memory
 		delete[] indices;
 		//================== TEXT RENDERER ==================//
 	}
@@ -144,7 +148,9 @@ namespace Light {
 		*(map + 1) = s_Camera->GetProjection();
 		s_ViewProjBuffer->UnMap();
 
-		if (!s_Framebuffers.empty())
+		if (s_MSAAEnabled)
+			s_MSAA->BindFrameBuffer();
+		else if (!s_Framebuffers.empty())
 			s_Framebuffers[0]->BindAsTarget();
 	}
 
@@ -167,7 +173,6 @@ namespace Light {
 			EndLayer();
 			BeginLayer();
 		}
-
 
 		// locals
 		const float xMin = position.x;
@@ -371,6 +376,12 @@ namespace Light {
 		// handle the framebuffers
 		if (!s_Framebuffers.empty())
 		{
+			if (s_MSAAEnabled)
+			{
+				s_Framebuffers[0]->BindAsTarget();
+				s_MSAA->Resolve();
+			}
+
 			s_FramebufferVertices->Bind();
 			s_FramebufferLayout->Bind();
 
@@ -385,8 +396,16 @@ namespace Light {
 			s_Framebuffers.back()->BindAsResource();
 			RenderCommand::Draw(6);
 		}
+		else
+		{
+			if (s_MSAAEnabled)
+			{
+				RenderCommand::DefaultRenderBuffer();
+				s_MSAA->Resolve();
+			}
+		}
+				
 	}
-
 	void Renderer::AddFramebuffer(std::shared_ptr<Framebuffer> framebuffer)
 	{
 		auto it = std::find(s_Framebuffers.begin(), s_Framebuffers.end(), framebuffer);
@@ -405,6 +424,17 @@ namespace Light {
 			s_Framebuffers.erase(it);
 		else
 			LT_CORE_ERROR("Renderer::RemoveFramebuffer: failed to find framebuffer");
+	}
+
+	void Renderer::SetMSAA(bool enabled)
+	{
+		s_MSAAEnabled = enabled;
+	}
+
+	void Renderer::SetMSAASampleCount(unsigned int sampleCount)
+	{
+		LT_CORE_ASSERT((sampleCount & (sampleCount - 1)) == 0, "Renderer::Init: MSAASampleCount is not power of 2");
+		s_MSAA = MSAA::Create(sampleCount);
 	}
 
 } 

@@ -49,8 +49,11 @@ namespace Light {
 	struct GraphicsConfigurations
 	{
 		Resolution resolution;
+
+		unsigned int MSAASampleCount = 4;
+
+		bool MSAAEnabled = false;
 		bool vSync = true;
-		// #todo: add anti-aliasing
 	};
 
 	class GraphicsContext
@@ -80,15 +83,23 @@ namespace Light {
 
 		// setters
 		virtual void SetConfigurations(const GraphicsConfigurations& configurations) = 0;
+
 		virtual void SetResolution(const Resolution& resolution) = 0;
-		virtual void SetVSync(bool vsync) = 0;
 
+		virtual void SetVSync(bool enabled) = 0;
+
+		void SetMSAA(bool enabled);
+		void SetMSAASampleCount(unsigned int sampleCount);
+		
 		// getters
-		static inline const GraphicsConfigurations& GetConfigurations() { return s_Context->m_Configurations; }
-		static inline const GraphicsAPI GetAPI() { return s_Api; }
+		static inline GraphicsConfigurations GetConfigurations() { return s_Context->m_Configurations; }
+		static inline GraphicsAPI GetAPI() { return s_Api; }
 
-		static inline const Resolution& GetResolution() { return s_Context->m_Configurations.resolution; }
+		static inline Resolution GetResolution() { return s_Context->m_Configurations.resolution; }
 		static inline float GetAspectRatio() { return s_Context->m_Configurations.resolution.aspectRatio; }
+
+		static inline unsigned int GetMSAASampleCount() { return s_Context->m_Configurations.MSAASampleCount; }
+		static inline bool IsMSAAEnabled() { return s_Context->m_Configurations.MSAAEnabled; }
 
 		static inline bool IsVSync() { return s_Context->m_Configurations.vSync; }
 	};

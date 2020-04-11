@@ -37,7 +37,7 @@ namespace Light {
 		void SetVSync(bool vSync) override; 
 
 		// Getters
-		static ID3D11Device*        GetDevice       () { return s_Instance->m_Device.Get()       ; }
+		static ID3D11Device* GetDevice() { return s_Instance->m_Device.Get(); }
 		static ID3D11DeviceContext* GetDeviceContext() { return s_Instance->m_DeviceContext.Get(); }
 
 		// temp
