@@ -39,6 +39,7 @@ project "Light Engine"
 		"%{wks.location}/spdlog/"                       ,
 		"%{wks.location}/Dependencies/glm/"             ,
 		"%{wks.location}/Dependencies/irrKlang/include" ,
+		"%{wks.location}/Dependencies/stb_image"        ,
     }
 
 	libdirs
