@@ -433,7 +433,9 @@ namespace Light {
 
 	void Renderer::SetMSAASampleCount(unsigned int sampleCount)
 	{
-		LT_CORE_ASSERT((sampleCount & (sampleCount - 1)) == 0, "Renderer::Init: MSAASampleCount is not power of 2");
+		LT_CORE_ASSERT((sampleCount & (sampleCount - 1)) == 0, "Renderer::SetMSAASampleCount: sampleCount '{}' is not power of 2", sampleCount);
+		LT_CORE_ASSERT(sampleCount <= 16, "Renderer::SetMSAASampleCount: sampleCount too high: '{}', maximum sampleCount should be 16", sampleCount);
+
 		s_MSAA = MSAA::Create(sampleCount);
 	}
 

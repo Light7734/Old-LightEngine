@@ -33,14 +33,15 @@ namespace Light{
 
 		void DeleteAudio(const char* name);
 
-		void StopAllSounds();
-		void SetAllSoundsPaused(bool paused = true);
-
 		void SetMasterVolume(float volume);
+
+		void StopAllSounds();
+
+		void SetAllSoundsPaused(bool paused = true);
 
 		float GetMasterVolume();
 
-		inline AudioSource* GetAudio(const char* name) { return m_AudioSources[name]; }
+		AudioSource* GetAudio(const char* name);
 	};
 
 }

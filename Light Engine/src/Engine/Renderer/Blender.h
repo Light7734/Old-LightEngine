@@ -17,8 +17,7 @@ namespace Light {
 
 	enum class BlendFactor
 	{
-		ZERO = 0,
-		ONE,
+		ZERO, ONE,
 
 		SRC_COLOR,
 		SRC_COLOR_INVERSE,
@@ -35,13 +34,10 @@ namespace Light {
 	{
 	private:
 		static std::unique_ptr<Blender> s_Context;
-	protected:
-		BlendFactor m_SrcFactor;
-		BlendFactor m_DstFactor;
 	public:
-		static inline Blender* Get() { return s_Context.get(); }
-
 		virtual ~Blender() = default;
+
+		static inline Blender* Get() { return s_Context.get(); }
 
 		virtual void Enable () = 0;
 		virtual void Disable() = 0;
@@ -51,8 +47,6 @@ namespace Light {
 	private:
 		friend class GraphicsContext;
 		static void Init();
-
-		const char* FactorToString(BlendFactor factor);
 	};
 
 }

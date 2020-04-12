@@ -47,19 +47,20 @@ namespace Light {
 	AudioSource* AudioEngine::LoadAudio(const char* name, const char* path)
 	{
 		if (m_AudioSources[name])
-			LT_CORE_WARN("AudioEngine::LoadAudio2D: overwriting Audio source: '{}'", name);
+			LT_CORE_WARN("AudioEngine::LoadAudio: overwriting AudioSource: '{}'", name);
 
 		return m_AudioSources[name] = m_Engine->addSoundSourceFromFile(path);
 	}
 
 	void AudioEngine::DeleteAudio(const char* name)
 	{
-		if (m_AudioSources[name])
-			m_AudioSources[name]->drop();
-		else
-			LT_CORE_ERROR("AudioEngine::DestroyAudio: audio name does not exists: {}", name);
+		const auto it= m_AudioSources.find(name);
 
-		m_AudioSources.erase(name);
+		if (it == m_AudioSources.end())
+			{ LT_CORE_ERROR("AudioEngine::DeleteAudio: AudioSource named '{}' does not exists", name); return; }
+
+		it->second->drop();
+		m_AudioSources.erase(it);
 	}
 
 	void AudioEngine::StopAllSounds()
@@ -80,6 +81,16 @@ namespace Light {
 	float AudioEngine::GetMasterVolume()
 	{
 		return m_Engine->getSoundVolume();
+	}
+
+	AudioSource* AudioEngine::GetAudio(const char* name)
+	{
+		const auto it = m_AudioSources.find(name);
+
+		if (it == m_AudioSources.end())
+			{ LT_CORE_ERROR("AudioEngine::GetAudio: AudioSource named '{}' does not exists", name); return nullptr; }
+
+		return it->second;
 	}
 
 }

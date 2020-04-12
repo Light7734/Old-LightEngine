@@ -8,8 +8,6 @@
 #endif
 #include "Platform/Opengl/glBlender.h"
 
-#include <imgui.h>
-
 namespace Light {
 
 	std::unique_ptr<Blender> Blender::s_Context;
@@ -32,25 +30,6 @@ namespace Light {
 		)
 		default:
 			LT_CORE_ASSERT(false, "Blender::Init: invalid GraphicsAPI");
-		}
-	}
-
-	const char* Blender::FactorToString(BlendFactor factor)
-	{
-		switch (factor)
-		{
-		case Light::BlendFactor::ZERO:                 return "ZERO";
-		case Light::BlendFactor::ONE:                  return "ONE";
-		case Light::BlendFactor::SRC_COLOR:            return "SRC_COLOR";
-		case Light::BlendFactor::SRC_COLOR_INVERSE:    return "SRC_COLOR_INVERSE";
-		case Light::BlendFactor::SRC_ALPHA:            return "SRC_ALPHA";
-		case Light::BlendFactor::SRC_ALPHA_INVERSE:    return "SRC_ALPHA_INVERSE";
-		case Light::BlendFactor::DST_COLOR:            return "DST_COLOR";
-		case Light::BlendFactor::DST_COLOR_INVERSE:    return "DST_COLOR_INVERSE";
-		case Light::BlendFactor::DST_ALPHA:            return "DST_ALPHA";
-		case Light::BlendFactor::DST_ALPHA_INVERSE:    return "DST_ALPHA_INVERSE";
-
-		default: return "Invalid/Unknown value";
 		}
 	}
 

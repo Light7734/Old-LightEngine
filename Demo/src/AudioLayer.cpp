@@ -23,12 +23,10 @@ void AudioLayer::ShowDebugWindow()
 	Light::AudioEngine::Get().SetMasterVolume(volume);
 
 
-	ImGui::BulletText("Music: getout [ %s ]", m_Music->getIsPaused() ? "paused" : "playing");
-	if (ImGui::Button("Play"))
-		m_Music->setIsPaused(false);
+	ImGui::BulletText("Music: getout");
 	ImGui::SameLine();
-	if (ImGui::Button("Pause"))
-		m_Music->setIsPaused(true);
+	if (ImGui::Button(m_Music->getIsPaused() ? "resume" : "pause"))
+		m_Music->setIsPaused(!m_Music->getIsPaused());
 
 
 	ImGui::PushID("Bell");
