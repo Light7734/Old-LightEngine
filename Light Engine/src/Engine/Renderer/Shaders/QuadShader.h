@@ -6,8 +6,8 @@ R"(
 #version 450 core
 
 layout(location = 0) in vec2 InPosition;
-layout(location = 1) in vec4 InColor;
-layout(location = 2) in vec3 InTexCoords;
+layout(location = 1) in vec3 InTexCoords;
+layout(location = 2) in vec4 InColor;
 
 layout(std140, binding = 6) uniform ViewProjectionVSUniform
 {
@@ -17,15 +17,15 @@ layout(std140, binding = 6) uniform ViewProjectionVSUniform
 
 out VS_OUT
 {
-	vec4 Color;
 	vec3 TexCoords;
+	vec4 Color;
 } VertexOut;
 
 void main()
 {
 	gl_Position = ProjectionMatrix * ViewMatrix * vec4(InPosition, 0.0, 1.0);
-	VertexOut.Color = InColor;
 	VertexOut.TexCoords = InTexCoords;
+	VertexOut.Color = InColor;
 }
 -GLSL
 
@@ -43,12 +43,15 @@ cbuffer	ViewVSConstant : register(b6)
 	row_major matrix ProjectionMatrix;
 }
 
-VertexOut main(float2 InPosition : POSITION, float4 InColor : COLOR, float3 InTexCoords : TEXCOORDS) 
+VertexOut main(float2 InPosition : POSITION, float3 InTexCoords : TEXCOORDS, float4 InColor : COLOR) 
 {
 	VertexOut vso;
-	vso.Position = mul(float4(InPosition, 0.0f, 1.0f), mul(ViewMatrix, ProjectionMatrix));
-	vso.Color = InColor;
+
+	vso.Position = mul(float4(InPosition, 0.0, 1.0), mul(ViewMatrix, ProjectionMatrix));
+
 	vso.TexCoords = InTexCoords;
+	vso.Color = InColor;
+
 	return vso;
 }
 -HLSL)"
@@ -63,8 +66,8 @@ out vec4 FSOutFragColor;
 
 in VS_OUT
 {
-	vec4 Color;
 	vec3 TexCoords;
+	vec4 Color;
 } FragmentIn;
 
 uniform sampler2DArray u_TextureArray;

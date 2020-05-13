@@ -20,6 +20,9 @@ private:
 
 	std::vector<Sprite> m_Sprites;
 	Sprite* m_SelectedSprite;
+
+	float m_Angle;
+	bool b_BoundToTimer;
 public:
 	QuadsLayer(std::shared_ptr<Light::Camera> camera);
 
@@ -28,6 +31,8 @@ public:
 	
 	void OnUpdate(float DeltaTime) override;
 	void OnRender() override;
+
+	void ShowDebugWindow() override;
 
 	void OnEvent(Light::Event& event) override;
 private:

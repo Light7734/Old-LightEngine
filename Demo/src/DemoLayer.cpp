@@ -121,15 +121,11 @@ void DemoLayer::OnUserInterfaceUpdate()
 
 	if (ImGui::TreeNode("MSAA"))
 	{
-		if (ImGui::Button("enable"))
-			Light::GraphicsContext::Get()->SetMSAA(true);
-
-		ImGui::SameLine();
-		if (ImGui::Button("disable"))
-			Light::GraphicsContext::Get()->SetMSAA(false);
+		if (ImGui::Button(Light::GraphicsContext::IsMSAAEnabled() ? "disable" : "enable"))
+			Light::GraphicsContext::Get()->SetMSAA(!Light::GraphicsContext::IsMSAAEnabled());
 
 		static int samples = 1;
-		if (ImGui::DragInt("2 ^ SampleCount", &samples, 2u, 1, 4))
+		if (ImGui::DragInt("^ 2 = SampleCount", &samples, 2u, 1, 4))
 			Light::GraphicsContext::Get()->SetMSAASampleCount(BIT(samples));
 
 		ImGui::TreePop();

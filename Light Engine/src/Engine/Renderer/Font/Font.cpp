@@ -38,9 +38,9 @@ namespace Light {
 			// load character from FT_Face
 			LT_CORE_ASSERT(!FT_Load_Char(face, i, FT_LOAD_RENDER), "glFont::glFont: FT_Load_Char failed: {}", i);
 
-			FontCharData character = { glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
-									   glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-									   (unsigned int)face->glyph->advance.x };
+			FontCharData character = { glm::vec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
+									   glm::vec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+									   (unsigned int)face->glyph->advance.x >> 6 };
 
 			// not enough space? go next line
 			if (x > 1024.0f - character.size.x)

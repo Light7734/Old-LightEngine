@@ -16,12 +16,16 @@
 #include "Shaders/QuadShader.h"
 #include "Shaders/TextShader.h"
 
+#include "Core/Timer.h"
+
+#include <glm/gtc/matrix_transform.hpp>
+
 #define LT_MAX_BASIC_SPRITES    10000
 #define LT_MAX_TEXT_SPRITES     2000
 
 namespace Light {
 
-	Renderer::BasicQuadRenderer Renderer::s_QuadRenderer;
+	Renderer::QuadRenderer Renderer::s_QuadRenderer;
 	Renderer::TextRenderer Renderer::s_TextRenderer;
 
 	std::vector<std::shared_ptr<Framebuffer>> Renderer::s_Framebuffers;
@@ -91,13 +95,14 @@ namespace Light {
 
 		// create bindables
 		s_QuadRenderer.shader = Shader::Create(QuadShaderSrc_VS, QuadShaderSrc_FS);
-		s_QuadRenderer.vertexBuffer = VertexBuffer::Create(nullptr, LT_MAX_BASIC_SPRITES * sizeof(float) * 9 * 4, sizeof(float) * 9);
+		s_QuadRenderer.vertexBuffer = VertexBuffer::Create(nullptr, LT_MAX_BASIC_SPRITES * sizeof(QuadRenderer::BasicQuadVertexData) * 4,
+		                                                   sizeof(QuadRenderer::BasicQuadVertexData));
 
 		s_QuadRenderer.vertexLayout = VertexLayout::Create(s_QuadRenderer.shader,
 		                                                   s_QuadRenderer.vertexBuffer,
 		                                                   { {"POSITION" , VertexElementType::Float2},
-		                                                     {"COLOR"    , VertexElementType::Float4},
-		                                                     {"TEXCOORDS", VertexElementType::Float3}, });
+		                                                     {"TEXCOORDS", VertexElementType::Float3},
+		                                                     {"COLOR"    , VertexElementType::Float4}, });
 
 		s_QuadRenderer.indexBuffer = IndexBuffer::Create(indices, LT_MAX_BASIC_SPRITES * sizeof(unsigned int) * 6);
 
@@ -125,13 +130,15 @@ namespace Light {
 
 		// create bindables
 		s_TextRenderer.shader = Shader::Create(TextShaderSrc_VS, TextShaderSrc_FS);
-		s_TextRenderer.vertexBuffer = VertexBuffer::Create(nullptr, LT_MAX_TEXT_SPRITES * sizeof(float) * 9 * 4, sizeof(float) * 9);
+		s_TextRenderer.vertexBuffer = VertexBuffer::Create(nullptr,
+		                                                   LT_MAX_TEXT_SPRITES * sizeof(TextRenderer::TextVertexData) * 4,
+		                                                   sizeof(TextRenderer::TextVertexData));
 
 		s_TextRenderer.vertexLayout = VertexLayout::Create(s_TextRenderer.shader,
 		                                                   s_TextRenderer.vertexBuffer,
 		                                                   { {"POSITION" , VertexElementType::Float2},
-		                                                     {"COLOR"    , VertexElementType::Float4},
-		                                                     {"TEXCOORDS", VertexElementType::Float3}, });
+		                                                     {"TEXCOORDS", VertexElementType::Float3},
+		                                                     {"COLOR"    , VertexElementType::Float4}, });
 
 		s_TextRenderer.indexBuffer = IndexBuffer::Create(indices, LT_MAX_TEXT_SPRITES * sizeof(unsigned int) * 6);
 
@@ -156,16 +163,16 @@ namespace Light {
 
 	void Renderer::BeginLayer()
 	{
-		s_QuadRenderer.mapCurrent = (float*)s_QuadRenderer.vertexBuffer->Map();
-		s_QuadRenderer.mapEnd = s_QuadRenderer.mapCurrent + LT_MAX_BASIC_SPRITES * 9 * 4;
+		s_QuadRenderer.mapCurrent = (QuadRenderer::BasicQuadVertexData*)s_QuadRenderer.vertexBuffer->Map();
+		s_QuadRenderer.mapEnd = s_QuadRenderer.mapCurrent + LT_MAX_BASIC_SPRITES * 4;
 
-		s_TextRenderer.mapCurrent = (float*)s_TextRenderer.vertexBuffer->Map();
-		s_TextRenderer.mapEnd = s_TextRenderer.mapCurrent + LT_MAX_TEXT_SPRITES * 9 * 4;
+		s_TextRenderer.mapCurrent = (TextRenderer::TextVertexData*)s_TextRenderer.vertexBuffer->Map();
+		s_TextRenderer.mapEnd = s_TextRenderer.mapCurrent + LT_MAX_TEXT_SPRITES * 4;
 	}
 	
-	void Renderer::DrawQuad(const glm::vec2& position, const glm::vec2& size, const TextureCoordinates* uv, const glm::vec4& tint)
+	void Renderer::DrawQuad(const glm::vec2& position, const glm::vec2& size,
+	                        TextureCoordinates* coords, const glm::vec4& tint)
 	{
-		// #todo: make VertexBuffer size dynamic
 		if (s_QuadRenderer.mapCurrent == s_QuadRenderer.mapEnd)
 		{
 			LT_CORE_ERROR("Renderer::DrawQuad: calls to this function exceeded its limit: {}", LT_MAX_BASIC_SPRITES);
@@ -174,159 +181,212 @@ namespace Light {
 			BeginLayer();
 		}
 
-		// locals
-		const float xMin = position.x;
-		const float yMin = position.y;
-		const float xMax = position.x + size.x;
-		const float yMax = position.y + size.y;
+		/* locals */
+		const float xMin = position.x - size.x / 2.0f;
+		const float xMax = position.x + size.x / 2.0f;
+		const float yMin = position.y - size.y / 2.0f;
+		const float yMax = position.y + size.y / 2.0f;
 
-		const TextureCoordinates str = *uv;
+		// TOP_LEFT  [ -0.5, -0.5 ]
+		s_QuadRenderer.mapCurrent->position = { xMin, yMin };
+		s_QuadRenderer.mapCurrent->str = { coords->xMin, coords->yMin, coords->sliceIndex };
+		s_QuadRenderer.mapCurrent->tint = tint;
+		s_QuadRenderer.mapCurrent++;
 
+		// TOP_RIGHT [ 0.5, -0.5 ]
+		s_QuadRenderer.mapCurrent->position = { xMax, yMin };
+		s_QuadRenderer.mapCurrent->str = { coords->xMax, coords->yMin, coords->sliceIndex };
+		s_QuadRenderer.mapCurrent->tint = tint;
+		s_QuadRenderer.mapCurrent++;
 
-		// TOP_LEFT
-		s_QuadRenderer.mapCurrent[0 + 0] = xMin;
-		s_QuadRenderer.mapCurrent[1 + 0] = yMin;
+		// BOTTOM_RIGHT [ 0.5, 0.5 ]
+		s_QuadRenderer.mapCurrent->position = { xMax, yMax };
+		s_QuadRenderer.mapCurrent->str = { coords->xMax, coords->yMax, coords->sliceIndex };
+		s_QuadRenderer.mapCurrent->tint = tint;
+		s_QuadRenderer.mapCurrent++;
 
-		s_QuadRenderer.mapCurrent[2 + 0] = tint.r;
-		s_QuadRenderer.mapCurrent[3 + 0] = tint.g;
-		s_QuadRenderer.mapCurrent[4 + 0] = tint.b;
-		s_QuadRenderer.mapCurrent[5 + 0] = tint.a;
+		// BOTTOM_LEFT [ -0.5, 0.5 ]
+		s_QuadRenderer.mapCurrent->position = { xMin, yMax };
+		s_QuadRenderer.mapCurrent->str = { coords->xMin, coords->yMax, coords->sliceIndex };
+		s_QuadRenderer.mapCurrent->tint = tint;
+		s_QuadRenderer.mapCurrent++;
 
-		s_QuadRenderer.mapCurrent[6 + 0] = str.xMin;
-		s_QuadRenderer.mapCurrent[7 + 0] = str.yMin;
-		s_QuadRenderer.mapCurrent[8 + 0] = str.sliceIndex;
-
-		// TOP_RIGHT
-		s_QuadRenderer.mapCurrent[0 + 9] = xMax;
-		s_QuadRenderer.mapCurrent[1 + 9] = yMin;
-
-		s_QuadRenderer.mapCurrent[2 + 9] = tint.r;
-		s_QuadRenderer.mapCurrent[3 + 9] = tint.g;
-		s_QuadRenderer.mapCurrent[4 + 9] = tint.b;
-		s_QuadRenderer.mapCurrent[5 + 9] = tint.a;
-
-		s_QuadRenderer.mapCurrent[6 + 9] = str.xMax;
-		s_QuadRenderer.mapCurrent[7 + 9] = str.yMin;
-		s_QuadRenderer.mapCurrent[8 + 9] = str.sliceIndex;
-
-		// BOTTOM_RIGHT
-		s_QuadRenderer.mapCurrent[0 + 18] = xMax;
-		s_QuadRenderer.mapCurrent[1 + 18] = yMax;
-
-		s_QuadRenderer.mapCurrent[2 + 18] = tint.r;
-		s_QuadRenderer.mapCurrent[3 + 18] = tint.g;
-		s_QuadRenderer.mapCurrent[4 + 18] = tint.b;
-		s_QuadRenderer.mapCurrent[5 + 18] = tint.a;
-
-		s_QuadRenderer.mapCurrent[6 + 18] = str.xMax;
-		s_QuadRenderer.mapCurrent[7 + 18] = str.yMax;
-		s_QuadRenderer.mapCurrent[8 + 18] = str.sliceIndex;
-
-		// BOTTOM_LEFT
-		s_QuadRenderer.mapCurrent[0 + 27] = xMin;
-		s_QuadRenderer.mapCurrent[1 + 27] = yMax;
-
-		s_QuadRenderer.mapCurrent[2 + 27] = tint.r;
-		s_QuadRenderer.mapCurrent[3 + 27] = tint.g;
-		s_QuadRenderer.mapCurrent[4 + 27] = tint.b;
-		s_QuadRenderer.mapCurrent[5 + 27] = tint.a;
-
-		s_QuadRenderer.mapCurrent[6 + 27] = str.xMin;
-		s_QuadRenderer.mapCurrent[7 + 27] = str.yMax;
-		s_QuadRenderer.mapCurrent[8 + 27] = str.sliceIndex;
-
-
-		// move buffer map forward and increase quad count
-		s_QuadRenderer.mapCurrent += 36;
 		s_QuadRenderer.quadCount++;
 	}
 
-	void Renderer::DrawString(const std::string& text, const std::shared_ptr<Font>& font, const glm::vec2& position, float scale, const glm::vec4& tint)
+	void Renderer::DrawQuad(const glm::vec2& position, const glm::vec2& size,
+	                        float angle, TextureCoordinates* coords, const glm::vec4& tint)
 	{
-		unsigned int advance = 0;
+		if (s_QuadRenderer.mapCurrent == s_QuadRenderer.mapEnd)
+		{
+			LT_CORE_ERROR("Renderer::DrawQuad: calls to this function exceeded its limit: {}", LT_MAX_BASIC_SPRITES);
 
-		// loop through the string characters to render
+			EndLayer();
+			BeginLayer();
+		}
+
+		/* locals */
+		const float COS = std::cos(angle);
+		const float SIN = std::sin(angle);
+
+		glm::vec2 quadCos = COS * size / 2.0f;
+		glm::vec2 quadSin = SIN * size / 2.0f;
+
+		/* write to the buffer */
+		// TOP_LEFT  [ -0.5, -0.5 ]
+		s_QuadRenderer.mapCurrent->position = glm::vec2(-(quadCos.x - quadSin.y), -(quadSin.x + quadCos.y)) + position;
+		s_QuadRenderer.mapCurrent->str = { coords->xMin, coords->yMin, coords->sliceIndex };
+		s_QuadRenderer.mapCurrent->tint = tint;
+		s_QuadRenderer.mapCurrent++;
+
+		// TOP_RIGHT [ 0.5, -0.5 ]
+		s_QuadRenderer.mapCurrent->position = glm::vec2(quadCos.x - -quadSin.y, quadSin.x + -quadCos.y) + position;
+		s_QuadRenderer.mapCurrent->str = glm::vec3(coords->xMax, coords->yMin, coords->sliceIndex);
+		s_QuadRenderer.mapCurrent->tint = tint;
+		s_QuadRenderer.mapCurrent++;
+
+		// BOTTOM_RIGHT [ 0.5, 0.5 ]
+		s_QuadRenderer.mapCurrent->position = glm::vec2(quadCos.x - quadSin.y, quadSin.x + quadCos.y) + position;
+		s_QuadRenderer.mapCurrent->str = { coords->xMax, coords->yMax, coords->sliceIndex };
+		s_QuadRenderer.mapCurrent->tint = tint;
+		s_QuadRenderer.mapCurrent++;
+
+		// BOTTOM_LEFT [ -0.5, 0.5 ]
+		s_QuadRenderer.mapCurrent->position = glm::vec2(-quadCos.x - quadSin.y, -quadSin.x + quadCos.y) + position;
+		s_QuadRenderer.mapCurrent->str = { coords->xMin, coords->yMax, coords->sliceIndex };
+		s_QuadRenderer.mapCurrent->tint = tint;
+		s_QuadRenderer.mapCurrent++;
+
+		s_QuadRenderer.quadCount++;
+	}
+
+	void Renderer::DrawString(const std::string& text, const std::shared_ptr<Font>& font,
+	                          const glm::vec2& position, float scale, const glm::vec4& tint)
+	{
+		/* locals */
+		glm::vec2 beginning(position);
+		float advance = 0.0f;
+
+		// calculate beginning
+		for (const auto& ch : text)
+			beginning.x -= (font->GetCharacterData(ch).advance) * scale / 2.0f;
+
 		for (const auto& ch : text)
 		{
-			// #todo: make VertexBuffer size dynamic
 			if (s_TextRenderer.mapCurrent == s_TextRenderer.mapEnd)
 			{
-				LT_CORE_ERROR("Renderer::DrawString: calls to this function exceeded its limit: {}", LT_MAX_TEXT_SPRITES);
+				LT_CORE_ERROR("Renderer::DrawString: calls to this function exceeded its limit (or string too long): {}", LT_MAX_TEXT_SPRITES);
 
 				EndLayer();
 				BeginLayer();
 			}
 
+			/* locals */
+			const FontCharData character = font->GetCharacterData(ch);
 
-			// locals
-			const FontCharData character = *font->GetCharacterData(ch);
-
-			const float xMin = position.x + (character.bearing.x * scale) + advance;
-			const float yMin = position.y - (character.bearing.y) * scale;
+			const float xMin = beginning.x + (character.bearing.x * scale) + advance;
+			const float yMin = beginning.y - (character.bearing.y) * scale;
 
 			const float xMax = xMin + character.size.x * scale;
 			const float yMax = yMin + character.size.y * scale;
 
-			advance += (character.advance >> 6) * scale;
+			advance += (character.advance) * scale;
 
-			const TextureCoordinates str = character.coordinates;
+			/* write to the buffer */
+			// TOP_LEFT [ 0.0, 0.0 ]
+			s_TextRenderer.mapCurrent->position = { xMin, yMin };
+			s_TextRenderer.mapCurrent->str = { character.coordinates.xMin, character.coordinates.yMin, character.coordinates.sliceIndex };
+			s_TextRenderer.mapCurrent->tint = tint;
+			s_TextRenderer.mapCurrent++;
 
+			// TOP_RIGHT [ 1.0, 0.0 ]
+			s_TextRenderer.mapCurrent->position = { xMax, yMin };
+			s_TextRenderer.mapCurrent->str = { character.coordinates.xMax, character.coordinates.yMin, character.coordinates.sliceIndex };
+			s_TextRenderer.mapCurrent->tint = tint;
+			s_TextRenderer.mapCurrent++;
 
-			// TOP_LEFT
-			s_TextRenderer.mapCurrent[0 + 0] = xMin;
-			s_TextRenderer.mapCurrent[1 + 0] = yMin;
+			// BOTTOM_RIGHT [ 1.0, 1.0 ]
+			s_TextRenderer.mapCurrent->position = { xMax, yMax };
+			s_TextRenderer.mapCurrent->str = { character.coordinates.xMax, character.coordinates.yMax, character.coordinates.sliceIndex};
+			s_TextRenderer.mapCurrent->tint = tint;
+			s_TextRenderer.mapCurrent++;
 
-			s_TextRenderer.mapCurrent[2 + 0] = tint.r;
-			s_TextRenderer.mapCurrent[3 + 0] = tint.g;
-			s_TextRenderer.mapCurrent[4 + 0] = tint.b;
-			s_TextRenderer.mapCurrent[5 + 0] = tint.a;
+			// BOTTOM_LEFT [ 0.0, 1.0 ] 
+			s_TextRenderer.mapCurrent->position = { xMin, yMax };
+			s_TextRenderer.mapCurrent->str = { character.coordinates.xMin, character.coordinates.yMax, character.coordinates.sliceIndex };
+			s_TextRenderer.mapCurrent->tint = tint;
+			s_TextRenderer.mapCurrent++;
 
-			s_TextRenderer.mapCurrent[6 + 0] = str.xMin;
-			s_TextRenderer.mapCurrent[7 + 0] = str.yMin;
-			s_TextRenderer.mapCurrent[8 + 0] = str.sliceIndex;
+			s_TextRenderer.quadCount++;
+		}
+	}
 
-			// TOP_RIGHT
-			s_TextRenderer.mapCurrent[0 + 9] = xMax;
-			s_TextRenderer.mapCurrent[1 + 9] = yMin;
+	void Renderer::DrawString(const std::string& text, const std::shared_ptr<Font>& font,
+	                          const glm::vec2& position, float angle, float scale, const glm::vec4& tint)
+	{
+		/* locals */
+		glm::vec2 advance(0.0f);
+		glm::vec2 beginning(position);
 
-			s_TextRenderer.mapCurrent[2 + 9] = tint.r;
-			s_TextRenderer.mapCurrent[3 + 9] = tint.g;
-			s_TextRenderer.mapCurrent[4 + 9] = tint.b;
-			s_TextRenderer.mapCurrent[5 + 9] = tint.a;
+		const float COS = std::cos(angle) * scale;
+		const float SIN = std::sin(angle) * scale;
 
-			s_TextRenderer.mapCurrent[6 + 9] = str.xMax;
-			s_TextRenderer.mapCurrent[7 + 9] = str.yMin;
-			s_TextRenderer.mapCurrent[8 + 9] = str.sliceIndex;
+		// calculate beginning
+		for (const auto& ch : text)
+		{
+			beginning.x -= ((font->GetCharacterData(ch).advance) * COS) / 2.0f;
+			beginning.y -= ((font->GetCharacterData(ch).advance) * SIN) / 2.0f;
+		}
 
-			// BOTTOM_RIGHT
-			s_TextRenderer.mapCurrent[0 + 18] = xMax;
-			s_TextRenderer.mapCurrent[1 + 18] = yMax;
+		for (const auto& ch : text)
+		{
+			if (s_TextRenderer.mapCurrent == s_TextRenderer.mapEnd)
+			{
+				LT_CORE_ERROR("Renderer::DrawString: calls to this function exceeded its limit (or string too long): {}", LT_MAX_TEXT_SPRITES);
 
-			s_TextRenderer.mapCurrent[2 + 18] = tint.r;
-			s_TextRenderer.mapCurrent[3 + 18] = tint.g;
-			s_TextRenderer.mapCurrent[4 + 18] = tint.b;
-			s_TextRenderer.mapCurrent[5 + 18] = tint.a;
+				EndLayer();
+				BeginLayer();
+			}
 
-			s_TextRenderer.mapCurrent[6 + 18] = str.xMax;
-			s_TextRenderer.mapCurrent[7 + 18] = str.yMax;
-			s_TextRenderer.mapCurrent[8 + 18] = str.sliceIndex;
+			/* locals */
+			const auto& character = font->GetCharacterData(ch);
+			 
+			glm::vec2 bearing(character.bearing.x  * COS + (character.bearing.y) * SIN,
+			                  character.bearing.x  * SIN - (character.bearing.y) * COS);
 
-			// BOTTOM_LEFT
-			s_TextRenderer.mapCurrent[0 + 27] = xMin;
-			s_TextRenderer.mapCurrent[1 + 27] = yMax;
+			glm::vec2 charPosition = beginning + advance + bearing;
 
-			s_TextRenderer.mapCurrent[2 + 27] = tint.r;
-			s_TextRenderer.mapCurrent[3 + 27] = tint.g;
-			s_TextRenderer.mapCurrent[4 + 27] = tint.b;
-			s_TextRenderer.mapCurrent[5 + 27] = tint.a;
+			advance.x += (character.advance) * COS;
+			advance.y += (character.advance) * SIN;
 
-			s_TextRenderer.mapCurrent[6 + 27] = str.xMin;
-			s_TextRenderer.mapCurrent[7 + 27] = str.yMax;
-			s_TextRenderer.mapCurrent[8 + 27] = str.sliceIndex;
+			const glm::vec2 charCos = COS * character.size;
+			const glm::vec2 charSin = SIN * character.size;
 
+			/* write to the buffer  */	
+			// TOP_LEFT [ 0.0, 0.0 ]
+			s_TextRenderer.mapCurrent->position = charPosition;
+			s_TextRenderer.mapCurrent->str = { character.coordinates.xMin, character.coordinates.yMin, character.coordinates.sliceIndex };
+			s_TextRenderer.mapCurrent->tint = tint;
+			s_TextRenderer.mapCurrent++;
 
-			// move buffer map forward and increase quad count
-			s_TextRenderer.mapCurrent += 36;
+			// TOP_RIGHT [ 1.0, 0.0 ]
+			s_TextRenderer.mapCurrent->position = glm::vec2(charCos.x, charSin.x) + charPosition;
+			s_TextRenderer.mapCurrent->str = { character.coordinates.xMax, character.coordinates.yMin, character.coordinates.sliceIndex };
+			s_TextRenderer.mapCurrent->tint = tint;
+			s_TextRenderer.mapCurrent++;
+
+			// BOTTOM_RIGHT [ 1.0, 1.0 ]
+			s_TextRenderer.mapCurrent->position = glm::vec2(charCos.x - charSin.y, charSin.x + charCos.y) + charPosition;
+			s_TextRenderer.mapCurrent->str = { character.coordinates.xMax, character.coordinates.yMax, character.coordinates.sliceIndex };
+			s_TextRenderer.mapCurrent->tint = tint;
+			s_TextRenderer.mapCurrent++;
+
+			// BOTTOM_LEFT [ 0.0, 1.0 ] 
+			s_TextRenderer.mapCurrent->position = glm::vec2(-charSin.y, charCos.y) + charPosition;
+			s_TextRenderer.mapCurrent->str = { character.coordinates.xMin, character.coordinates.yMax, character.coordinates.sliceIndex };
+			s_TextRenderer.mapCurrent->tint = tint;
+			s_TextRenderer.mapCurrent++;
+
 			s_TextRenderer.quadCount++;
 		}
 	}

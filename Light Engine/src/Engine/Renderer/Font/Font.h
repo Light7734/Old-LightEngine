@@ -10,8 +10,8 @@ namespace Light {
 
 	struct FontCharData
 	{
-		glm::ivec2 size;
-		glm::ivec2 bearing;
+		glm::vec2 size;
+		glm::vec2 bearing;
 		unsigned int advance;
 
 		TextureCoordinates coordinates;
@@ -28,7 +28,7 @@ namespace Light {
 		Font(std::shared_ptr<TextureArray> textureArray, const std::string& path, unsigned int size);
 		~Font();
 
-		const FontCharData* GetCharacterData(char character) { return &m_CharactersData[character]; }
+		const FontCharData& GetCharacterData(char character) { return m_CharactersData[character]; }
 	};
 
 }

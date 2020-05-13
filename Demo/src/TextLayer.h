@@ -15,7 +15,7 @@ private:
 
 		void ShowDebugWindow()
 		{
-			ImGui::DragFloat2("position", &position[0], 10.0f, NULL, NULL, "%.0f");
+			ImGui::DragFloat2("position", &position[0], 0.5f, NULL, NULL, "%.0f");
 			ImGui::DragFloat("scale", &scale, 0.05f, NULL, NULL, "%.2f");
 			ImGui::ColorEdit4("tint", &tint[0]);
 		}
@@ -24,6 +24,9 @@ private:
 	Text m_Arial;
 	Text m_Comic;
 	Text m_Impact;
+
+	float m_Angle;
+	bool m_BlenderEnabled;
 public:
 	TextLayer();
 

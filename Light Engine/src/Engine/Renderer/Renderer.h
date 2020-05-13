@@ -23,22 +23,30 @@ namespace Light {
 	class Renderer
 	{
 	private:
-		//=============== BASIC QUAD RENDERER ===============//
-		struct BasicQuadRenderer
+		//=============== QUAD RENDERER ===============//
+		struct QuadRenderer
 		{
 			std::shared_ptr<Shader>       shader;
 			std::shared_ptr<VertexLayout> vertexLayout;
 			std::shared_ptr<IndexBuffer>  indexBuffer;
 			std::shared_ptr<VertexBuffer> vertexBuffer;
 
-			float* mapCurrent = nullptr;
-			float* mapEnd     = nullptr;
+			struct BasicQuadVertexData
+			{
+				glm::vec2 position;
+				glm::vec3 str;
+				glm::vec4 tint;
+			};
+
+			BasicQuadVertexData* mapCurrent = nullptr;
+			BasicQuadVertexData* mapEnd     = nullptr;
 
 			unsigned int quadCount = 0;
 		};
-		static BasicQuadRenderer s_QuadRenderer;
-		//=============== BASIC QUAD RENDERER ===============//
+		static QuadRenderer s_QuadRenderer;
+		//=============== QUAD RENDERER ===============//
 
+		//=============== TEXT RENDERER ===============//
 		struct TextRenderer
 		{
 			std::shared_ptr<Shader> shader;
@@ -46,12 +54,20 @@ namespace Light {
 			std::shared_ptr<IndexBuffer> indexBuffer;
 			std::shared_ptr<VertexBuffer> vertexBuffer;
 
-			float* mapCurrent = nullptr;
-			float* mapEnd = nullptr;
+			struct TextVertexData
+			{
+				glm::vec2 position;
+				glm::vec3 str;
+				glm::vec4 tint;
+			};
+
+			TextVertexData* mapCurrent = nullptr;
+			TextVertexData* mapEnd = nullptr;
 
 			unsigned int quadCount = 0;
 		};
 		static TextRenderer s_TextRenderer;
+		//=============== TEXT RENDERER ===============//
 
 		// camera
 		static std::shared_ptr<ConstantBuffer> s_ViewProjBuffer;
@@ -69,11 +85,19 @@ namespace Light {
 		static void BeginFrame();
 		static void BeginLayer();
 
-		// basic quad
-		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const TextureCoordinates* uv, const glm::vec4& tint);
+		// quad renderer
+		static void DrawQuad(const glm::vec2& position, const glm::vec2& size,
+		                     TextureCoordinates* coords, const glm::vec4& tint = glm::vec4(1.0f));
 
-		// draw text
-		static void DrawString(const std::string& text, const std::shared_ptr<Font>& font, const glm::vec2& position, float scale, const glm::vec4& tint);
+		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, float angle,
+		                            TextureCoordinates* coords, const glm::vec4& tint = glm::vec4(1.0f));
+
+		// text renderer
+		static void DrawString(const std::string& text, const std::shared_ptr<Font>& font,
+		                       const glm::vec2& position, float scale = 1.0f, const glm::vec4& tint = glm::vec4(1.0f));
+		
+		static void DrawString(const std::string& text, const std::shared_ptr<Font>& font,
+		                       const glm::vec2& position, float angle, float scale = 1.0f, const glm::vec4& tint = glm::vec4(1.0f));
 
 		static void EndLayer();
 		static void EndFrame();
