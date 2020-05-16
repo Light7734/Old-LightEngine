@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Renderer/Font/Font.h"
-
 #include "Core/Core.h"
+
+#include "Renderer/Font/Font.h"
 
 #include "Renderer/Texture.h"
 

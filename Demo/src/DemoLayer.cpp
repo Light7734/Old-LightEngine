@@ -41,6 +41,8 @@ void DemoLayer::OnDetatch()
 
 void DemoLayer::OnUpdate(float DeltaTime)
 {
+	m_DeltaTime = DeltaTime;
+
 	if (Light::Input::GetKey(KEY_A))
 		m_Camera->MoveX(-m_CameraSpeed * DeltaTime);
 	if (Light::Input::GetKey(KEY_D))
@@ -54,7 +56,12 @@ void DemoLayer::OnUpdate(float DeltaTime)
 
 void DemoLayer::OnUserInterfaceUpdate()
 {
-	ImGui::Begin("DemoLayer");
+	ImGui::Begin("Metrics", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+	ImGui::Text("DeltaTime: %f.3", m_DeltaTime);
+	ImGui::Text("FPS: %f.3", 1.0f / m_DeltaTime);
+	ImGui::End();
+
+	ImGui::Begin("DemoLayer", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 
 	if (ImGui::TreeNode("Keyboard map"))
 	{
@@ -125,7 +132,7 @@ void DemoLayer::OnUserInterfaceUpdate()
 			Light::GraphicsContext::Get()->SetMSAA(!Light::GraphicsContext::IsMSAAEnabled());
 
 		static int samples = 1;
-		if (ImGui::DragInt("^ 2 = SampleCount", &samples, 2u, 1, 4))
+		if (ImGui::DragInt("^ 2 = SampleCount", &samples, 1.0f, 1, 4))
 			Light::GraphicsContext::Get()->SetMSAASampleCount(BIT(samples));
 
 		ImGui::TreePop();

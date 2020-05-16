@@ -26,7 +26,7 @@ Demo::Demo()
 	// create graphics configurations
 	Light::GraphicsConfigurations gc;
 	gc.resolution = Light::Resolution(1280, 720, Light::AspectRatio::AR_16_9);
-	gc.vSync      = false;
+	gc.vSync      = true;
 
 	// create window and set callback function
 	m_Window = std::make_unique<Light::Window>(wd, gc, Light::GraphicsAPI::Directx);

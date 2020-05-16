@@ -17,6 +17,8 @@ private:
 
 	std::shared_ptr<Light::Camera> m_Camera;
 	float m_CameraSpeed;
+	
+	float m_DeltaTime = 0.0f;
 public:
 	DemoLayer();
 

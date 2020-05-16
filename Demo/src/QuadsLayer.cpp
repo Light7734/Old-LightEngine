@@ -58,13 +58,13 @@ void QuadsLayer::OnUpdate(float DeltaTime)
 
 void QuadsLayer::OnRender()
 {
-
+	Light::Blender::Get()->Enable();
 	m_TextureArray->Bind();
 
 	Light::Renderer::BeginLayer();
 	for (const auto& sprite : m_Sprites)
 			Light::Renderer::DrawQuad(sprite.position, sprite.size, glm::radians(m_Angle), sprite.coordinates, sprite.tint);
-	 Light::Renderer::EndLayer();
+	Light::Renderer::EndLayer();
 }
 
 void QuadsLayer::ShowDebugWindow()
