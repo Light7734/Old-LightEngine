@@ -6,8 +6,8 @@ R"(
 #version 450 core
 
 layout(location = 0) in vec2 InPosition;
-layout(location = 1) in vec4 InColor;
-layout(location = 2) in vec3 InTexCoords;
+layout(location = 1) in vec3 InTexCoords;
+layout(location = 2) in vec4 InColor;
 
 layout(std140, binding = 6) uniform ViewProjectionVSUniform
 {
