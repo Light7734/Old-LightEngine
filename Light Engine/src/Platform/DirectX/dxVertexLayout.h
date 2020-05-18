@@ -20,7 +20,10 @@ namespace Light {
 
 		void Bind() override;
 	private:
+		Microsoft::WRL::ComPtr<ID3DBlob> CreateDummyVertexBlob(std::vector<std::pair<const char*, VertexElementType>> elements);
+
 		DXGI_FORMAT GetDxgiFormat(VertexElementType type);
+		std::string GetHLSLTypeName(VertexElementType type);
 	};
 
 }
