@@ -9,26 +9,24 @@
 
 namespace Light {
 
-	void Camera::ShowDebugWindow()
+	Camera::Camera(const glm::vec2& position, float aspectRatio, float zoomLevel)
+		: m_Up(0.0f, 1.0f, 0.0f), m_View(1.0f), m_Projection(1.0f)
 	{
-		ImGui::DragFloat2("position", &m_Position.x, 15.0f, NULL, NULL, "%.2f");
-		ImGui::DragFloat("zoom level", &m_ZoomLevel, 1.0f, NULL, NULL, "%.1f");
-		ImGui::BulletText("aspect ratio: %f", m_AspectRatio);
+		m_Controller = std::make_shared<CameraController>(position, aspectRatio, zoomLevel);
 	}
 
-	const glm::mat4& Camera::GetView()
+	void Camera::CalculateViewProjection()
 	{
-		m_View = glm::lookAt(glm::vec3(m_Position, 1.0f), glm::vec3(m_Position, 0.0f), m_Up);
-		return m_View;
-	}
+		const glm::vec2& position = m_Controller->GetPosition();
+		const float aspectRatio = m_Controller->GetAspectRatio();
+		const float zoomLevel = m_Controller->GetZoomLevel();
 
-	const glm::mat4& Camera::GetProjection()
-	{
-		m_Projection = glm::ortho(-m_AspectRatio * m_ZoomLevel,
-		                           m_AspectRatio * m_ZoomLevel,
-		                                           m_ZoomLevel,
-		                                          -m_ZoomLevel);
-		return m_Projection;
+		m_View = glm::lookAt(glm::vec3(position, 1.0f), glm::vec3(position, 0.0f), m_Up);
+
+		m_Projection = glm::ortho(aspectRatio * -zoomLevel,
+		                          aspectRatio *  zoomLevel,
+		                                         zoomLevel,
+		                                        -zoomLevel);
 	}
 
 }

@@ -30,9 +30,6 @@ QuadsLayer::QuadsLayer(std::shared_ptr<Light::Camera> camera)
 
 		m_Sprites.push_back(sprite);
 	}
-
-	m_Sprites[0].position = { 0.0f, 0.0f };
-	m_Sprites[0].size = { 30.0f, 30.0f };
 }
 
 void QuadsLayer::OnAttach()
@@ -61,10 +58,10 @@ void QuadsLayer::OnRender()
 	Light::Blender::Get()->Enable();
 	m_TextureArray->Bind();
 
-	Light::Renderer::BeginLayer();
+	Light::Renderer::BeginScene(m_Camera);
 	for (const auto& sprite : m_Sprites)
 			Light::Renderer::DrawQuad(sprite.position, sprite.size, glm::radians(m_Angle), sprite.coordinates, sprite.tint);
-	Light::Renderer::EndLayer();
+	Light::Renderer::EndScene();
 }
 
 void QuadsLayer::ShowDebugWindow()

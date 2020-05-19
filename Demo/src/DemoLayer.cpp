@@ -13,18 +13,17 @@ DemoLayer::DemoLayer()
 	m_LayeDebugrName = "DemoLayer";
 
 	m_Camera = std::make_shared<Light::Camera>(glm::vec2(500.0f, 500.0f), Light::GraphicsContext::GetAspectRatio(), 1000.0f);
+	m_CameraController = m_Camera->GetController();
 
 	m_AudioLayer = new AudioLayer;
 	m_QuadsLayer = new QuadsLayer(m_Camera);
 	m_PostProcessLayer = new PostProcessLayer;
-	m_TextLayer = new TextLayer;
+	m_TextLayer = new TextLayer(m_Camera);
 }
 
 void DemoLayer::OnAttach()
 {
 	LT_TRACE("Attached: {}", m_LayeDebugrName);
-
-	Light::Renderer::SetCamera(m_Camera);
 
 	Light::Window::Get()->SetMouseCursor("res/cursor.png", 1u, 1u);
 
@@ -44,21 +43,21 @@ void DemoLayer::OnUpdate(float DeltaTime)
 	m_DeltaTime = DeltaTime;
 
 	if (Light::Input::GetKey(KEY_A))
-		m_Camera->MoveX(-m_CameraSpeed * DeltaTime);
+		m_CameraController->MoveX(-m_CameraSpeed * DeltaTime);
 	if (Light::Input::GetKey(KEY_D))
-		m_Camera->MoveX(m_CameraSpeed * DeltaTime);
-
+		m_CameraController->MoveX(m_CameraSpeed * DeltaTime);
+	
 	if (Light::Input::GetKey(KEY_W))
-		m_Camera->MoveY(-m_CameraSpeed * DeltaTime);
+		m_CameraController->MoveY(-m_CameraSpeed * DeltaTime);
 	if (Light::Input::GetKey(KEY_S))
-		m_Camera->MoveY(m_CameraSpeed * DeltaTime);
+		m_CameraController->MoveY(m_CameraSpeed * DeltaTime);
 }
 
 void DemoLayer::OnUserInterfaceUpdate()
 {
 	ImGui::Begin("Metrics", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
-	ImGui::Text("DeltaTime: %f.3", m_DeltaTime);
-	ImGui::Text("FPS: %f.3", 1.0f / m_DeltaTime);
+	ImGui::Text("DeltaTime: %.3f", m_DeltaTime);
+	ImGui::Text("FPS: %.3f", 1.0f / m_DeltaTime);
 	ImGui::End();
 
 	ImGui::Begin("DemoLayer", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
@@ -120,7 +119,6 @@ void DemoLayer::OnUserInterfaceUpdate()
 
 	if (ImGui::TreeNode("Camera"))
 	{
-		m_Camera->ShowDebugWindow();
 		ImGui::BulletText("speed %.2f", m_CameraSpeed);
 		ImGui::TreePop();
 	}
@@ -188,7 +186,7 @@ bool DemoLayer::OnKeyPress(Light::KeyboardKeyPressedEvent& event)
 
 		m_QuadsLayer = new QuadsLayer(m_Camera);
 		m_PostProcessLayer = new PostProcessLayer;
-		m_TextLayer = new TextLayer;
+		m_TextLayer = new TextLayer(m_Camera);
 
 		Light::Application::AttachLayer(m_QuadsLayer);
 		Light::Application::AttachLayer(m_PostProcessLayer);
@@ -250,14 +248,14 @@ bool DemoLayer::OnKeyPress(Light::KeyboardKeyPressedEvent& event)
 
 bool DemoLayer::OnWindowResize(Light::WindowResizedEvent& event)
 {
-	m_Camera->SetProjection(Light::GraphicsContext::GetAspectRatio(), m_Camera->GetZoomLevel());
+	m_CameraController->SetProjection(Light::GraphicsContext::GetAspectRatio(), m_CameraController->GetZoomLevel());
 	return false;
 }
 
 bool DemoLayer::OnMouseScroll(Light::MouseScrolledEvent& event)
 {
 	if (Light::Input::GetKey(KEY_LEFT_CONTROL))
-		m_Camera->Zoom(event.GetOffset() * 25);
+		m_CameraController->Zoom(event.GetOffset() * 25);
 
 	return false;
 }

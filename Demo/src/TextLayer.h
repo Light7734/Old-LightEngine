@@ -20,7 +20,9 @@ private:
 			ImGui::ColorEdit4("tint", &tint[0]);
 		}
 	};
-	
+
+	std::shared_ptr<Light::Camera> m_Camera;
+
 	Text m_Arial;
 	Text m_Comic;
 	Text m_Impact;
@@ -28,7 +30,7 @@ private:
 	float m_Angle;
 	bool m_BlenderEnabled;
 public:
-	TextLayer();
+	TextLayer(std::shared_ptr<Light::Camera> camera);
 
 	void OnAttach() override;
 	void OnDetatch() override;

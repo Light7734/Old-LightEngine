@@ -1,7 +1,7 @@
 #include "TextLayer.h"
 
-TextLayer::TextLayer()
-	: m_Angle(-2.5f)
+TextLayer::TextLayer(std::shared_ptr<Light::Camera> camera)
+	: m_Angle(-2.5f), m_Camera(camera)
 {
 	LT_PROFILE_FUNC();
 
@@ -47,11 +47,11 @@ void TextLayer::OnRender()
 	else
 		Light::Blender::Get()->Disable();
 
-	Light::Renderer::BeginLayer();
+	Light::Renderer::BeginScene(m_Camera);
 	Light::Renderer::DrawString("The quick brown fox jumps over the lazy dog", m_Arial.font, m_Arial.position, m_Arial.scale, m_Arial.tint);
 	Light::Renderer::DrawString("The quick brown fox jumps over the lazy dog", m_Comic.font, m_Comic.position, glm::radians(m_Angle), m_Comic.scale, m_Comic.tint);
 	Light::Renderer::DrawString("The quick brown fox jumps over the lazy dog", m_Impact.font, m_Impact.position, m_Impact.scale, m_Impact.tint);
-	Light::Renderer::EndLayer();
+	Light::Renderer::EndScene();
 }
 
 void TextLayer::ShowDebugWindow()

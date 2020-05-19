@@ -1,8 +1,15 @@
 #pragma once
 
+#include "Buffers.h"
+#include "Shader.h"
+#include "VertexLayout.h"
+
 #include "Core/Core.h"
 
 #include <glm/glm.hpp>
+
+#define LT_MAX_BASIC_SPRITES    10000
+#define LT_MAX_TEXT_SPRITES     2000
 
 namespace Light {
 
@@ -31,17 +38,31 @@ namespace Light {
 			std::shared_ptr<IndexBuffer>  indexBuffer;
 			std::shared_ptr<VertexBuffer> vertexBuffer;
 
-			struct BasicQuadVertexData
+			struct QuadVertexData
 			{
 				glm::vec2 position;
 				glm::vec3 str;
 				glm::vec4 tint;
 			};
 
-			BasicQuadVertexData* mapCurrent = nullptr;
-			BasicQuadVertexData* mapEnd     = nullptr;
+			QuadVertexData* mapCurrent = nullptr;
+			QuadVertexData* mapEnd     = nullptr;
 
 			unsigned int quadCount = 0;
+
+			void Map()
+			{
+				mapCurrent = (QuadVertexData*)vertexBuffer->Map();
+				mapEnd = mapCurrent + LT_MAX_BASIC_SPRITES * 4;
+			}
+
+			void Bind()
+			{
+				shader->Bind();
+				vertexLayout->Bind();
+				indexBuffer->Bind();
+				vertexBuffer->Bind();
+			}
 		};
 		static QuadRenderer s_QuadRenderer;
 		//=============== QUAD RENDERER ===============//
@@ -65,13 +86,26 @@ namespace Light {
 			TextVertexData* mapEnd = nullptr;
 
 			unsigned int quadCount = 0;
+
+			void Map() 
+			{
+				mapCurrent = (TextVertexData*)vertexBuffer->Map();
+				mapEnd = mapCurrent + LT_MAX_TEXT_SPRITES * 4;
+			}
+			
+			void Bind()
+			{
+				shader->Bind();
+				vertexLayout->Bind();
+				indexBuffer->Bind();
+				vertexBuffer->Bind();
+			}
 		};
 		static TextRenderer s_TextRenderer;
 		//=============== TEXT RENDERER ===============//
 
 		// camera
 		static std::shared_ptr<ConstantBuffer> s_ViewProjBuffer;
-		static std::shared_ptr<Camera> s_Camera;
 
 		// framebuffers
 		static std::vector<std::shared_ptr<Framebuffer>> s_Framebuffers;
@@ -83,7 +117,7 @@ namespace Light {
 		static bool s_MSAAEnabled;
 	public:
 		static void BeginFrame();
-		static void BeginLayer();
+		static void BeginScene(const std::shared_ptr<Camera>& camera);
 
 		// quad renderer
 		static void DrawQuad(const glm::vec2& position, const glm::vec2& size,
@@ -99,15 +133,12 @@ namespace Light {
 		static void DrawString(const std::string& text, const std::shared_ptr<Font>& font,
 		                       const glm::vec2& position, float angle, float scale = 1.0f, const glm::vec4& tint = glm::vec4(1.0f));
 
-		static void EndLayer();
+		static void EndScene();
 		static void EndFrame();
 
 		// frame buffers
 		static void AddFramebuffer(std::shared_ptr<Framebuffer> framebuffer);
 		static void RemoveFramebuffer(std::shared_ptr<Framebuffer> framebuffer);
-
-		// camera
-		static inline void SetCamera(std::shared_ptr<Camera> camera) { s_Camera = camera; }
 	private:
 		friend class GraphicsContext;
 		static void Init(unsigned int MSAASampleCount, bool MSAA);

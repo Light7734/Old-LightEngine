@@ -1,14 +1,11 @@
 #include "ltpch.h"
 #include "Renderer.h"
 
-#include "Buffers.h"
-#include "Framebuffer.h"
 #include "Camera.h"
+#include "Framebuffer.h"
 #include "MSAA.h"
 #include "RenderCommand.h"
-#include "Shader.h"
 #include "Texture.h"
-#include "VertexLayout.h"
 
 #include "Font/Font.h"
 #include "Font/FontManager.h"
@@ -20,8 +17,6 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-#define LT_MAX_BASIC_SPRITES    10000
-#define LT_MAX_TEXT_SPRITES     2000
 
 namespace Light {
 
@@ -33,7 +28,6 @@ namespace Light {
 	std::shared_ptr<VertexLayout> Renderer::s_FramebufferLayout;
 
 	std::shared_ptr<ConstantBuffer> Renderer::s_ViewProjBuffer;
-	std::shared_ptr<Camera> Renderer::s_Camera;
 
 	std::shared_ptr<MSAA> Renderer::s_MSAA;
 	bool Renderer::s_MSAAEnabled = false;
@@ -63,10 +57,6 @@ namespace Light {
 		// view projection buffer
 		s_ViewProjBuffer = ConstantBuffer::Create(ConstantBufferIndex_ViewProjection, sizeof(glm::mat4) * 2);
 
-		// camera
-		if (!s_Camera)
-			s_Camera = std::make_shared<Camera>(glm::vec2(0.0f, 0.0f), GraphicsContext::GetResolution().aspectRatio, 1000.0f);
-
 		// MSAA
 		SetMSAA(MSAA);
 		SetMSAASampleCount(MSAASampleCount);
@@ -75,7 +65,7 @@ namespace Light {
 		unsigned int* indices = nullptr;
 		unsigned int offset = 0;
 
-		//=============== BASIC QUAD RENDERER ===============//
+		//=============== QUAD RENDERER ===============//
 		// indices
 		indices = new unsigned int [LT_MAX_BASIC_SPRITES * 6];
 		offset = 0;
@@ -95,8 +85,8 @@ namespace Light {
 
 		// create bindables
 		s_QuadRenderer.shader = Shader::Create(QuadShaderSrc_VS, QuadShaderSrc_FS);
-		s_QuadRenderer.vertexBuffer = VertexBuffer::Create(nullptr, LT_MAX_BASIC_SPRITES * sizeof(QuadRenderer::BasicQuadVertexData) * 4,
-		                                                   sizeof(QuadRenderer::BasicQuadVertexData));
+		s_QuadRenderer.vertexBuffer = VertexBuffer::Create(nullptr, LT_MAX_BASIC_SPRITES * sizeof(QuadRenderer::QuadVertexData) * 4,
+		                                                   sizeof(QuadRenderer::QuadVertexData));
 
 		s_QuadRenderer.vertexLayout = VertexLayout::Create(s_QuadRenderer.shader,
 		                                                   s_QuadRenderer.vertexBuffer,
@@ -108,7 +98,7 @@ namespace Light {
 
 		// free memory
 		delete[] indices;
-		//=============== BASIC QUAD RENDERER ===============//
+		//=============== QUAD RENDERER ===============//
 
 		//================== TEXT RENDERER ==================//
 		// indices
@@ -149,25 +139,26 @@ namespace Light {
 
 	void Renderer::BeginFrame()
 	{
-		// set view projection buffer
-		glm::mat4* map = (glm::mat4*)s_ViewProjBuffer->Map();
-		*(map + 0) = s_Camera->GetView();
-		*(map + 1) = s_Camera->GetProjection();
-		s_ViewProjBuffer->UnMap();
-
 		if (s_MSAAEnabled)
 			s_MSAA->BindFrameBuffer();
 		else if (!s_Framebuffers.empty())
 			s_Framebuffers[0]->BindAsTarget();
 	}
 
-	void Renderer::BeginLayer()
+	void Renderer::BeginScene(const std::shared_ptr<Camera>& camera)
 	{
-		s_QuadRenderer.mapCurrent = (QuadRenderer::BasicQuadVertexData*)s_QuadRenderer.vertexBuffer->Map();
-		s_QuadRenderer.mapEnd = s_QuadRenderer.mapCurrent + LT_MAX_BASIC_SPRITES * 4;
+		// set view projection buffer
+		camera->CalculateViewProjection();
 
-		s_TextRenderer.mapCurrent = (TextRenderer::TextVertexData*)s_TextRenderer.vertexBuffer->Map();
-		s_TextRenderer.mapEnd = s_TextRenderer.mapCurrent + LT_MAX_TEXT_SPRITES * 4;
+		glm::mat4* map = (glm::mat4*)s_ViewProjBuffer->Map();
+		map[0] = camera->GetView();
+		map[1] = camera->GetProjection();
+		s_ViewProjBuffer->UnMap();
+
+
+		// map renderer's vertex buffer
+		s_QuadRenderer.Map();
+		s_TextRenderer.Map();
 	}
 	
 	void Renderer::DrawQuad(const glm::vec2& position, const glm::vec2& size,
@@ -176,9 +167,10 @@ namespace Light {
 		if (s_QuadRenderer.mapCurrent == s_QuadRenderer.mapEnd)
 		{
 			LT_CORE_ERROR("Renderer::DrawQuad: calls to this function exceeded its limit: {}", LT_MAX_BASIC_SPRITES);
+			EndScene();
 
-			EndLayer();
-			BeginLayer();
+			s_QuadRenderer.Map();
+			s_TextRenderer.Map();
 		}
 
 		/* locals */
@@ -220,9 +212,10 @@ namespace Light {
 		if (s_QuadRenderer.mapCurrent == s_QuadRenderer.mapEnd)
 		{
 			LT_CORE_ERROR("Renderer::DrawQuad: calls to this function exceeded its limit: {}", LT_MAX_BASIC_SPRITES);
+			EndScene();
 
-			EndLayer();
-			BeginLayer();
+			s_QuadRenderer.Map();
+			s_TextRenderer.Map();
 		}
 
 		/* locals */
@@ -276,9 +269,10 @@ namespace Light {
 			if (s_TextRenderer.mapCurrent == s_TextRenderer.mapEnd)
 			{
 				LT_CORE_ERROR("Renderer::DrawString: calls to this function exceeded its limit (or string too long): {}", LT_MAX_TEXT_SPRITES);
+				EndScene();
 
-				EndLayer();
-				BeginLayer();
+				s_QuadRenderer.Map();
+				s_TextRenderer.Map();
 			}
 
 			/* locals */
@@ -343,9 +337,10 @@ namespace Light {
 			if (s_TextRenderer.mapCurrent == s_TextRenderer.mapEnd)
 			{
 				LT_CORE_ERROR("Renderer::DrawString: calls to this function exceeded its limit (or string too long): {}", LT_MAX_TEXT_SPRITES);
+				EndScene();
 
-				EndLayer();
-				BeginLayer();
+				s_QuadRenderer.Map();
+				s_TextRenderer.Map();
 			}
 
 			/* locals */
@@ -391,38 +386,30 @@ namespace Light {
 		}
 	}
 
-	void Renderer::EndLayer()
+	void Renderer::EndScene()
 	{
 		// unmap vertex buffers
-		s_QuadRenderer.vertexBuffer->UnMap();
 		s_TextRenderer.vertexBuffer->UnMap();
+		s_QuadRenderer.vertexBuffer->UnMap();
 
-		// #todo: right now all texts will be rendered after basic quads, implement something to make them render in order they are called.
-		//=============== BASIC QUAD RENDERER ===============//
+		//=============== QUAD RENDERER ===============//
 		if (s_QuadRenderer.quadCount)
 		{
-			// bindables
-			s_QuadRenderer.shader->Bind();
-			s_QuadRenderer.vertexLayout->Bind();
-			s_QuadRenderer.indexBuffer->Bind();
-			s_QuadRenderer.vertexBuffer->Bind();
+			// bind
+			s_QuadRenderer.Bind();
 
 			// draw
 			RenderCommand::DrawIndexed(s_QuadRenderer.quadCount * 6);
 			s_QuadRenderer.quadCount = 0;
 		}
-		//=============== BASIC QUAD RENDERER ===============//
+		//=============== QUAD RENDERER ===============//
 
 		//================== TEXT RENDERER ==================//
 		if (s_TextRenderer.quadCount)
 		{
-			// bindables
-			FontManager::BindTextureArray();
-
-			s_TextRenderer.shader->Bind();
-			s_TextRenderer.vertexLayout->Bind();
-			s_TextRenderer.indexBuffer->Bind();
-			s_TextRenderer.vertexBuffer->Bind();
+			// bind
+			FontManager::BindTextureArray(); // #todo
+			s_TextRenderer.Bind();
 
 			// draw
 			RenderCommand::DrawIndexed(s_TextRenderer.quadCount * 6);

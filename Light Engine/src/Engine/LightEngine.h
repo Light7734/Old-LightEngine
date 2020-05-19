@@ -72,10 +72,10 @@
 // Renderer -----------------
 #include "Renderer/Font/Font.h"
 #include "Renderer/Font/FontManager.h"
-
+#include "Renderer/Camera.h"
+#include "Renderer/CameraController.h"
 #include "Renderer/Blender.h"
 #include "Renderer/Buffers.h"
-#include "Renderer/Camera.h"
 #include "Renderer/Framebuffer.h"
 #include "Renderer/GraphicsContext.h"
 #include "Renderer/Renderer.h"

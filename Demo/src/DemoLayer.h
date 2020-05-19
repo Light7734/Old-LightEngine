@@ -15,10 +15,11 @@ private:
 	PostProcessLayer* m_PostProcessLayer;
 	TextLayer* m_TextLayer;
 
-	std::shared_ptr<Light::Camera> m_Camera;
-	float m_CameraSpeed;
-	
 	float m_DeltaTime = 0.0f;
+
+	std::shared_ptr<Light::Camera> m_Camera;
+	std::shared_ptr<Light::CameraController> m_CameraController;
+	float m_CameraSpeed;
 public:
 	DemoLayer();
 

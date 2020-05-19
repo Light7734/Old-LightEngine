@@ -40,17 +40,19 @@ namespace Light {
 
 	glm::vec2 Input::MousePosToCameraView(const std::shared_ptr<Camera> camera)
 	{
-		glm::vec2 mouse = (glm::vec2)s_MousePos;
+		const auto& controller = camera->GetController();
 
+		glm::vec2 mouse = (glm::vec2)s_MousePos;
+		
 		mouse.x /= GraphicsContext::GetResolution().width;
 		mouse.y /= GraphicsContext::GetResolution().height;
-
-		mouse.x = -camera->GetZoomLevel() + (mouse.x * camera->GetZoomLevel() * 2);
-		mouse.x *= camera->GetAspectRatio();
-
-		mouse.y = -camera->GetZoomLevel() + (mouse.y * camera->GetZoomLevel() * 2);
-
-		mouse += camera->GetPosition();
+		
+		mouse.x = -controller->GetZoomLevel() + (mouse.x * controller->GetZoomLevel() * 2);
+		mouse.x *= controller->GetAspectRatio();
+		
+		mouse.y = -controller->GetZoomLevel() + (mouse.y * controller->GetZoomLevel() * 2);
+		
+		mouse += controller->GetPosition();
 
 		return mouse;
 	}
