@@ -15,7 +15,7 @@ QuadsLayer::QuadsLayer(std::shared_ptr<Light::Camera> camera)
 	// create texture atlas to extract coordinates of texture array's slices
 	std::shared_ptr<Light::TextureAtlas> textureAtlas;
 	textureAtlas = m_TextureArray->GetAtlas("QuadsLayer atlas");
-	Light::TextureCoordinates* boxCoords = textureAtlas->GetCoordinates("awesomeface");
+	Light::SubTexture* awesomeface = textureAtlas->GetSubTexture("awesomeface");
 
 	// create sprites
 	for (int i = 0; i < 125; i++)
@@ -26,7 +26,7 @@ QuadsLayer::QuadsLayer(std::shared_ptr<Light::Camera> camera)
 		sprite.position.x = std::rand() % 1000;
 		sprite.position.y = std::rand() % 1000;
 
-		sprite.coordinates = boxCoords;
+		sprite.texture = awesomeface;
 
 		m_Sprites.push_back(sprite);
 	}
@@ -60,7 +60,7 @@ void QuadsLayer::OnRender()
 
 	Light::Renderer::BeginScene(m_Camera);
 	for (const auto& sprite : m_Sprites)
-			Light::Renderer::DrawQuad(sprite.position, sprite.size, glm::radians(m_Angle), sprite.coordinates, sprite.tint);
+			Light::Renderer::DrawQuad(sprite.position, sprite.size, glm::radians(m_Angle), sprite.texture, sprite.tint);
 	Light::Renderer::EndScene();
 }
 

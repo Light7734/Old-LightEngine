@@ -94,8 +94,7 @@ namespace Light {
 
 		glfwDestroyCursor(m_Data.cursor);
 
-		TextureData tdata;
-		tdata.pixels = FileManager::LoadTextureFile(texturePath, &tdata.width, &tdata.height, &tdata.channels);
+		TextureImageData tdata = FileManager::LoadTextureFile(texturePath);
 
 		LT_CORE_ASSERT(tdata, "Window::SetMouseCursor: failed to load cursor texture: {}", texturePath);
 		LT_CORE_ASSERT(hotspotX <= tdata.width && hotspotY <= tdata.height, "Window::SetMouseCursor: invalid hotspot position");

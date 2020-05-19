@@ -4,6 +4,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
+
 namespace Light {
 
 	std::string FileManager::LoadTextFile(const std::string& path)
@@ -25,14 +26,17 @@ namespace Light {
 		return ss.str();
 	}
 
-	unsigned char* FileManager::LoadTextureFile(const std::string& path, int* x, int* y, int* channels)
+	TextureImageData FileManager::LoadTextureFile(const std::string& path)
 	{
 		LT_PROFILE_FUNC();
 
-		unsigned char* pixels = stbi_load(path.c_str(), x, y, channels, 4);
+		int x = 0, y = 0, channels = 0;
+		unsigned char* pixels = stbi_load(path.c_str(), &x, &y, &channels, 4);
+
 		if (!pixels)
 			LT_CORE_ERROR("FileManager::LoadTextureFile: failed to load texture file: {}", path);
-		return pixels;
+
+		return { pixels, x, y, channels };
 	}
 
 }

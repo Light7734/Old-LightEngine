@@ -14,7 +14,7 @@ namespace Light {
 		glm::vec2 bearing;
 		unsigned int advance;
 
-		TextureCoordinates coordinates;
+		SubTexture glyph;
 	};
 
 	class Font

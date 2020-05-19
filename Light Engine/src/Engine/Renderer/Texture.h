@@ -6,21 +6,23 @@
 
 namespace Light {
 
-	struct TextureData
+	struct TextureImageData
 	{
 		unsigned char* pixels;
 		int width, height, channels;
 
-		TextureData(): pixels(nullptr), width(0), height(0), channels(0) {}
-		TextureData(const TextureData&) = delete;
-		TextureData& operator=(const TextureData&) = delete;
+		TextureImageData(unsigned char* pixels_, int width_, int height_, int channels_)
+		                 : pixels(pixels_), width(width_), height(height_), channels(channels_) {}
+		TextureImageData() : pixels(nullptr), width(0), height(0), channels(0) {}
+		TextureImageData(const TextureImageData&) = delete;
+		TextureImageData& operator=(const TextureImageData&) = delete;
 
-		~TextureData() { free(pixels); }
+		~TextureImageData() { free(pixels); }
 
 		inline operator bool() const { return pixels && width && height && channels; }
 	};
 
-	struct TextureCoordinates
+	struct SubTexture
 	{
 		float xMin, yMin, xMax, yMax, sliceIndex;
 	};
@@ -28,14 +30,14 @@ namespace Light {
 	class TextureAtlas
 	{
 	protected:
-		std::unordered_map<std::string, TextureCoordinates> m_Segments;
+		std::unordered_map<std::string, SubTexture> m_SubTextures;
 		unsigned int m_Index;
 
 		std::string m_Name;
 	public:
 		TextureAtlas(const std::string& name, const std::string& path, unsigned int sliceIndex);
 
-		inline TextureCoordinates* GetCoordinates(const std::string& name) { return &m_Segments[name]; }
+		inline SubTexture* GetSubTexture(const std::string& name) { return &m_SubTextures[name]; }
 
 		inline unsigned int GetSliceIndex() const { return m_Index; }
 
@@ -63,7 +65,8 @@ namespace Light {
 
 		virtual void CreateSliceWithAtlas(const std::string& texturePath, const std::string& atlasName, const std::string& atlasPath) = 0;
 
-		// #todo: this is not very safe because we can accidentally pass sliceIndex of a SliceWithTexture
+		// #todo: I'm reading this bottom todo and have no idea what I've wrote there, figure out what to do later
+		// // #todo: this is not very safe because we can accidentally pass sliceIndex of a SliceWithTexture
 		virtual unsigned int CreateSlice(const std::string& texturePath) = 0;
 
 		virtual unsigned int CreateSlice(unsigned int width, unsigned int height, void* pixels) = 0;
@@ -73,8 +76,7 @@ namespace Light {
 		virtual void DeleteSlice(unsigned int sliceIndex) = 0;
 
 		virtual void Bind() = 0;
-
-
+			
 		inline std::shared_ptr<TextureAtlas> GetAtlas(const std::string& name) { return m_Atlases[name]; }
 	};
 

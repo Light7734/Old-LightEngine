@@ -37,7 +37,7 @@ namespace Light {
 			std::getline(lineStream, temp, ' '); xMax = std::stof(temp); xMax += xMin;
 			std::getline(lineStream, temp, ' '); yMax = std::stof(temp); yMax += yMin;
 
-			m_Segments[name] = { xMin, yMin, xMax, yMax, static_cast<float>(m_Index) };
+			m_SubTextures[name] = { xMin, yMin, xMax, yMax, static_cast<float>(m_Index) };
 		}
 	}
 

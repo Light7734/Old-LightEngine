@@ -161,8 +161,7 @@ namespace Light {
 		s_TextRenderer.Map();
 	}
 	
-	void Renderer::DrawQuad(const glm::vec2& position, const glm::vec2& size,
-	                        TextureCoordinates* coords, const glm::vec4& tint)
+	void Renderer::DrawQuad(const glm::vec2& position, const glm::vec2& size, SubTexture* texture, const glm::vec4& tint)
 	{
 		if (s_QuadRenderer.mapCurrent == s_QuadRenderer.mapEnd)
 		{
@@ -181,33 +180,32 @@ namespace Light {
 
 		// TOP_LEFT  [ -0.5, -0.5 ]
 		s_QuadRenderer.mapCurrent->position = { xMin, yMin };
-		s_QuadRenderer.mapCurrent->str = { coords->xMin, coords->yMin, coords->sliceIndex };
+		s_QuadRenderer.mapCurrent->str = { texture->xMin, texture->yMin, texture->sliceIndex };
 		s_QuadRenderer.mapCurrent->tint = tint;
 		s_QuadRenderer.mapCurrent++;
 
 		// TOP_RIGHT [ 0.5, -0.5 ]
 		s_QuadRenderer.mapCurrent->position = { xMax, yMin };
-		s_QuadRenderer.mapCurrent->str = { coords->xMax, coords->yMin, coords->sliceIndex };
+		s_QuadRenderer.mapCurrent->str = { texture->xMax, texture->yMin, texture->sliceIndex };
 		s_QuadRenderer.mapCurrent->tint = tint;
 		s_QuadRenderer.mapCurrent++;
 
 		// BOTTOM_RIGHT [ 0.5, 0.5 ]
 		s_QuadRenderer.mapCurrent->position = { xMax, yMax };
-		s_QuadRenderer.mapCurrent->str = { coords->xMax, coords->yMax, coords->sliceIndex };
+		s_QuadRenderer.mapCurrent->str = { texture->xMax, texture->yMax, texture->sliceIndex };
 		s_QuadRenderer.mapCurrent->tint = tint;
 		s_QuadRenderer.mapCurrent++;
 
 		// BOTTOM_LEFT [ -0.5, 0.5 ]
 		s_QuadRenderer.mapCurrent->position = { xMin, yMax };
-		s_QuadRenderer.mapCurrent->str = { coords->xMin, coords->yMax, coords->sliceIndex };
+		s_QuadRenderer.mapCurrent->str = { texture->xMin, texture->yMax, texture->sliceIndex };
 		s_QuadRenderer.mapCurrent->tint = tint;
 		s_QuadRenderer.mapCurrent++;
 
 		s_QuadRenderer.quadCount++;
 	}
 
-	void Renderer::DrawQuad(const glm::vec2& position, const glm::vec2& size,
-	                        float angle, TextureCoordinates* coords, const glm::vec4& tint)
+	void Renderer::DrawQuad(const glm::vec2& position, const glm::vec2& size, float angle, SubTexture* texture, const glm::vec4& tint)
 	{
 		if (s_QuadRenderer.mapCurrent == s_QuadRenderer.mapEnd)
 		{
@@ -228,25 +226,25 @@ namespace Light {
 		/* write to the buffer */
 		// TOP_LEFT  [ -0.5, -0.5 ]
 		s_QuadRenderer.mapCurrent->position = glm::vec2(-(quadCos.x - quadSin.y), -(quadSin.x + quadCos.y)) + position;
-		s_QuadRenderer.mapCurrent->str = { coords->xMin, coords->yMin, coords->sliceIndex };
+		s_QuadRenderer.mapCurrent->str = { texture->xMin, texture->yMin, texture->sliceIndex };
 		s_QuadRenderer.mapCurrent->tint = tint;
 		s_QuadRenderer.mapCurrent++;
 
 		// TOP_RIGHT [ 0.5, -0.5 ]
 		s_QuadRenderer.mapCurrent->position = glm::vec2(quadCos.x - -quadSin.y, quadSin.x + -quadCos.y) + position;
-		s_QuadRenderer.mapCurrent->str = glm::vec3(coords->xMax, coords->yMin, coords->sliceIndex);
+		s_QuadRenderer.mapCurrent->str = glm::vec3(texture->xMax, texture->yMin, texture->sliceIndex);
 		s_QuadRenderer.mapCurrent->tint = tint;
 		s_QuadRenderer.mapCurrent++;
 
 		// BOTTOM_RIGHT [ 0.5, 0.5 ]
 		s_QuadRenderer.mapCurrent->position = glm::vec2(quadCos.x - quadSin.y, quadSin.x + quadCos.y) + position;
-		s_QuadRenderer.mapCurrent->str = { coords->xMax, coords->yMax, coords->sliceIndex };
+		s_QuadRenderer.mapCurrent->str = { texture->xMax, texture->yMax, texture->sliceIndex };
 		s_QuadRenderer.mapCurrent->tint = tint;
 		s_QuadRenderer.mapCurrent++;
 
 		// BOTTOM_LEFT [ -0.5, 0.5 ]
 		s_QuadRenderer.mapCurrent->position = glm::vec2(-quadCos.x - quadSin.y, -quadSin.x + quadCos.y) + position;
-		s_QuadRenderer.mapCurrent->str = { coords->xMin, coords->yMax, coords->sliceIndex };
+		s_QuadRenderer.mapCurrent->str = { texture->xMin, texture->yMax, texture->sliceIndex };
 		s_QuadRenderer.mapCurrent->tint = tint;
 		s_QuadRenderer.mapCurrent++;
 
@@ -289,25 +287,25 @@ namespace Light {
 			/* write to the buffer */
 			// TOP_LEFT [ 0.0, 0.0 ]
 			s_TextRenderer.mapCurrent->position = { xMin, yMin };
-			s_TextRenderer.mapCurrent->str = { character.coordinates.xMin, character.coordinates.yMin, character.coordinates.sliceIndex };
+			s_TextRenderer.mapCurrent->str = { character.glyph.xMin, character.glyph.yMin, character.glyph.sliceIndex };
 			s_TextRenderer.mapCurrent->tint = tint;
 			s_TextRenderer.mapCurrent++;
 
 			// TOP_RIGHT [ 1.0, 0.0 ]
 			s_TextRenderer.mapCurrent->position = { xMax, yMin };
-			s_TextRenderer.mapCurrent->str = { character.coordinates.xMax, character.coordinates.yMin, character.coordinates.sliceIndex };
+			s_TextRenderer.mapCurrent->str = { character.glyph.xMax, character.glyph.yMin, character.glyph.sliceIndex };
 			s_TextRenderer.mapCurrent->tint = tint;
 			s_TextRenderer.mapCurrent++;
 
 			// BOTTOM_RIGHT [ 1.0, 1.0 ]
 			s_TextRenderer.mapCurrent->position = { xMax, yMax };
-			s_TextRenderer.mapCurrent->str = { character.coordinates.xMax, character.coordinates.yMax, character.coordinates.sliceIndex};
+			s_TextRenderer.mapCurrent->str = { character.glyph.xMax, character.glyph.yMax, character.glyph.sliceIndex};
 			s_TextRenderer.mapCurrent->tint = tint;
 			s_TextRenderer.mapCurrent++;
 
 			// BOTTOM_LEFT [ 0.0, 1.0 ] 
 			s_TextRenderer.mapCurrent->position = { xMin, yMax };
-			s_TextRenderer.mapCurrent->str = { character.coordinates.xMin, character.coordinates.yMax, character.coordinates.sliceIndex };
+			s_TextRenderer.mapCurrent->str = { character.glyph.xMin, character.glyph.yMax, character.glyph.sliceIndex };
 			s_TextRenderer.mapCurrent->tint = tint;
 			s_TextRenderer.mapCurrent++;
 
@@ -360,25 +358,25 @@ namespace Light {
 			/* write to the buffer  */	
 			// TOP_LEFT [ 0.0, 0.0 ]
 			s_TextRenderer.mapCurrent->position = charPosition;
-			s_TextRenderer.mapCurrent->str = { character.coordinates.xMin, character.coordinates.yMin, character.coordinates.sliceIndex };
+			s_TextRenderer.mapCurrent->str = { character.glyph.xMin, character.glyph.yMin, character.glyph.sliceIndex };
 			s_TextRenderer.mapCurrent->tint = tint;
 			s_TextRenderer.mapCurrent++;
 
 			// TOP_RIGHT [ 1.0, 0.0 ]
 			s_TextRenderer.mapCurrent->position = glm::vec2(charCos.x, charSin.x) + charPosition;
-			s_TextRenderer.mapCurrent->str = { character.coordinates.xMax, character.coordinates.yMin, character.coordinates.sliceIndex };
+			s_TextRenderer.mapCurrent->str = { character.glyph.xMax, character.glyph.yMin, character.glyph.sliceIndex };
 			s_TextRenderer.mapCurrent->tint = tint;
 			s_TextRenderer.mapCurrent++;
 
 			// BOTTOM_RIGHT [ 1.0, 1.0 ]
 			s_TextRenderer.mapCurrent->position = glm::vec2(charCos.x - charSin.y, charSin.x + charCos.y) + charPosition;
-			s_TextRenderer.mapCurrent->str = { character.coordinates.xMax, character.coordinates.yMax, character.coordinates.sliceIndex };
+			s_TextRenderer.mapCurrent->str = { character.glyph.xMax, character.glyph.yMax, character.glyph.sliceIndex };
 			s_TextRenderer.mapCurrent->tint = tint;
 			s_TextRenderer.mapCurrent++;
 
 			// BOTTOM_LEFT [ 0.0, 1.0 ] 
 			s_TextRenderer.mapCurrent->position = glm::vec2(-charSin.y, charCos.y) + charPosition;
-			s_TextRenderer.mapCurrent->str = { character.coordinates.xMin, character.coordinates.yMax, character.coordinates.sliceIndex };
+			s_TextRenderer.mapCurrent->str = { character.glyph.xMin, character.glyph.yMax, character.glyph.sliceIndex };
 			s_TextRenderer.mapCurrent->tint = tint;
 			s_TextRenderer.mapCurrent++;
 

@@ -13,11 +13,6 @@
 
 namespace Light {
 
-	class Shader;
-	class VertexLayout;
-	class ConstantBuffer;
-	class VertexBuffer;
-	class IndexBuffer;
 	class Framebuffer;
 	class MSAA;
 
@@ -25,7 +20,7 @@ namespace Light {
 
 	class Camera;
 
-	struct TextureCoordinates;
+	struct SubTexture;
 
 	class Renderer
 	{
@@ -120,11 +115,9 @@ namespace Light {
 		static void BeginScene(const std::shared_ptr<Camera>& camera);
 
 		// quad renderer
-		static void DrawQuad(const glm::vec2& position, const glm::vec2& size,
-		                     TextureCoordinates* coords, const glm::vec4& tint = glm::vec4(1.0f));
+		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, SubTexture* texture, const glm::vec4& tint = glm::vec4(1.0f));
 
-		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, float angle,
-		                            TextureCoordinates* coords, const glm::vec4& tint = glm::vec4(1.0f));
+		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, float angle, SubTexture* texture, const glm::vec4& tint = glm::vec4(1.0f));
 
 		// text renderer
 		static void DrawString(const std::string& text, const std::shared_ptr<Font>& font,

@@ -31,8 +31,7 @@ namespace Light {
 	{
 		LT_PROFILE_FUNC();
 
-		TextureData data;
-		data.pixels = FileManager::LoadTextureFile(texturePath, &data.width, &data.height, &data.channels);
+		TextureImageData data = FileManager::LoadTextureFile(texturePath);
 
 		// first atlas? initialize texture array
 		if (!m_Width)
@@ -96,8 +95,7 @@ namespace Light {
 	{
 		LT_PROFILE_FUNC();
 
-		TextureData data;
-		data.pixels = FileManager::LoadTextureFile(texturePath, &data.width, &data.height, &data.channels);
+		TextureImageData data = FileManager::LoadTextureFile(texturePath);
 
 		// first atlas? initialize texture array
 		if (!m_Width)

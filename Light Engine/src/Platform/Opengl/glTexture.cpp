@@ -50,8 +50,7 @@ namespace Light {
 		LT_PROFILE_FUNC();
 
 		// load texture
-		TextureData data;
-		data.pixels = FileManager::LoadTextureFile(texturePath, &data.width, &data.height, &data.channels);
+		TextureImageData data = FileManager::LoadTextureFile(texturePath);
 		
 		// first slice? initialize width & height and specify the storage requirements
 		if (!m_Width)
@@ -93,8 +92,7 @@ namespace Light {
 		LT_PROFILE_FUNC();
 
 		// load texture
-		TextureData data;
-		data.pixels = FileManager::LoadTextureFile(texturePath, &data.width, &data.height, &data.channels);
+		TextureImageData data = FileManager::LoadTextureFile(texturePath);
 		
 		// first slice? initialize width & height and specify the storage requirements
 		if (!m_Width)

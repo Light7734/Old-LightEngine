@@ -2,6 +2,8 @@
 
 #include "Core/Core.h"
 
+#include "Renderer/Texture.h"
+
 namespace Light {
 
 	class FileManager
@@ -10,7 +12,7 @@ namespace Light {
 		FileManager() = delete;
 
 		static std::string LoadTextFile(const std::string& path);
-		static unsigned char* LoadTextureFile(const std::string& path, int* x, int* y, int* channels);
+		static TextureImageData LoadTextureFile(const std::string& path);
 	};
 
 }

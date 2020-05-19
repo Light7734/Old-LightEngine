@@ -33,7 +33,7 @@ namespace Light {
 		unsigned int prevY = 0u, nextY = 0u;
 
 		textureArray->Bind();
-		for (int i = 0; i < 128; i++)
+		for (int i = 0; i < 128; i++) // #todo: currently the generated glyph atlas will be a bit large due to novice texture packing algorithm
 		{
 			// load character from FT_Face
 			LT_CORE_ASSERT(!FT_Load_Char(face, i, FT_LOAD_RENDER), "glFont::glFont: FT_Load_Char failed: {}", i);
@@ -53,10 +53,10 @@ namespace Light {
 			// write to texture slice
 			textureArray->UpdateSubTexture(x, y, m_SliceIndex, character.size.x, character.size.y, face->glyph->bitmap.buffer);
 
-			// figure out and set character's uv
-			character.coordinates = { tcu * x, tcu * y, // xMin, yMin
-									  tcu * (x + character.size.x), tcu * (y + character.size.y), // xMax, yMax
-									  (float)m_SliceIndex }; // sliceIndex
+			// figure out and set character's texture coordinates
+			character.glyph = { tcu * x                     , tcu * y,                      // xMin, yMin
+			                    tcu * (x + character.size.x), tcu * (y + character.size.y), // xMax, yMax
+			                    (float)m_SliceIndex }; // sliceIndex
 
 			// find the character with largest 'height', we will add that much to 'y' when we go next line
 			if (nextY - prevY < character.size.y)
