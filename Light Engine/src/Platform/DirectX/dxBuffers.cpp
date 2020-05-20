@@ -89,11 +89,10 @@ namespace Light {
 	{
 		LT_PROFILE_FUNC();
 
-
 		bool noIndices = false;
 		if (!indices)
 		{
-			LT_CORE_ASSERT(count % 6 != 0, "dxIndexBuffer::dxIndexBuffer: indices can only be null if count is multiple of 6");
+			LT_CORE_ASSERT(count % 6 == 0, "dxIndexBuffer::dxIndexBuffer: indices can only be null if count is multiple of 6");
 
 			noIndices = true;
 			indices = new unsigned int[count];
