@@ -47,7 +47,7 @@ namespace Light {
 	}
 
 	// VertexBuffer //
-	dxVertexBuffer::dxVertexBuffer(float* vertices, unsigned int size, unsigned int stride)
+	dxVertexBuffer::dxVertexBuffer(float* vertices, unsigned int stride, unsigned int count)
 		: m_Stride(stride)
 	{
 		LT_PROFILE_FUNC();
@@ -58,7 +58,7 @@ namespace Light {
 		bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		bd.Usage     = D3D11_USAGE_DYNAMIC;
 		bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		bd.ByteWidth = size;
+		bd.ByteWidth = stride * count;
 		bd.StructureByteStride = stride;
 
 		sd.pSysMem = vertices;
@@ -85,22 +85,52 @@ namespace Light {
 	}
 
 	// IndexBuffer //
-	dxIndexBuffer::dxIndexBuffer(unsigned int* indices, unsigned int size)
+	dxIndexBuffer::dxIndexBuffer(unsigned int* indices, unsigned int count)
 	{
 		LT_PROFILE_FUNC();
+
+
+		bool noIndices = false;
+		if (!indices)
+		{
+			LT_CORE_ASSERT(count % 6 != 0, "dxIndexBuffer::dxIndexBuffer: indices can only be null if count is multiple of 6");
+
+			noIndices = true;
+			indices = new unsigned int[count];
+
+			unsigned int offset = 0;
+			for (int i = 0; i < count; i += 6)
+			{
+				indices[i + 0] = offset + 0;
+				indices[i + 1] = offset + 1;
+				indices[i + 2] = offset + 2;
+
+				indices[i + 3] = offset + 2;
+				indices[i + 4] = offset + 3;
+				indices[i + 5] = offset + 0;
+
+				offset += 4;
+			}
+		}
 
 		D3D11_BUFFER_DESC bd = {};
 		D3D11_SUBRESOURCE_DATA sd = {};
 
 		bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 		bd.Usage     = D3D11_USAGE_DEFAULT;
-		bd.ByteWidth = size;
+		bd.ByteWidth = count * sizeof(unsigned int);
 		bd.StructureByteStride = sizeof(unsigned int);
 
 		sd.pSysMem = indices;
 
 		HRESULT hr;
 		DXC(dxGraphicsContext::GetDevice()->CreateBuffer(&bd, &sd, &m_Buffer));
+
+		if (noIndices)
+		{
+			delete[] indices;
+			indices = nullptr;
+		}
 	}
 
 	void dxIndexBuffer::Bind()

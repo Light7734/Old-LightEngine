@@ -71,12 +71,41 @@ namespace Light {
 	}
 
 	// IndexBuffer //
-	glIndexBuffer::glIndexBuffer(unsigned int* indices, unsigned int size)
+	glIndexBuffer::glIndexBuffer(unsigned int* indices, unsigned int count)
 	{
 		LT_PROFILE_FUNC();
 
+		bool noIndices = false;
+		if (!indices)
+		{
+			LT_CORE_ASSERT(count % 6 != 0, "glIndexBuffer::glIndexBuffer: indices can only be null if count is multiple of 6");
+
+			noIndices = true;
+			indices = new unsigned int[count];
+
+			unsigned int offset = 0;
+			for (int i = 0; i < count; i += 6)
+			{
+				indices[i + 0] = offset + 0;
+				indices[i + 1] = offset + 1;
+				indices[i + 2] = offset + 2;
+
+				indices[i + 3] = offset + 2;
+				indices[i + 4] = offset + 3;
+				indices[i + 5] = offset + 0;
+
+				offset += 4;
+			}
+		}
+
 		glCreateBuffers(1, &m_BufferID);
-		glNamedBufferData(m_BufferID, size, indices, GL_STATIC_DRAW);
+		glNamedBufferData(m_BufferID, count * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+
+		if (noIndices)
+		{
+			delete[] indices;
+			indices = nullptr;
+		}
 	}
 
 	glIndexBuffer::~glIndexBuffer()

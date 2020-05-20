@@ -17,7 +17,6 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-
 namespace Light {
 
 	Renderer::QuadRenderer Renderer::s_QuadRenderer;
@@ -50,9 +49,9 @@ namespace Light {
 			-1.0f,  1.0f,  0.0f, 1.0f,
 		};
 
-		s_FramebufferVertices = VertexBuffer::Create(framebufferVertices, sizeof(framebufferVertices), sizeof(float) * 4);
-		s_FramebufferLayout = VertexLayout::Create(nullptr, s_FramebufferVertices, { {"POSITION" , VertexElementType::Float2 },
-																					 {"TEXCOORDS", VertexElementType::Float2} });
+		s_FramebufferVertices = VertexBuffer::Create(framebufferVertices, sizeof(float) * 4, 6);
+		s_FramebufferLayout = VertexLayout::Create(nullptr, s_FramebufferVertices, { { "POSITION" , VertexElementType::Float2 },
+																					 { "TEXCOORDS", VertexElementType::Float2 } });
 
 		// view projection buffer
 		s_ViewProjBuffer = ConstantBuffer::Create(ConstantBufferIndex_ViewProjection, sizeof(glm::mat4) * 2);
@@ -61,79 +60,26 @@ namespace Light {
 		SetMSAA(MSAA);
 		SetMSAASampleCount(MSAASampleCount);
 
-		// renderers
-		unsigned int* indices = nullptr;
-		unsigned int offset = 0;
-
 		//=============== QUAD RENDERER ===============//
-		// indices
-		indices = new unsigned int [LT_MAX_BASIC_SPRITES * 6];
-		offset = 0;
-
-		for (int i = 0; i < LT_MAX_BASIC_SPRITES * 6; i += 6)
-		{
-			indices[i + 0] = offset + 0;
-			indices[i + 1] = offset + 1;
-			indices[i + 2] = offset + 2;
-
-			indices[i + 3] = offset + 2;
-			indices[i + 4] = offset + 3;
-			indices[i + 5] = offset + 0;
-
-			offset += 4;
-		}
-
-		// create bindables
 		s_QuadRenderer.shader = Shader::Create(QuadShaderSrc_VS, QuadShaderSrc_FS);
-		s_QuadRenderer.vertexBuffer = VertexBuffer::Create(nullptr, LT_MAX_BASIC_SPRITES * sizeof(QuadRenderer::QuadVertexData) * 4,
-		                                                   sizeof(QuadRenderer::QuadVertexData));
 
-		s_QuadRenderer.vertexLayout = VertexLayout::Create(s_QuadRenderer.shader,
-		                                                   s_QuadRenderer.vertexBuffer,
-		                                                   { {"POSITION" , VertexElementType::Float2},
-		                                                     {"TEXCOORDS", VertexElementType::Float3},
-		                                                     {"COLOR"    , VertexElementType::Float4}, });
+		s_QuadRenderer.vertexBuffer = VertexBuffer::Create(nullptr, sizeof(QuadRenderer::QuadVertexData), LT_MAX_BASIC_SPRITES * 4);
+		s_QuadRenderer.indexBuffer = IndexBuffer::Create(nullptr, LT_MAX_BASIC_SPRITES * 6);
 
-		s_QuadRenderer.indexBuffer = IndexBuffer::Create(indices, LT_MAX_BASIC_SPRITES * sizeof(unsigned int) * 6);
-
-		// free memory
-		delete[] indices;
+		s_QuadRenderer.vertexLayout = VertexLayout::Create(s_QuadRenderer.shader, s_QuadRenderer.vertexBuffer, { { "POSITION" , VertexElementType::Float2 }, 
+		                                                                                                         { "TEXCOORDS", VertexElementType::Float3 },
+		                                                                                                         { "COLOR"    , VertexElementType::Float4 }, });
 		//=============== QUAD RENDERER ===============//
 
 		//================== TEXT RENDERER ==================//
-		// indices
-		indices = new unsigned int [LT_MAX_BASIC_SPRITES * 6];
-		offset = 0;
-
-		for (int i = 0; i < LT_MAX_TEXT_SPRITES * 6; i += 6)
-		{
-			indices[i + 0] = offset + 0;
-			indices[i + 1] = offset + 1;
-			indices[i + 2] = offset + 2;
-
-			indices[i + 3] = offset + 2;
-			indices[i + 4] = offset + 3;
-			indices[i + 5] = offset + 0;
-
-			offset += 4;
-		}
-
-		// create bindables
 		s_TextRenderer.shader = Shader::Create(TextShaderSrc_VS, TextShaderSrc_FS);
-		s_TextRenderer.vertexBuffer = VertexBuffer::Create(nullptr,
-		                                                   LT_MAX_TEXT_SPRITES * sizeof(TextRenderer::TextVertexData) * 4,
-		                                                   sizeof(TextRenderer::TextVertexData));
 
-		s_TextRenderer.vertexLayout = VertexLayout::Create(s_TextRenderer.shader,
-		                                                   s_TextRenderer.vertexBuffer,
-		                                                   { {"POSITION" , VertexElementType::Float2},
-		                                                     {"TEXCOORDS", VertexElementType::Float3},
-		                                                     {"COLOR"    , VertexElementType::Float4}, });
-
-		s_TextRenderer.indexBuffer = IndexBuffer::Create(indices, LT_MAX_TEXT_SPRITES * sizeof(unsigned int) * 6);
-
-		// free memory
-		delete[] indices;
+		s_TextRenderer.vertexBuffer = VertexBuffer::Create(nullptr, sizeof(TextRenderer::TextVertexData), LT_MAX_TEXT_SPRITES * 4);
+		s_TextRenderer.indexBuffer = IndexBuffer::Create(nullptr, LT_MAX_TEXT_SPRITES * 6);
+																																						  
+		s_TextRenderer.vertexLayout = VertexLayout::Create(s_TextRenderer.shader, s_TextRenderer.vertexBuffer, { { "POSITION" , VertexElementType::Float2 },
+		                                                                                                         { "TEXCOORDS", VertexElementType::Float3 },
+		                                                                                                         { "COLOR"    , VertexElementType::Float4 }, });
 		//================== TEXT RENDERER ==================//
 	}
 
@@ -165,7 +111,7 @@ namespace Light {
 	{
 		if (s_QuadRenderer.mapCurrent == s_QuadRenderer.mapEnd)
 		{
-			LT_CORE_ERROR("Renderer::DrawQuad: calls to this function exceeded its limit: {}", LT_MAX_BASIC_SPRITES);
+			LT_CORE_ERROR("Renderer::DrawQuad: calls to this function exceeded its limit: {}", s_QuadRenderer.GetMaximumQuadCount());
 			EndScene();
 
 			s_QuadRenderer.Map();
@@ -209,7 +155,7 @@ namespace Light {
 	{
 		if (s_QuadRenderer.mapCurrent == s_QuadRenderer.mapEnd)
 		{
-			LT_CORE_ERROR("Renderer::DrawQuad: calls to this function exceeded its limit: {}", LT_MAX_BASIC_SPRITES);
+			LT_CORE_ERROR("Renderer::DrawQuad: calls to this function exceeded its limit: {}", s_QuadRenderer.GetMaximumQuadCount());
 			EndScene();
 
 			s_QuadRenderer.Map();
@@ -266,7 +212,7 @@ namespace Light {
 		{
 			if (s_TextRenderer.mapCurrent == s_TextRenderer.mapEnd)
 			{
-				LT_CORE_ERROR("Renderer::DrawString: calls to this function exceeded its limit (or string too long): {}", LT_MAX_TEXT_SPRITES);
+				LT_CORE_ERROR("Renderer::DrawString: calls to this function exceeded its limit (or string too long): {}", s_TextRenderer.GetMaximumQuadCount());
 				EndScene();
 
 				s_QuadRenderer.Map();
@@ -334,7 +280,7 @@ namespace Light {
 		{
 			if (s_TextRenderer.mapCurrent == s_TextRenderer.mapEnd)
 			{
-				LT_CORE_ERROR("Renderer::DrawString: calls to this function exceeded its limit (or string too long): {}", LT_MAX_TEXT_SPRITES);
+				LT_CORE_ERROR("Renderer::DrawString: calls to this function exceeded its limit (or string too long): {}", s_TextRenderer.GetMaximumQuadCount());
 				EndScene();
 
 				s_QuadRenderer.Map();
@@ -386,17 +332,14 @@ namespace Light {
 
 	void Renderer::EndScene()
 	{
-		// unmap vertex buffers
 		s_TextRenderer.vertexBuffer->UnMap();
 		s_QuadRenderer.vertexBuffer->UnMap();
 
 		//=============== QUAD RENDERER ===============//
 		if (s_QuadRenderer.quadCount)
 		{
-			// bind
 			s_QuadRenderer.Bind();
 
-			// draw
 			RenderCommand::DrawIndexed(s_QuadRenderer.quadCount * 6);
 			s_QuadRenderer.quadCount = 0;
 		}
@@ -405,11 +348,9 @@ namespace Light {
 		//================== TEXT RENDERER ==================//
 		if (s_TextRenderer.quadCount)
 		{
-			// bind
 			FontManager::BindTextureArray(); // #todo
 			s_TextRenderer.Bind();
 
-			// draw
 			RenderCommand::DrawIndexed(s_TextRenderer.quadCount * 6);
 			s_TextRenderer.quadCount = 0;
 		}
@@ -480,6 +421,7 @@ namespace Light {
 	{
 		LT_CORE_ASSERT((sampleCount & (sampleCount - 1)) == 0, "Renderer::SetMSAASampleCount: sampleCount '{}' is not power of 2", sampleCount);
 		LT_CORE_ASSERT(sampleCount <= 16, "Renderer::SetMSAASampleCount: sampleCount too high: '{}', maximum sampleCount should be 16", sampleCount);
+		LT_CORE_ASSERT(sampleCount != 0, "Renderer::SetMSAASampleCount: sampleCount cannot be 0");
 
 		s_MSAA = MSAA::Create(sampleCount);
 	}

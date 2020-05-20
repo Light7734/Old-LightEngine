@@ -33,7 +33,6 @@ namespace Light {
 		void UpdateSubTexture(unsigned int xoffset, unsigned int yoffset, unsigned int zoffset, unsigned int width, unsigned int height, void* pixels) override;
 		void GenerateMips() override;
 
-
 		void Bind() override;
 	};
 

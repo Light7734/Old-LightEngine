@@ -40,7 +40,7 @@ namespace Light {
 	private:
 		unsigned int m_BufferID;
 	public:
-		glIndexBuffer(unsigned int* indices, unsigned int size);
+		glIndexBuffer(unsigned int* indices, unsigned int count);
 		~glIndexBuffer();
 
 		void Bind() override;

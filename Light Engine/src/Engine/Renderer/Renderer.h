@@ -22,16 +22,24 @@ namespace Light {
 
 	struct SubTexture;
 
+	struct RendererProgram
+	{
+		virtual void Bind() = 0;
+		virtual void Map() = 0;
+
+		virtual inline unsigned int GetMaximumQuadCount() = 0;
+	};
+		
 	class Renderer
 	{
 	private:
 		//=============== QUAD RENDERER ===============//
-		struct QuadRenderer
+		struct QuadRenderer : public RendererProgram
 		{
 			std::shared_ptr<Shader>       shader;
 			std::shared_ptr<VertexLayout> vertexLayout;
-			std::shared_ptr<IndexBuffer>  indexBuffer;
 			std::shared_ptr<VertexBuffer> vertexBuffer;
+			std::shared_ptr<IndexBuffer>  indexBuffer;
 
 			struct QuadVertexData
 			{
@@ -45,30 +53,31 @@ namespace Light {
 
 			unsigned int quadCount = 0;
 
-			void Map()
+			void Map() override
 			{
 				mapCurrent = (QuadVertexData*)vertexBuffer->Map();
 				mapEnd = mapCurrent + LT_MAX_BASIC_SPRITES * 4;
 			}
 
-			void Bind()
+			void Bind() override
 			{
 				shader->Bind();
 				vertexLayout->Bind();
-				indexBuffer->Bind();
 				vertexBuffer->Bind();
+				indexBuffer->Bind();
 			}
+
+			inline unsigned int GetMaximumQuadCount() override { return LT_MAX_BASIC_SPRITES; }
 		};
-		static QuadRenderer s_QuadRenderer;
 		//=============== QUAD RENDERER ===============//
 
 		//=============== TEXT RENDERER ===============//
-		struct TextRenderer
+		struct TextRenderer : public RendererProgram
 		{
 			std::shared_ptr<Shader> shader;
 			std::shared_ptr<VertexLayout> vertexLayout;
-			std::shared_ptr<IndexBuffer> indexBuffer;
 			std::shared_ptr<VertexBuffer> vertexBuffer;
+			std::shared_ptr<IndexBuffer> indexBuffer;
 
 			struct TextVertexData
 			{
@@ -82,22 +91,28 @@ namespace Light {
 
 			unsigned int quadCount = 0;
 
-			void Map() 
+			void Map() override
 			{
 				mapCurrent = (TextVertexData*)vertexBuffer->Map();
 				mapEnd = mapCurrent + LT_MAX_TEXT_SPRITES * 4;
 			}
 			
-			void Bind()
+			void Bind() override
 			{
 				shader->Bind();
 				vertexLayout->Bind();
-				indexBuffer->Bind();
 				vertexBuffer->Bind();
+				indexBuffer->Bind();
 			}
+
+			inline unsigned int GetMaximumQuadCount() override { return LT_MAX_TEXT_SPRITES; }
 		};
-		static TextRenderer s_TextRenderer;
 		//=============== TEXT RENDERER ===============//
+
+
+		// renderer programs
+		static QuadRenderer s_QuadRenderer;
+		static TextRenderer s_TextRenderer;
 
 		// camera
 		static std::shared_ptr<ConstantBuffer> s_ViewProjBuffer;

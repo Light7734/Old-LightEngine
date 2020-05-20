@@ -27,31 +27,31 @@ namespace Light {
 
 	}
 
-	std::shared_ptr<VertexBuffer> VertexBuffer::Create(float* vertices, unsigned int size, unsigned int stride)
+	std::shared_ptr<VertexBuffer> VertexBuffer::Create(float* vertices, unsigned int stride, unsigned int count)
 	{
 		LT_PROFILE_FUNC();
 
 		switch (GraphicsContext::GetAPI())
 		{
 		case GraphicsAPI::Opengl:
-			return std::make_shared<glVertexBuffer>(vertices, size);
+			return std::make_shared<glVertexBuffer>(vertices, stride * count);
 		case GraphicsAPI::Directx: LT_DX(
-			return std::make_shared<dxVertexBuffer>(vertices, size, stride); )
+			return std::make_shared<dxVertexBuffer>(vertices, stride, count); )
 		default:
 			LT_CORE_ASSERT(false, "VertexBuffer::Create: invalid GraphicsAPI");
 		}
 	}
 
-	std::shared_ptr<Light::IndexBuffer> IndexBuffer::Create(unsigned int* indices, unsigned int size)
+	std::shared_ptr<Light::IndexBuffer> IndexBuffer::Create(unsigned int* indices, unsigned int count)
 	{
 		LT_PROFILE_FUNC();
 
 		switch (GraphicsContext::GetAPI())
 		{
 		case GraphicsAPI::Opengl:
-			return std::make_shared<glIndexBuffer>(indices, size);
+			return std::make_shared<glIndexBuffer>(indices, count);
 		case GraphicsAPI::Directx: LT_DX(
-			return std::make_shared<dxIndexBuffer>(indices, size); )
+			return std::make_shared<dxIndexBuffer>(indices, count); )
 		default:
 			LT_CORE_ASSERT(false, "IndexBuffer::Create: invalid GraphicsAPI");
 		}
