@@ -23,8 +23,8 @@ QuadsLayer::QuadsLayer(std::shared_ptr<Light::Camera> camera)
 		Sprite sprite;
 
 		sprite.size = glm::vec2(100.0f, 100.0f);
-		sprite.position.x = std::rand() % 1000;
-		sprite.position.y = std::rand() % 1000;
+		sprite.position.x = 500.0f - std::rand() % 1000;
+		sprite.position.y = 500.0f - std::rand() % 1000;
 
 		sprite.texture = awesomeface;
 

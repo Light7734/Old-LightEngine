@@ -12,7 +12,7 @@ DemoLayer::DemoLayer()
 
 	m_LayeDebugrName = "DemoLayer";
 
-	m_Camera = std::make_shared<Light::Camera>(glm::vec2(500.0f, 500.0f), Light::GraphicsContext::GetAspectRatio(), 1000.0f);
+	m_Camera = std::make_shared<Light::Camera>(glm::vec2(0.0f, 0.0f), Light::GraphicsContext::GetAspectRatio(), 1000.0f);
 	m_CameraController = m_Camera->GetController();
 
 	m_AudioLayer = new AudioLayer;
