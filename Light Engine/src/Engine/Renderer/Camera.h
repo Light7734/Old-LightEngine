@@ -29,6 +29,8 @@ namespace Light {
 		inline const glm::mat4& GetProjection() const { return m_Projection; }
 
 		void CalculateViewProjection();
+
+		void ShowDebugWindow();
 	};
 
 }

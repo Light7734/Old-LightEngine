@@ -57,7 +57,7 @@ void DemoLayer::OnUserInterfaceUpdate()
 {
 	ImGui::Begin("Metrics", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 	ImGui::Text("DeltaTime: %.3f", m_DeltaTime);
-	ImGui::Text("FPS: %.3f", 1.0f / m_DeltaTime);
+	ImGui::Text("FPS:       %.3f", 1.0f / m_DeltaTime);
 	ImGui::End();
 
 	ImGui::Begin("DemoLayer", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
@@ -119,7 +119,7 @@ void DemoLayer::OnUserInterfaceUpdate()
 
 	if (ImGui::TreeNode("Camera"))
 	{
-		ImGui::BulletText("speed %.2f", m_CameraSpeed);
+		m_Camera->ShowDebugWindow();
 		ImGui::TreePop();
 	}
 	ImGui::Separator();

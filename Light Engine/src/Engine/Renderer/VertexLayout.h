@@ -20,9 +20,8 @@ namespace Light {
 	public:
 		virtual ~VertexLayout() = default;
 
-		static std::shared_ptr<VertexLayout> Create(std::shared_ptr<Shader> shader,
-		                                            std::shared_ptr<VertexBuffer> buffer,
-		                                            std::initializer_list<std::pair<const char*, VertexElementType>> elements);
+		static std::shared_ptr<VertexLayout> Create(std::shared_ptr<Shader> shader, std::shared_ptr<VertexBuffer> buffer,
+		                                            const std::vector<std::pair<std::string, VertexElementType>>& elements);
 
 		virtual void Bind() = 0;
 	};

@@ -19,7 +19,7 @@ namespace Light {
 	private:
 		unsigned int m_ArrayID;
 	public:
-		glVertexLayout(std::shared_ptr<VertexBuffer> buffer, std::initializer_list<std::pair<const char*, VertexElementType>> elements);
+		glVertexLayout(std::shared_ptr<VertexBuffer> buffer, const std::vector<std::pair<std::string, VertexElementType>>& elements);
 		~glVertexLayout();
 
 		void Bind() override;

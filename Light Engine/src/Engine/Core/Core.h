@@ -66,6 +66,11 @@
 
 namespace Light {
 
+	constexpr unsigned int hashStr(const char* str, int h = 0)
+	{
+		return !str[h] ? 5381 : (hashStr(str, h + 1) * 33) ^ str[h];
+	}
+
 	struct FailedAssertion : public std::exception 
 	{
 		FailedAssertion(const char* file, int line)		

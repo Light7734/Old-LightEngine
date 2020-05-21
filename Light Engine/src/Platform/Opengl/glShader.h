@@ -17,6 +17,9 @@ namespace Light {
 		void Bind() override;
 	private:
 		void AssignSamplersSlots(const std::string& fragmentSource);
+		void ExtractVertexElements(const std::string& vertexSource);
+
+		VertexElementType GetVertexElementType(const char* typeName);
 	};
 
 }

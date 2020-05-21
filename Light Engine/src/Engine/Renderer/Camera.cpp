@@ -29,4 +29,19 @@ namespace Light {
 		                                        -zoomLevel);
 	}
 
+	void Camera::ShowDebugWindow()
+	{
+		CameraBounds bounds = m_Controller->GetCameraBounds();
+
+
+		ImGui::BulletText("position: %.2f, %.2f", m_Controller->GetPosition().x, m_Controller->GetPosition().y);
+		ImGui::BulletText("ratio:    %.5f", m_Controller->GetAspectRatio());
+		ImGui::BulletText("zoom:     %.1f", m_Controller->GetZoomLevel());
+		ImGui::Text("bounds:");
+		ImGui::BulletText("left, right: %.2f, %.2f", bounds.left, bounds.right);
+		ImGui::BulletText("top, bottom: %.2f, %.2f", bounds.top, bounds.bottom);
+		ImGui::BulletText("width - height: [%.2f x %.2f] ", bounds.GetWidth(), bounds.GetHeight());
+
+	}
+
 }

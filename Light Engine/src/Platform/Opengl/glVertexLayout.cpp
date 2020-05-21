@@ -6,15 +6,11 @@
 
 namespace Light {
 
-	glVertexLayout::glVertexLayout(std::shared_ptr<VertexBuffer> buffer,
-	                               std::initializer_list<std::pair<const char*, VertexElementType>> elements)
+	glVertexLayout::glVertexLayout(std::shared_ptr<VertexBuffer> buffer, const std::vector<std::pair<std::string, VertexElementType>>& elements)
 	{
 		LT_PROFILE_FUNC();
 
-		// assertion
-		LT_CORE_ASSERT(std::dynamic_pointer_cast<glVertexBuffer>(buffer),
-		               "glVertexlayout::glVertexLayout: failed to cast VertexBuffer to glVertexBuffer");
-
+		LT_CORE_ASSERT(std::dynamic_pointer_cast<glVertexBuffer>(buffer), "glVertexlayout::glVertexLayout: failed to cast VertexBuffer to glVertexBuffer");
 
 		// vertex elements desc
 		std::vector<glVertexElementDesc> vertexElementsDesc;
@@ -26,7 +22,6 @@ namespace Light {
 			vertexElementsDesc.push_back(GetTypeDesc(element.second, stride));
 			stride += vertexElementsDesc.back().typeSize * vertexElementsDesc.back().count;
 		}
-
 
 		// vertex array
 		glCreateVertexArrays(1, &m_ArrayID);

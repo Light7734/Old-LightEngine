@@ -66,9 +66,7 @@ namespace Light {
 		s_QuadRenderer.vertexBuffer = VertexBuffer::Create(nullptr, sizeof(QuadRenderer::QuadVertexData), LT_MAX_BASIC_SPRITES * 4);
 		s_QuadRenderer.indexBuffer = IndexBuffer::Create(nullptr, LT_MAX_BASIC_SPRITES * 6);
 
-		s_QuadRenderer.vertexLayout = VertexLayout::Create(s_QuadRenderer.shader, s_QuadRenderer.vertexBuffer, { { "POSITION" , VertexElementType::Float2 }, 
-		                                                                                                         { "TEXCOORDS", VertexElementType::Float3 },
-		                                                                                                         { "COLOR"    , VertexElementType::Float4 }, });
+		s_QuadRenderer.vertexLayout = VertexLayout::Create(s_QuadRenderer.shader, s_QuadRenderer.vertexBuffer, s_QuadRenderer.shader->GetElements());
 		//=============== QUAD RENDERER ===============//
 
 		//================== TEXT RENDERER ==================//
@@ -77,9 +75,7 @@ namespace Light {
 		s_TextRenderer.vertexBuffer = VertexBuffer::Create(nullptr, sizeof(TextRenderer::TextVertexData), LT_MAX_TEXT_SPRITES * 4);
 		s_TextRenderer.indexBuffer = IndexBuffer::Create(nullptr, LT_MAX_TEXT_SPRITES * 6);
 																																						  
-		s_TextRenderer.vertexLayout = VertexLayout::Create(s_TextRenderer.shader, s_TextRenderer.vertexBuffer, { { "POSITION" , VertexElementType::Float2 },
-		                                                                                                         { "TEXCOORDS", VertexElementType::Float3 },
-		                                                                                                         { "COLOR"    , VertexElementType::Float4 }, });
+		s_TextRenderer.vertexLayout = VertexLayout::Create(s_TextRenderer.shader, s_TextRenderer.vertexBuffer, s_QuadRenderer.shader->GetElements());
 		//================== TEXT RENDERER ==================//
 	}
 
@@ -100,7 +96,6 @@ namespace Light {
 		map[0] = camera->GetView();
 		map[1] = camera->GetProjection();
 		s_ViewProjBuffer->UnMap();
-
 
 		// map renderer's vertex buffer
 		s_QuadRenderer.Map();
@@ -359,7 +354,6 @@ namespace Light {
 
 	void Renderer::EndFrame()
 	{
-		// handle the framebuffers
 		if (!s_Framebuffers.empty())
 		{
 			if (s_MSAAEnabled)
@@ -390,8 +384,8 @@ namespace Light {
 				s_MSAA->Resolve();
 			}
 		}
-				
 	}
+
 	void Renderer::AddFramebuffer(std::shared_ptr<Framebuffer> framebuffer)
 	{
 		auto it = std::find(s_Framebuffers.begin(), s_Framebuffers.end(), framebuffer);

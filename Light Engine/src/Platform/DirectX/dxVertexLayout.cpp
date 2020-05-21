@@ -10,7 +10,7 @@
 
 namespace Light {
 
-	dxVertexLayout::dxVertexLayout(std::shared_ptr<Shader> shader, std::initializer_list<std::pair<const char*, VertexElementType>> elements)
+	dxVertexLayout::dxVertexLayout(std::shared_ptr<Shader> shader, const std::vector<std::pair<std::string, VertexElementType>>& elements)
 	{
 		LT_PROFILE_FUNC();
 
@@ -20,7 +20,7 @@ namespace Light {
 
 		for (const auto& element : elements)
 		{
-			inputElementsDesc.emplace_back( D3D11_INPUT_ELEMENT_DESC{ element.first,
+			inputElementsDesc.emplace_back( D3D11_INPUT_ELEMENT_DESC{ element.first.c_str(),
 			                                                          0u,
 			                                                          GetDxgiFormat(element.second),
 			                                                          0u,
@@ -61,7 +61,7 @@ namespace Light {
 		dxGraphicsContext::GetDeviceContext()->IASetInputLayout(m_InputLayout.Get());
 	}
 
-	Microsoft::WRL::ComPtr<ID3DBlob> dxVertexLayout::CreateDummyVertexBlob(std::vector<std::pair<const char*, VertexElementType>> elements)
+	Microsoft::WRL::ComPtr<ID3DBlob> dxVertexLayout::CreateDummyVertexBlob(const std::vector<std::pair<std::string, VertexElementType>>& elements)
 	{
 
 		Microsoft::WRL::ComPtr<ID3DBlob> blob, vsErr = nullptr;

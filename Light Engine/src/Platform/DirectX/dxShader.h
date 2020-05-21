@@ -22,6 +22,10 @@ namespace Light {
 		void Bind() override;
 
 		Microsoft::WRL::ComPtr<ID3D10Blob> GetVertexBlob() { return m_VertexBlob; }
+	private:
+		void ExtractVertexElements(const std::string& vertexSource);
+
+		VertexElementType GetVertexElementType(const char* typeName);
 	};
 
 }

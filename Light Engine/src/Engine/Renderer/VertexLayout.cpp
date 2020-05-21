@@ -10,9 +10,8 @@
 
 namespace Light {
 
-	std::shared_ptr<VertexLayout> VertexLayout::Create(std::shared_ptr<Shader> shader,
-	                                                   std::shared_ptr<VertexBuffer> buffer,
-	                                                   std::initializer_list<std::pair<const char*, VertexElementType>> elements)
+	std::shared_ptr<VertexLayout> VertexLayout::Create(std::shared_ptr<Shader> shader, std::shared_ptr<VertexBuffer> buffer,
+	                                                   const std::vector<std::pair<std::string, VertexElementType>>& elements)
 	{
 		LT_PROFILE_FUNC();
 

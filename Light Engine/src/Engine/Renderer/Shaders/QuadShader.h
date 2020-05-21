@@ -43,7 +43,7 @@ cbuffer	ViewVSConstant : register(b6)
 	row_major matrix ProjectionMatrix;
 }
 
-VertexOut main(float2 InPosition : POSITION, float3 InTexCoords : TEXCOORDS, float4 InColor : COLOR) 
+VertexOut main(float2 InPosition : POSITION, float3 InTexCoords : TEXCOORDS, float4 InColor : COLOR)
 {
 	VertexOut vso;
 
