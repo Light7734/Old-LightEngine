@@ -1,6 +1,8 @@
 #include "ltpch.h"
 #include "Font.h"
 
+#include "Utility/ResourceManager.h"
+
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
@@ -8,8 +10,7 @@
 
 namespace Light {
 
-	Font::Font(std::shared_ptr<TextureArray> textureArray, const std::string& path, unsigned int size)
-		: m_SliceIndex(0), m_TextureArrayRef(textureArray)
+	Font::Font(std::shared_ptr<TextureArray> textureArray, unsigned int slice, const std::string& path, unsigned int size)
 	{
 		LT_PROFILE_FUNC();
 
@@ -17,33 +18,28 @@ namespace Light {
 		FT_Library library;
 		FT_Face face;
 
-		LT_CORE_ASSERT(!FT_Init_FreeType(&library), "glFont::glFont: FT_Init_FreeType failed");
-		LT_CORE_ASSERT(!FT_New_Face(library, path.c_str(), 0, &face), "glFont::glFont: FT_New_Face failed");
-		LT_CORE_ASSERT(!FT_Set_Pixel_Sizes(face, 0, size), "glFont::glFont: FT_Set_Pixel_Sizes failed");
-
-
-		// create texture slice
-		m_SliceIndex = textureArray->CreateSlice(1024, 1024, NULL);
-
+		LT_CORE_ASSERT(!FT_Init_FreeType(&library), "Font::Font: FT_Init_FreeType failed");
+		LT_CORE_ASSERT(!FT_New_Face(library, path.c_str(), 0, &face), "Font::Font: FT_New_Face failed");
+		LT_CORE_ASSERT(!FT_Set_Pixel_Sizes(face, 0, size), "Font::Font: FT_Set_Pixel_Sizes failed");
 
 		// load characters
-		float tcu = 1.0f / 1024.0f; // texture coordinates unit
+		float tcuX = 1.0f / textureArray->GetWidth();  // texture coordinates unit - x axis
+		float tcuY = 1.0f / textureArray->GetHeight(); // texture coordinates unit - y axis
 
 		unsigned int x = 0u, y = 0u;
 		unsigned int prevY = 0u, nextY = 0u;
 
-		textureArray->Bind();
 		for (int i = 0; i < 128; i++) // #todo: currently the generated glyph atlas will be a bit large due to novice texture packing algorithm
 		{
 			// load character from FT_Face
-			LT_CORE_ASSERT(!FT_Load_Char(face, i, FT_LOAD_RENDER), "glFont::glFont: FT_Load_Char failed: {}", i);
+			LT_CORE_ASSERT(!FT_Load_Char(face, i, FT_LOAD_RENDER), "Font::Font: FT_Load_Char failed: {}", i);
 
 			FontCharData character = { glm::vec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
 									   glm::vec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
 									   (unsigned int)face->glyph->advance.x >> 6 };
 
 			// not enough space? go next line
-			if (x > 1024.0f - character.size.x)
+			if (x > textureArray->GetWidth() - character.size.x)
 			{
 				x = 0;
 				prevY = y;
@@ -51,12 +47,12 @@ namespace Light {
 			}
 
 			// write to texture slice
-			textureArray->UpdateSubTexture(x, y, m_SliceIndex, character.size.x, character.size.y, face->glyph->bitmap.buffer);
+			textureArray->UpdateSubTexture(x, y, slice, character.size.x, character.size.y, face->glyph->bitmap.buffer);
 
 			// figure out and set character's texture coordinates
-			character.glyph = { tcu * x                     , tcu * y,                      // xMin, yMin
-			                    tcu * (x + character.size.x), tcu * (y + character.size.y), // xMax, yMax
-			                    (float)m_SliceIndex }; // sliceIndex
+			character.glyph = { tcuX * x                     , tcuY * y,                      // xMin, yMin
+								tcuX * (x + character.size.x), tcuY * (y + character.size.y), // xMax, yMax
+			                    (float)slice }; // sliceIndex
 
 			// find the character with largest 'height', we will add that much to 'y' when we go next line
 			if (nextY - prevY < character.size.y)
@@ -73,13 +69,6 @@ namespace Light {
 		// free memory
 		FT_Done_Face(face);
 		FT_Done_FreeType(library);
-	}
-
-	Font::~Font()
-	{
-		LT_PROFILE_FUNC();
-
-		m_TextureArrayRef->DeleteSlice(m_SliceIndex);
 	}
 
 }

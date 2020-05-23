@@ -8,14 +8,12 @@ QuadsLayer::QuadsLayer(std::shared_ptr<Light::Camera> camera)
 	m_LayeDebugrName = "QuadsLayer";
 
 	// create texture array and load an atlas
-	m_TextureArray = Light::TextureArray::Create(1u);
 
-	m_TextureArray->CreateSliceWithAtlas("res/atlas.png", "QuadsLayer atlas", "res/atlas.txt");
+	Light::ResourceManager::LoadTexture("QuadsLayerAtlas", "res/atlas.png", "res/atlas.txt");
 
 	// create texture atlas to extract coordinates of texture array's slices
-	std::shared_ptr<Light::TextureAtlas> textureAtlas;
-	textureAtlas = m_TextureArray->GetAtlas("QuadsLayer atlas");
-	Light::SubTexture* awesomeface = textureAtlas->GetSubTexture("awesomeface");
+	std::shared_ptr<Light::Texture> atlas = Light::ResourceManager::GetTexture("QuadsLayerAtlas");
+	Light::SubTexture* awesomeface = atlas->GetSubTexture("awesomeface");
 
 	// create sprites
 	for (int i = 0; i < 125; i++)
@@ -56,11 +54,10 @@ void QuadsLayer::OnUpdate(float DeltaTime)
 void QuadsLayer::OnRender()
 {
 	Light::Blender::Get()->Enable();
-	m_TextureArray->Bind();
 
 	Light::Renderer::BeginScene(m_Camera);
 	for (const auto& sprite : m_Sprites)
-			Light::Renderer::DrawQuad(sprite.position, sprite.size, glm::radians(m_Angle), sprite.texture, sprite.tint);
+		Light::Renderer::DrawQuad(sprite.position, sprite.size, glm::radians(m_Angle), sprite.texture, sprite.tint);
 	Light::Renderer::EndScene();
 }
 

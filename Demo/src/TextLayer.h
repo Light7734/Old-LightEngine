@@ -31,6 +31,7 @@ private:
 	bool m_BlenderEnabled;
 public:
 	TextLayer(std::shared_ptr<Light::Camera> camera);
+	~TextLayer();
 
 	void OnAttach() override;
 	void OnDetatch() override;

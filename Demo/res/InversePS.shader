@@ -5,7 +5,7 @@ out vec4 FSOutFragmentColor;
 
 in vec2 VSOutTexCoords;
 
-uniform sampler2D u_Texture;
+uniform sampler2D u_Texture; // #BINDING_0
 
 void main()
 {

@@ -28,7 +28,6 @@ namespace Light {
 		LT_CORE_ASSERT(!vertex_source.empty(), "Shader::Create: empty vertex shader source");
 		LT_CORE_ASSERT(!fragment_source.empty(), "Shader::Create: empty fragment shader source");
 
-
 		switch (GraphicsContext::GetAPI())
 		{
 		case GraphicsAPI::Opengl:

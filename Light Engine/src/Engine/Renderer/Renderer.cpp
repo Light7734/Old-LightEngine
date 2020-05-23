@@ -8,8 +8,6 @@
 #include "Texture.h"
 
 #include "Font/Font.h"
-#include "Font/FontManager.h"
-
 #include "Shaders/QuadShader.h"
 #include "Shaders/TextShader.h"
 
@@ -334,7 +332,7 @@ namespace Light {
 		if (s_QuadRenderer.quadCount)
 		{
 			s_QuadRenderer.Bind();
-
+				
 			RenderCommand::DrawIndexed(s_QuadRenderer.quadCount * 6);
 			s_QuadRenderer.quadCount = 0;
 		}
@@ -343,7 +341,6 @@ namespace Light {
 		//================== TEXT RENDERER ==================//
 		if (s_TextRenderer.quadCount)
 		{
-			FontManager::BindTextureArray(); // #todo
 			s_TextRenderer.Bind();
 
 			RenderCommand::DrawIndexed(s_TextRenderer.quadCount * 6);

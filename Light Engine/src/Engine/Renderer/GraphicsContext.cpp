@@ -5,14 +5,14 @@
 #include "RenderCommand.h"
 #include "Renderer.h"
 
-#include "Font/FontManager.h"
-
 #include "UserInterface/UserInterface.h"
 
 #ifdef LIGHT_PLATFORM_WINDOWS
 	#include "Platform/DirectX/dxGraphicsContext.h"
 #endif
 #include "Platform/Opengl/glGraphicsContext.h"
+
+#include "Utility/ResourceManager.h"
 
 #include <imgui.h>
 
@@ -58,9 +58,9 @@ namespace Light {
 		// initialize GraphicsContext dependent classes
 		Renderer::Init(configurations.MSAASampleCount, configurations.MSAAEnabled);
 		RenderCommand::SetGraphicsContext(s_Context.get());
-		FontManager::Init();
 		Blender::Init();
 		UserInterface::Init();
+		ResourceManager::Init();
 	}
 
 	void GraphicsContext::ShowDebugWindow()

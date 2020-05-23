@@ -70,7 +70,7 @@ in VS_OUT
 	vec4 Color;
 } FragmentIn;
 
-uniform sampler2DArray u_TextureArray;
+uniform sampler2DArray u_TextureArray; // #BINDING_0
 
 void main()
 {

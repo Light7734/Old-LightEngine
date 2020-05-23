@@ -6,34 +6,20 @@
 
 namespace Light {
 
-	class glTextureArray : public TextureArray
+	class glTextureArray : public TextureArray 
 	{
 	private:
-		unsigned int m_ArrayID;
-
-		unsigned int m_Format;
-		unsigned int m_Channels;
+		unsigned int m_TextureArrayID;
+		unsigned int m_Channels, m_Format;
 	public:
-		glTextureArray(unsigned int slices, unsigned int channels);
+		glTextureArray(unsigned int width, unsigned int height, unsigned int depth, unsigned int channels);
 		~glTextureArray();
 
-		// create
-		void CreateSliceWithAtlas(const std::string& texturePath, const std::string& atlasName, const std::string& atlasPath) override;
-
-		unsigned int CreateSlice(const std::string& texturePath) override;
-
-		unsigned int CreateSlice(unsigned int width, unsigned int height, void* pixels) override;
-
-		// delete
-		void DeleteSliceWithAtlas(const std::string& atlasName) override;
-
-		void DeleteSlice(unsigned int sliceIndex) override;
-
-		// write
 		void UpdateSubTexture(unsigned int xoffset, unsigned int yoffset, unsigned int zoffset, unsigned int width, unsigned int height, void* pixels) override;
+
 		void GenerateMips() override;
 
-		void Bind() override;
+		void Bind(unsigned int slot = 0) override;
 	};
 
 }

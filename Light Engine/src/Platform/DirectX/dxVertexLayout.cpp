@@ -29,7 +29,6 @@ namespace Light {
 			                                                          0u } );
 		}
 
-
 		// input layout
 		HRESULT hr;
 

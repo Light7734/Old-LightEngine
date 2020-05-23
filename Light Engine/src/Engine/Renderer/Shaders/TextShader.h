@@ -67,7 +67,7 @@ in VS_OUT
 	vec3 TexCoords;
 } FragmentIn;
 
-uniform sampler2DArray u_TextureArray;
+uniform sampler2DArray u_TextureArray; // #BINDING_1
 
 void main()
 {
@@ -76,8 +76,8 @@ void main()
 -GLSL
 
 +HLSL
-SamplerState samplerState : register(s0);
-Texture2DArray textureArray : register(t0);
+SamplerState samplerState : register(s1);
+Texture2DArray textureArray : register(t1);
 
 float4 main(float4 Color : COLOR, float3 TexCoords : TEXCOORDS) : SV_Target
 {

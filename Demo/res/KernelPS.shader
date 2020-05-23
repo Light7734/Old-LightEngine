@@ -7,7 +7,7 @@ out vec4 FSOutFragmentColor;
 
 in vec2 VSOutTexCoords;
 
-uniform sampler2D u_Texture;
+uniform sampler2D u_Texture; // #BINDING_0
 
 layout(std140, binding = 0) uniform KarnelFSUniform
 {

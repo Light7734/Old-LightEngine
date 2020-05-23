@@ -71,7 +71,6 @@
 
 // Renderer -----------------
 #include "Renderer/Font/Font.h"
-#include "Renderer/Font/FontManager.h"
 #include "Renderer/Camera.h"
 #include "Renderer/CameraController.h"
 #include "Renderer/Blender.h"
@@ -85,6 +84,7 @@
 
 // Utility ------------------
 #include "Utility/FileManager.h"
+#include "Utility/ResourceManager.h"
 // --------------------------
 
 // ======================================================

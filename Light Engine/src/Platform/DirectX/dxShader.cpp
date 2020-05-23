@@ -37,6 +37,8 @@ namespace Light {
 
 	void dxShader::ExtractVertexElements(const std::string& vertexSource)
 	{
+		LT_PROFILE_FUNC();
+
 		std::string line = vertexSource.substr(vertexSource.find("main(") + 5);
 		line = line.substr(0, line.find(')'));
 

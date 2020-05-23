@@ -58,6 +58,8 @@ namespace Light {
 
 	void glShader::ExtractVertexElements(const std::string& vertexSource)
 	{
+		LT_PROFILE_FUNC();
+
 		std::stringstream stream(vertexSource.substr(0, vertexSource.find("void main()")));
 		std::string line;
 
@@ -79,7 +81,6 @@ namespace Light {
 		LT_PROFILE_FUNC();
 
 		// #todo: optimize
-		int index = 0;
 		std::stringstream stream(fragmentSource.substr(0, fragmentSource.find("void main()")));
 		std::string line;
 		Bind();
@@ -88,26 +89,12 @@ namespace Light {
 		{
 			if (line.find("sampler2D") != std::string::npos)
 			{
-				LT_CORE_ASSERT(index < 15, "glShader::BindTextures: too many sampler2D uniforms");
-
 				line = line.substr(line.find("sampler2D"));
 		
-				if (line.find('[') != std::string::npos)
-				{
-					unsigned int count = std::stoi(line.substr(line.find('[') + 1, line.find(']') - line.find('[')));
-					std::string name = line.substr(line.find("u_"), line.find(";") - line.find("u_"));
+				std::string name = line.substr(line.find("u_"), (line.find(";") - line.find("u_") ));
+				int slot = std::stoi(line.substr(line.find("#BINDING_") + 9, 2));
 
-					for (int i = 0; i < count; i++)
-					{
-						glUniform1iv(glGetUniformLocation(m_ShaderID, (name + '[' + std::to_string(i) + ']').c_str()), 1, &index);
-						index++;
-					}
-				}
-				else
-				{
-					std::string name = line.substr(line.find("u_"), (line.find(";") - line.find("u_") ));
-					glUniform1i(glGetUniformLocation(m_ShaderID, name.c_str()), index++);
-				}
+				glUniform1i(glGetUniformLocation(m_ShaderID, name.c_str()), slot);
 			}
 		}
 	}

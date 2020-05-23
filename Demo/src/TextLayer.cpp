@@ -7,27 +7,31 @@ TextLayer::TextLayer(std::shared_ptr<Light::Camera> camera)
 
 	m_LayeDebugrName = "TextLayer";
 
-	Light::FontManager::LoadFont("arial", "res/arial.ttf", 24);
-	Light::FontManager::LoadFont("comic", "res/comic.ttf", 24);
-	Light::FontManager::LoadFont("impact", "res/impact.ttf", 24);
+	Light::ResourceManager::LoadFont("arial", "res/arial.ttf", 24);
+	Light::ResourceManager::LoadFont("comic", "res/comic.ttf", 24);
+	Light::ResourceManager::LoadFont("impact", "res/impact.ttf", 24);
 
-	m_Arial.font = Light::FontManager::GetFont("arial");
+	m_Arial.font = Light::ResourceManager::GetFont("arial");
 	m_Arial.position = glm::vec2(0.0f, -800.0f);
 	m_Arial.scale = 3.2f;
 	// 255, 57, 57
 	m_Arial.tint = glm::vec4(255.0f / 255.0f, 57.0f / 255.0f , 57.0f / 255.0f, 1.0f);
 
-	m_Comic.font = Light::FontManager::GetFont("comic");
+	m_Comic.font = Light::ResourceManager::GetFont("comic");
 	m_Comic.scale = 3.2f;
 	m_Comic.position = glm::vec2(0.0f, -700.0f);
 	// 14, 163, 255
 	m_Comic.tint = glm::vec4(14.0f / 255.0f, 163.0f / 255.0f, 255.0f / 255.0f, 1.0f);
 
-	m_Impact.font = Light::FontManager::GetFont("impact");
+	m_Impact.font = Light::ResourceManager::GetFont("impact");
 	m_Impact.position = glm::vec2(100.0f, -600.0f);
 	m_Impact.scale = 3.2f;
 	// 88, 220, 146
 	m_Impact.tint = glm::vec4(0.0f / 255.0f, 220 / 255.0f, 146.0f / 255.0f, 1.0f);
+}
+
+TextLayer::~TextLayer()
+{
 }
 
 void TextLayer::OnAttach()

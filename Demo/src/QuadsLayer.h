@@ -16,8 +16,6 @@ class QuadsLayer : public Light::Layer
 private:
 	std::shared_ptr<Light::Camera> m_Camera;
 
-	std::shared_ptr<Light::TextureArray> m_TextureArray;
-
 	std::vector<Sprite> m_Sprites;
 	Sprite* m_SelectedSprite;
 

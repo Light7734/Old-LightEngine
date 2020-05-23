@@ -21,14 +21,10 @@ namespace Light {
 	{
 	private:
 		std::unordered_map<char, FontCharData> m_CharactersData;
-
-		std::shared_ptr<TextureArray> m_TextureArrayRef;
-		unsigned int m_SliceIndex;
 	public:
-		Font(std::shared_ptr<TextureArray> textureArray, const std::string& path, unsigned int size);
-		~Font();
+		Font(std::shared_ptr<TextureArray> textureArray, unsigned int slice, const std::string& path, unsigned int size);
 
-		const FontCharData& GetCharacterData(char character) { return m_CharactersData[character]; }
+		inline const FontCharData& GetCharacterData(char character) const { return m_CharactersData.at(character); }
 	};
 
 }
