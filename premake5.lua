@@ -10,8 +10,8 @@ workspace "Light Engine"
     architecture "x64"
     startproject "Demo"
 
-TargetDir = "%{wks.location}bin/%{cfg.buildcfg}/%{prj.name}/"
-ObjectDir = "%{wks.location}bin-obj/%{cfg.buildcfg}/%{prj.name}/"
+TargetDir = "%{wks.location}/bin/%{cfg.buildcfg}/%{prj.name}/"
+ObjectDir = "%{wks.location}/bin-obj/%{cfg.buildcfg}/%{prj.name}/"
 
 DependenciesDir = "%{wks.location}/Dependencies/"
 
