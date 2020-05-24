@@ -3,6 +3,7 @@
 #include "Core/Core.h"
 
 #include <unordered_map>
+#include <set>
 
 namespace Light {
 
@@ -54,7 +55,7 @@ namespace Light {
 		unsigned int m_Width, m_Height, m_Depth;
 		unsigned int m_CurrentIndex;
 
-		std::vector<unsigned int> m_FreedSlices;
+		std::set<unsigned int> m_FreedSlices;
 	public:
 		TextureArray(unsigned int width, unsigned int height, unsigned int depth);
 		virtual ~TextureArray() = default;

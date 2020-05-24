@@ -76,8 +76,8 @@ namespace Light {
 
 		if (!m_FreedSlices.empty())
 		{
-			slice = m_FreedSlices.back();
-			m_FreedSlices.pop_back();
+			slice = *m_FreedSlices.begin();
+			m_FreedSlices.erase(slice);
 		}
 		else
 			slice = m_CurrentIndex++;
@@ -98,8 +98,8 @@ namespace Light {
 
 		if (!m_FreedSlices.empty())
 		{
-			slice = m_FreedSlices.back();
-			m_FreedSlices.pop_back();
+			slice = *m_FreedSlices.begin();
+			m_FreedSlices.erase(slice);
 		}
 		else
 			slice = m_CurrentIndex++;
@@ -111,7 +111,7 @@ namespace Light {
 
 	void TextureArray::DeleteSlice(const std::string& name)
 	{
-		m_FreedSlices.push_back(m_Textures[name]->GetSliceIndex());
+		m_FreedSlices.insert(m_Textures[name]->GetSliceIndex());
 		m_Textures.erase(name);
 	}
 	

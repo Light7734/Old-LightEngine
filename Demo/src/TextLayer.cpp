@@ -60,7 +60,6 @@ void TextLayer::OnRender()
 
 void TextLayer::ShowDebugWindow()
 {
-	ImGui::DragFloat("Angle", &m_Angle, 0.1f);
 	ImGui::Checkbox("Blend", &m_BlenderEnabled);
 
 	ImGui::BulletText("arial");
@@ -70,6 +69,7 @@ void TextLayer::ShowDebugWindow()
 
 	ImGui::BulletText("comic");
 	ImGui::PushID("comic");
+	ImGui::DragFloat("Angle", &m_Angle, 0.1f);
 	m_Comic.ShowDebugWindow();
 	ImGui::PopID();
 
