@@ -21,7 +21,7 @@ namespace Light {
 	std::unique_ptr<GraphicsContext> GraphicsContext::s_Context = nullptr;
 	GraphicsAPI GraphicsContext::s_Api = GraphicsAPI::Default;
 
-	void GraphicsContext::CreateContext(GraphicsAPI api, const GraphicsConfigurations& configurations)
+	bool GraphicsContext::CreateContext(GraphicsAPI api, const GraphicsConfigurations& configurations)
 	{
 		LT_PROFILE_FUNC();
 
@@ -29,7 +29,7 @@ namespace Light {
 		if (s_Api == api && api != GraphicsAPI::Default)
 		{
 			LT_CORE_ERROR("GraphicsContext::CreateContext: re-initializing same graphics api is not allowed, api: {}", api);
-			return;
+			return false;
 		}
 
 		// if api is 'Default', find the preferred graphics api based on platform
@@ -44,8 +44,12 @@ namespace Light {
 		else
 			s_Api = api;
 
+		Renderer::Terminate();
+		Blender::Terminate();
+		UserInterface::Terminate();
+		ResourceManager::Terminate();
 
-		// create GraphicsContext
+		// create GraphicsContext 
 		s_Context.reset();
 
 		if (s_Api == GraphicsAPI::Opengl)
@@ -61,6 +65,8 @@ namespace Light {
 		Blender::Init();
 		UserInterface::Init();
 		ResourceManager::Init();
+
+		return true;
 	}
 
 	void GraphicsContext::ShowDebugWindow()
@@ -73,7 +79,6 @@ namespace Light {
 		ImGui::BulletText("v-sync: %s", m_Configurations.vSync ? "on" : "off");
 		// #todo: properties...
 	}
-
 
 	void GraphicsContext::SetMSAA(bool enabled)
 	{

@@ -12,6 +12,15 @@
 
 namespace Light {
 
+	std::unordered_map<std::string, TextureBindingSlot> Shader::s_TextureSlotsMap = 
+	{ 
+		LT_MAP_MACRO_NAME_TO_VALUE(BINDING_TEXTUREARRAY0),
+		LT_MAP_MACRO_NAME_TO_VALUE(BINDING_FONTGLYPHARRAY0),
+		LT_MAP_MACRO_NAME_TO_VALUE(BINDING_FRAMEBUFFER0),
+		LT_MAP_MACRO_NAME_TO_VALUE(BINDING_FRAMEBUFFER1),
+		LT_MAP_MACRO_NAME_TO_VALUE(BINDING_FRAMEBUFFER2),
+	};
+
 	std::shared_ptr<Light::Shader> Shader::Create(const std::string& vertex, const std::string& fragment)
 	{
 		LT_PROFILE_FUNC();

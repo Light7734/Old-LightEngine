@@ -67,7 +67,7 @@ in VS_OUT
 	vec3 TexCoords;
 } FragmentIn;
 
-uniform sampler2DArray u_TextureArray; // #BINDING_1
+uniform sampler2DArray u_TextureArray; // #BINDING_FONTGLYPHARRAY0
 
 void main()
 {

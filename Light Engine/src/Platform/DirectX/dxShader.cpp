@@ -28,6 +28,16 @@ namespace Light {
 		ExtractVertexElements(vertexSource);
 	}
 
+	dxShader::~dxShader()
+	{
+		LT_PROFILE_FUNC();
+
+		ID3D11VertexShader* vs = nullptr;
+		ID3D11PixelShader* ps = nullptr;
+		
+		dxGraphicsContext::GetDeviceContext()->VSSetShader(vs, nullptr, 0u);
+		dxGraphicsContext::GetDeviceContext()->PSSetShader(ps, nullptr, 0u);
+	}
 
 	void dxShader::Bind()
 	{

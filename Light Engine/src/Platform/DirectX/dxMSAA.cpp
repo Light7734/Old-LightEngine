@@ -39,6 +39,14 @@ namespace Light {
 		DXC(dxGraphicsContext::GetDevice()->CreateRenderTargetView(m_Texture.Get(), &rtvDesc, &m_TargetView));
 	}
 
+	dxMSAA::~dxMSAA()
+	{
+		LT_PROFILE_FUNC();
+
+		ID3D11RenderTargetView* rtv = nullptr;
+		dxGraphicsContext::GetDeviceContext()->OMSetRenderTargets(1, &rtv, nullptr);
+	}
+
 	void dxMSAA::BindFrameBuffer()
 	{
 		const static const float const colors[] = { 0.0f, 0.0f, 0.0f, 0.0f };

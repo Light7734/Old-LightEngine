@@ -39,7 +39,7 @@ namespace Light {
 
 		static inline Blender* Get() { return s_Context.get(); }
 
-		virtual void Enable () = 0;
+		virtual void Enable() = 0;
 		virtual void Disable() = 0;
 
 		virtual void SetSrcFactor(BlendFactor factor) = 0;
@@ -47,6 +47,7 @@ namespace Light {
 	private:
 		friend class GraphicsContext;
 		static void Init();
+		static void Terminate();
 	};
 
 }

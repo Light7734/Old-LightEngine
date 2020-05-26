@@ -17,6 +17,7 @@ namespace Light {
 		Microsoft::WRL::ComPtr<ID3D11InputLayout> m_InputLayout;
 	public:
 		dxVertexLayout(std::shared_ptr<Shader> shader, const std::vector<std::pair<std::string, VertexElementType>>& elements);
+		~dxVertexLayout();
 
 		void Bind() override;
 	private:

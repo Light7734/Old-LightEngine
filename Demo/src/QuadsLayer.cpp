@@ -8,7 +8,6 @@ QuadsLayer::QuadsLayer(std::shared_ptr<Light::Camera> camera)
 	m_LayeDebugrName = "QuadsLayer";
 
 	// create texture array and load an atlas
-
 	Light::ResourceManager::LoadTexture("QuadsLayerAtlas", "res/atlas.png", "res/atlas.txt");
 
 	// create texture atlas to extract coordinates of texture array's slices

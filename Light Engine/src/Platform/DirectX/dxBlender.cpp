@@ -43,6 +43,12 @@ namespace Light {
 		DXC(dxGraphicsContext::GetDevice()->CreateBlendState(&m_Desc, &m_State));
 	}
 
+	dxBlender::~dxBlender()
+	{
+		LT_PROFILE_FUNC();
+		dxGraphicsContext::GetDeviceContext()->OMSetBlendState(nullptr, 0, 0xffffffff);
+	}
+
 	void dxBlender::Enable()
 	{
 		b_Enabled = true;

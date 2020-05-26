@@ -55,6 +55,12 @@ namespace Light {
 		}
 	}
 
+	dxVertexLayout::~dxVertexLayout()
+	{
+		ID3D11InputLayout* layout = nullptr;
+		dxGraphicsContext::GetDeviceContext()->IASetInputLayout(layout);
+	}
+
 	void dxVertexLayout::Bind()
 	{ 
 		dxGraphicsContext::GetDeviceContext()->IASetInputLayout(m_InputLayout.Get());

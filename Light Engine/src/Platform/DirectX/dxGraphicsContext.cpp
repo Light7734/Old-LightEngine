@@ -64,7 +64,6 @@ namespace Light {
 
 		if (flags == D3D11_CREATE_DEVICE_DEBUG)
 		{
-			Microsoft::WRL::ComPtr<ID3D11Debug> debugInterface;
 			Microsoft::WRL::ComPtr<ID3D11InfoQueue> infoQueue;
 
 			DXC(m_Device.As(&debugInterface));
@@ -73,7 +72,8 @@ namespace Light {
 			D3D11_MESSAGE_ID hide[] =
 			{
 				D3D11_MESSAGE_ID_DEVICE_DRAW_SAMPLER_NOT_SET,
-				// #todo: add more message IDs here as needed 
+					
+				// #todo: add more message IDs here as needed
 			};
 
 			D3D11_INFO_QUEUE_FILTER filter;
@@ -112,7 +112,7 @@ namespace Light {
 		char DefChar = ' ';
 		char ch[180];
 		WideCharToMultiByte(CP_ACP, 0, DXGIAdapterDesc.Description, -1, ch, 180, &DefChar, NULL);
-		std::string adapterDesc(ch);
+		std::string adapterDesc(ch);	
 		
 		// release memory
 		DXGIDevice->Release();
@@ -121,6 +121,25 @@ namespace Light {
 		// log info // #todo: log more information
 		LT_CORE_INFO("dxGraphicsContext:");
 		LT_CORE_INFO("        Renderer: {}", adapterDesc);
+	}
+
+	dxGraphicsContext::~dxGraphicsContext()
+	{
+		LT_PROFILE_FUNC();
+
+		ID3D11RenderTargetView* rtv = nullptr;
+		dxGraphicsContext::GetDeviceContext()->OMSetRenderTargets(1, &rtv, nullptr);
+
+		m_RenderTargetView.Reset();
+		m_SwapChain.Reset();
+
+		m_DeviceContext->ClearState();
+		m_DeviceContext->Flush();
+
+		m_DeviceContext.Reset();
+		m_Device.Reset();
+ 		
+		debugInterface->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
 	}
 
 	void dxGraphicsContext::SwapBuffers()
@@ -142,7 +161,6 @@ namespace Light {
 	{
 		m_DeviceContext->DrawIndexed(count, 0u, 0u);
 	}
-
 
 	void dxGraphicsContext::SetConfigurations(const GraphicsConfigurations& configurations)
 	{
@@ -212,7 +230,6 @@ namespace Light {
 		viewPort.MaxDepth = 1.0f;
 		viewPort.TopLeftX = 0.0f;
 		viewPort.TopLeftY = 0.0f;
-
 
 		m_DeviceContext->RSSetViewports(1u, &viewPort);
 	}

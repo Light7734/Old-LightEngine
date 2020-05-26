@@ -24,6 +24,7 @@ namespace Light {
 
 	struct RendererProgram
 	{
+		virtual void Reset() = 0;
 		virtual void Bind() = 0;
 		virtual void Map() = 0;
 
@@ -52,6 +53,14 @@ namespace Light {
 			QuadVertexData* mapEnd     = nullptr;
 
 			unsigned int quadCount = 0;
+
+			void Reset() override
+			{
+				shader.reset();
+				vertexLayout.reset();
+				vertexBuffer.reset();
+				indexBuffer.reset();
+			}
 
 			void Map() override
 			{
@@ -90,6 +99,14 @@ namespace Light {
 			TextVertexData* mapEnd = nullptr;
 
 			unsigned int quadCount = 0;
+
+			void Reset() override
+			{
+				shader.reset();
+				vertexLayout.reset();
+				vertexBuffer.reset();
+				indexBuffer.reset();
+			}
 
 			void Map() override
 			{
@@ -150,6 +167,7 @@ namespace Light {
 	private:
 		friend class GraphicsContext;
 		static void Init(unsigned int MSAASampleCount, bool MSAA);
+		static void Terminate();
 
 		static void SetMSAA(bool enabled);
 		static void SetMSAASampleCount(unsigned int sampleCount);

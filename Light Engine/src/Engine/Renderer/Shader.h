@@ -6,9 +6,19 @@
 
 namespace Light {
 
+	enum TextureBindingSlot
+	{
+		BINDING_TEXTUREARRAY0,
+		BINDING_FONTGLYPHARRAY0,
+		BINDING_FRAMEBUFFER0, 
+		BINDING_FRAMEBUFFER1, 
+		BINDING_FRAMEBUFFER2, 
+	};
+
 	class Shader
 	{
 	protected:
+		static std::unordered_map<std::string, TextureBindingSlot> s_TextureSlotsMap;
 		std::vector<std::pair<std::string, VertexElementType>> m_Elements;
 	public:
 		virtual ~Shader() = default;

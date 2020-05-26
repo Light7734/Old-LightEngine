@@ -10,7 +10,8 @@
 
 namespace Light {
 
-	glFramebuffer::glFramebuffer(const std::string& vertex, const std::string& fragment)
+	glFramebuffer::glFramebuffer(const std::string& vertex, const std::string& fragment, TextureBindingSlot slot)
+		: m_BindingSlot(slot)
 	{
 		LT_PROFILE_FUNC();
 
@@ -61,6 +62,8 @@ namespace Light {
 	void glFramebuffer::BindAsResource()
 	{
 		m_Shader->Bind();
+
+		glActiveTexture(GL_TEXTURE0 + m_BindingSlot);
 		glBindTexture(GL_TEXTURE_2D, m_TextureID);
 	}
 

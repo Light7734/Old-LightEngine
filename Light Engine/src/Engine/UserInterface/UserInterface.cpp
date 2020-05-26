@@ -21,8 +21,6 @@ namespace Light {
 	{
 		LT_PROFILE_FUNC();
 
-		s_Context.reset();
-
 		switch (GraphicsContext::GetAPI())
 		{
 		case GraphicsAPI::Opengl:
@@ -37,6 +35,12 @@ namespace Light {
 		default:
 			LT_CORE_ASSERT(false, "UserInterface::Init: invalid GraphicsAPI");
 		}
+	}
+
+	void UserInterface::Terminate()
+	{
+		LT_PROFILE_FUNC();
+		s_Context.reset();
 	}
 
 	void UserInterface::ShowImGuiDemoWnidow()

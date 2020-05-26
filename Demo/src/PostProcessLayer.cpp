@@ -11,7 +11,6 @@ PostProcessLayer::PostProcessLayer()
 	m_Grayscale = Light::Framebuffer::Create("res/FramebuffersVS.shader", "res/GrayscalePS.shader");
 	m_Inverse = Light::Framebuffer::Create("res/FramebuffersVS.shader", "res/InversePS.shader");
 	m_Kernel = Light::Framebuffer::Create("res/FramebuffersVS.shader", "res/KernelPS.shader");
-
 	
 	// create and set the kernel data
 	m_KernelData = Light::ConstantBuffer::Create(Light::ConstantBufferIndex_ClientSlot0, sizeof(float) * 16);

@@ -56,6 +56,7 @@ project "Light Engine"
 		links
 		{
 			"d3d11.lib"       ,
+			"dxguid.lib"      ,
 			"D3DCompiler.lib" ,
 		}
 

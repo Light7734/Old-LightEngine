@@ -30,12 +30,19 @@ namespace Light {
 		s_Fonts.erase(name);
 	}
 
+	void ResourceManager::Terminate()
+	{
+		s_TextureArray.reset();
+		s_FontGlyphs.reset();
+		s_Fonts.clear();
+	}
+
 	void ResourceManager::Init()
 	{
 		s_Fonts.clear();
 
-		s_TextureArray = TextureArray::Create(2048u, 2048u, 12u, 4u);
-		s_FontGlyphs   = TextureArray::Create(2048u, 2048u, 4u, 1u);
+		s_TextureArray = TextureArray::Create(2048u, 2048u, 16u, 4u);
+		s_FontGlyphs   = TextureArray::Create(2048u, 2048u, 3u, 1u);
 
 		s_TextureArray->Bind(0u);
 		s_FontGlyphs->Bind(1u);

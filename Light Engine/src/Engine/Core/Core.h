@@ -61,6 +61,7 @@
 
 // utility
 #define LT_MAP_MACRO_VALUE_TO_NAME(macro) { macro, #macro }
+#define LT_MAP_MACRO_NAME_TO_VALUE(macro) { #macro, macro }
 #define BIT(x) 1 << x
 
 

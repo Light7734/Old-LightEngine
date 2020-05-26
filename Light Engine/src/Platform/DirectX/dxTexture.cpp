@@ -49,6 +49,13 @@ namespace Light {
 		DXC(dxGraphicsContext::GetDevice()->CreateShaderResourceView(m_Texture.Get(), &srvDesc, &m_SRV));
 	}
 
+	dxTextureArray::~dxTextureArray()
+	{
+		LT_PROFILE_FUNC();
+
+		ID3D11ShaderResourceView* srv = { nullptr };
+		dxGraphicsContext::GetDeviceContext()->PSSetShaderResources(m_BoundSlot, 1u, &srv);
+	}
 
 	void dxTextureArray::UpdateSubTexture(unsigned int xoffset, unsigned int yoffset, unsigned int zoffset, unsigned int width, unsigned int height, void* pixels)
 	{
@@ -79,6 +86,8 @@ namespace Light {
 	void dxTextureArray::Bind(unsigned int slot	/* = 0 */)
 	{
 		LT_PROFILE_FUNC();
+
+		m_BoundSlot = slot;	
 		dxGraphicsContext::GetDeviceContext()->PSSetShaderResources(slot, 1u, m_SRV.GetAddressOf());
 	}
 

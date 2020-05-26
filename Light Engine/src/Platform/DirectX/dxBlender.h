@@ -23,6 +23,7 @@ namespace Light {
 		bool b_Enabled;
 	public:
 		dxBlender();
+		~dxBlender();
 
 		void Enable() override;
 		void Disable() override;

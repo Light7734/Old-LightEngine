@@ -16,13 +16,16 @@ namespace Light {
 	{
 	private:
 		static dxGraphicsContext* s_Instance;
-	private:
+
 		Microsoft::WRL::ComPtr<ID3D11Device> m_Device;
 		Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_DeviceContext;
 		Microsoft::WRL::ComPtr<IDXGISwapChain> m_SwapChain;
 		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_RenderTargetView;
+
+		Microsoft::WRL::ComPtr<ID3D11Debug> debugInterface;
 	public:
 		dxGraphicsContext(const GraphicsConfigurations& configurations);
+		~dxGraphicsContext();
 
 		void SwapBuffers() override;
 

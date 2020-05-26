@@ -23,6 +23,7 @@ private:
 	bool b_BoundToTimer;
 public:
 	QuadsLayer(std::shared_ptr<Light::Camera> camera);
+	~QuadsLayer() { Light::ResourceManager::DeleteTexture("QuadsLayerAtlas"); }
 
 	void OnAttach() override;
 	void OnDetatch() override;

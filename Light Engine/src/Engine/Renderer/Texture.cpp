@@ -83,7 +83,7 @@ namespace Light {
 			slice = m_CurrentIndex++;
 
 		LT_CORE_ASSERT(data, "TextureArray::CreateSlice: failed to load texture file: {}", texturePath);
-		LT_CORE_ASSERT(slice < m_Depth - 1, "TextureArray::CreateSlice: too many texture slices");
+		LT_CORE_ASSERT(slice <= m_Depth - 1, "TextureArray::CreateSlice: too many texture slices, limit: ", m_Depth);
 
 		UpdateSubTexture(0, 0, slice, data.width, data.height, data.pixels);
 		GenerateMips();
@@ -104,15 +104,20 @@ namespace Light {
 		else
 			slice = m_CurrentIndex++;
 
-		LT_CORE_ASSERT(slice < m_Depth - 1, "TextureArray::CreateSlice: too many texture slices");
+		LT_CORE_ASSERT(slice <= m_Depth - 1, "TextureArray::CreateSlice: too many texture slices, limit: {}", m_Depth);
 
 		m_Textures[name] = std::make_shared<Texture>(SubTexture(0.0f, 0.0f, width, height, slice));
 	}
 
 	void TextureArray::DeleteSlice(const std::string& name)
 	{
-		m_FreedSlices.insert(m_Textures[name]->GetSliceIndex());
-		m_Textures.erase(name);
+		if (m_Textures.find(name) != m_Textures.end())
+		{
+			m_FreedSlices.insert(m_Textures[name]->GetSliceIndex());
+			m_Textures.erase(name);
+		}
+		else
+			LT_CORE_ERROR("TextureArray::DeleteSlice: failed to find slice: {}", name);
 	}
 	
 }	

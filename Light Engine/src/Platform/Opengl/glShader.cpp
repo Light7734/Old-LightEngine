@@ -92,7 +92,8 @@ namespace Light {
 				line = line.substr(line.find("sampler2D"));
 		
 				std::string name = line.substr(line.find("u_"), (line.find(";") - line.find("u_") ));
-				int slot = std::stoi(line.substr(line.find("#BINDING_") + 9, 2));
+				std::string token = line.substr(line.find("#") + 1, -1);
+				int slot = s_TextureSlotsMap[token];
 
 				glUniform1i(glGetUniformLocation(m_ShaderID, name.c_str()), slot);
 			}

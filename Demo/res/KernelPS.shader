@@ -7,7 +7,7 @@ out vec4 FSOutFragmentColor;
 
 in vec2 VSOutTexCoords;
 
-uniform sampler2D u_Texture; // #BINDING_0
+uniform sampler2D u_Texture; // #BINDING_FRAMEBUFFER0
 
 layout(std140, binding = 0) uniform KarnelFSUniform
 {
@@ -40,7 +40,7 @@ void main()
 
 
 +HLSL // HLSL PIXEL SHADER //
-Texture2D frameTexture : register(t0);
+Texture2D frameTexture : register(t2);
 SamplerState linearSampler : register(s0);
 
 cbuffer	KarnelFSConstant : register(b0)

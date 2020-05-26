@@ -29,6 +29,17 @@ namespace Light {
 		dxGraphicsContext::GetDeviceContext()->PSSetConstantBuffers(index, 1u, m_Buffer.GetAddressOf());
 	}
 
+
+	dxConstantBuffer::~dxConstantBuffer()
+	{
+		LT_PROFILE_FUNC();
+
+		ID3D11Buffer* buffer = nullptr;
+
+		dxGraphicsContext::GetDeviceContext()->VSSetConstantBuffers(m_Index, 1u, &buffer);
+		dxGraphicsContext::GetDeviceContext()->PSSetConstantBuffers(m_Index, 1u, &buffer);
+	}
+
 	void dxConstantBuffer::Bind()
 	{
 		dxGraphicsContext::GetDeviceContext()->VSSetConstantBuffers(m_Index, 1u, m_Buffer.GetAddressOf());
@@ -67,6 +78,16 @@ namespace Light {
 		DXC(dxGraphicsContext::GetDevice()->CreateBuffer(&bd, sd.pSysMem ? &sd : nullptr, &m_Buffer));
 	}
 
+	dxVertexBuffer::~dxVertexBuffer()
+	{
+		LT_PROFILE_FUNC();
+
+		const UINT offset = 0u;
+
+		ID3D11Buffer* buffer = nullptr;
+		dxGraphicsContext::GetDeviceContext()->IASetVertexBuffers(0u, 1u, &buffer, &m_Stride, &offset);
+	}
+
 	void* dxVertexBuffer::Map()
 	{
 		dxGraphicsContext::GetDeviceContext()->Map(m_Buffer.Get(), NULL, D3D11_MAP_WRITE_DISCARD, NULL, &m_Map);
@@ -80,7 +101,7 @@ namespace Light {
 
 	void dxVertexBuffer::Bind()
 	{
-		static const UINT offset = 0u;
+		const UINT offset = 0u;
 		dxGraphicsContext::GetDeviceContext()->IASetVertexBuffers(0u, 1u, m_Buffer.GetAddressOf(), &m_Stride, &offset);
 	}
 
@@ -130,6 +151,14 @@ namespace Light {
 			delete[] indices;
 			indices = nullptr;
 		}
+	}
+
+	dxIndexBuffer::~dxIndexBuffer()
+	{
+		LT_PROFILE_FUNC();
+
+		ID3D11Buffer* buffer = nullptr;
+		dxGraphicsContext::GetDeviceContext()->IASetIndexBuffer(buffer, DXGI_FORMAT_R32_UINT, 0u);
 	}
 
 	void dxIndexBuffer::Bind()

@@ -38,7 +38,6 @@ namespace Light {
 
 		Resolution() : width(0), height(0), aspectRatio(0.0f) {}
 
-
 		// operators
 		operator bool() const
 		{
@@ -66,7 +65,7 @@ namespace Light {
 	public:
 		virtual ~GraphicsContext() = default;
 
-		static void CreateContext(GraphicsAPI api, const GraphicsConfigurations& configurations);
+		static bool CreateContext(GraphicsAPI api, const GraphicsConfigurations& configurations);
 
 		static inline GraphicsContext* Get() { return s_Context.get(); }
 

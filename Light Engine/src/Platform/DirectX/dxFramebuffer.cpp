@@ -9,7 +9,8 @@
 
 namespace Light {
 
-	dxFramebuffer::dxFramebuffer(const std::string& vertex, const std::string& pixel)
+	dxFramebuffer::dxFramebuffer(const std::string& vertex, const std::string& pixel, TextureBindingSlot slot)
+		: m_BindingSlot(slot)
 	{
 		LT_PROFILE_FUNC();
 
@@ -49,18 +50,28 @@ namespace Light {
 		DXC(dxGraphicsContext::GetDevice()->CreateRenderTargetView(m_Texture.Get(), &rtvDesc, &m_TargetView));
 	}
 
+	dxFramebuffer::~dxFramebuffer()
+	{
+		LT_PROFILE_FUNC();
+
+		ID3D11ShaderResourceView* srv = nullptr;
+		 
+		m_Shader->Bind();
+		dxGraphicsContext::GetDeviceContext()->PSSetShaderResources(m_BindingSlot, 1u, &srv);
+	}
+
 	void dxFramebuffer::BindAsTarget()
 	{
 		static const float colors [] =  { 0.0f, 0.0f, 0.0f, 0.0f };
 
-		dxGraphicsContext::GetDeviceContext()->OMSetRenderTargets(1, m_TargetView.GetAddressOf(), nullptr);
+		dxGraphicsContext::GetDeviceContext()->OMSetRenderTargets(1u, m_TargetView.GetAddressOf(), nullptr);
 		dxGraphicsContext::GetDeviceContext()->ClearRenderTargetView(m_TargetView.Get(), colors);
 	}
 
 	void dxFramebuffer::BindAsResource()
 	{
 		m_Shader->Bind();
-		dxGraphicsContext::GetDeviceContext()->PSSetShaderResources(0, 1, m_TextureView.GetAddressOf());
+		dxGraphicsContext::GetDeviceContext()->PSSetShaderResources(m_BindingSlot, 1u, m_TextureView.GetAddressOf());
 	}
 
 	void dxFramebuffer::Resize(unsigned int width, unsigned int height)

@@ -15,7 +15,6 @@ namespace Light {
 	void Blender::Init()
 	{
 		LT_PROFILE_FUNC();
-
 		s_Context.reset();
 
 		switch (GraphicsContext::GetAPI())
@@ -31,6 +30,12 @@ namespace Light {
 		default:
 			LT_CORE_ASSERT(false, "Blender::Init: invalid GraphicsAPI");
 		}
+	}
+
+	void Blender::Terminate()
+	{
+		LT_PROFILE_FUNC();
+		s_Context.reset();
 	}
 
 }

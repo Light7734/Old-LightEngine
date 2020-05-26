@@ -19,7 +19,9 @@ namespace Light {
 		void ShowImGuiDemoWnidow();
 	private:
 		friend class GraphicsContext;
+
 		static void Init();
+		static void Terminate();
 	};
 
 }

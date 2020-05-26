@@ -1,7 +1,7 @@
 #include "TextLayer.h"
 
 TextLayer::TextLayer(std::shared_ptr<Light::Camera> camera)
-	: m_Angle(-2.5f), m_Camera(camera)
+	: m_Angle(-2.5f), m_Camera(camera), m_BlenderEnabled(true)
 {
 	LT_PROFILE_FUNC();
 
@@ -32,6 +32,9 @@ TextLayer::TextLayer(std::shared_ptr<Light::Camera> camera)
 
 TextLayer::~TextLayer()
 {
+	Light::ResourceManager::DeleteFont("arial");
+	Light::ResourceManager::DeleteFont("comic");
+	Light::ResourceManager::DeleteFont("impact");
 }
 
 void TextLayer::OnAttach()

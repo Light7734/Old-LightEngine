@@ -279,6 +279,8 @@ void ImGui_ImplDX11_RenderDrawData(ImDrawData* draw_data)
     ctx->IASetInputLayout(old.InputLayout); if (old.InputLayout) old.InputLayout->Release();
 }
 
+#pragma comment (lib, "dxguid.lib")
+
 static void ImGui_ImplDX11_CreateFontsTexture()
 {
     // Build texture atlas
@@ -302,11 +304,16 @@ static void ImGui_ImplDX11_CreateFontsTexture()
         desc.CPUAccessFlags = 0;
 
         ID3D11Texture2D *pTexture = NULL;
+
+
         D3D11_SUBRESOURCE_DATA subResource;
         subResource.pSysMem = pixels;
         subResource.SysMemPitch = desc.Width * 4;
         subResource.SysMemSlicePitch = 0;
         g_pd3dDevice->CreateTexture2D(&desc, &subResource, &pTexture);
+
+		const char* textureName = "IMGUI_Texture";
+		pTexture->SetPrivateData(WKPDID_D3DDebugObjectName, 14u, textureName);
 
         // Create texture view
         D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;

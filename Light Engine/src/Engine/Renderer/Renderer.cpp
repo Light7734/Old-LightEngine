@@ -13,6 +13,8 @@
 
 #include "Core/Timer.h"
 
+#include "Utility/ResourceManager.h"
+
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace Light {
@@ -75,6 +77,20 @@ namespace Light {
 																																						  
 		s_TextRenderer.vertexLayout = VertexLayout::Create(s_TextRenderer.shader, s_TextRenderer.vertexBuffer, s_QuadRenderer.shader->GetElements());
 		//================== TEXT RENDERER ==================//
+	}
+
+	void Renderer::Terminate()
+	{
+		s_QuadRenderer.Reset();
+		s_TextRenderer.Reset();
+		
+		s_ViewProjBuffer.reset();
+		
+		s_Framebuffers.clear();
+		s_FramebufferVertices.reset();
+		s_FramebufferLayout.reset();
+
+		s_MSAA.reset();
 	}
 
 	void Renderer::BeginFrame()
@@ -351,6 +367,7 @@ namespace Light {
 
 	void Renderer::EndFrame()
 	{
+		
 		if (!s_Framebuffers.empty())
 		{
 			if (s_MSAAEnabled)

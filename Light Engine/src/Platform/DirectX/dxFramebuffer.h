@@ -19,8 +19,11 @@ namespace Light {
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> m_Texture;
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_TextureView;
 		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_TargetView;
+
+		TextureBindingSlot m_BindingSlot;
 	public:
-		dxFramebuffer(const std::string& vertex, const std::string& pixel);
+		dxFramebuffer(const std::string& vertex, const std::string& pixel, TextureBindingSlot slot);
+		~dxFramebuffer();
 
 		void BindAsTarget() override;
 		void BindAsResource() override;

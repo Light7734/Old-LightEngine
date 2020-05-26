@@ -64,7 +64,7 @@ namespace Light {
 
 		void CreateSlice(const std::string& name, const std::string& texturePath, const std::string& atlasPath);
 
-		void CreateSlice(const std::string& name, unsigned int width, unsigned int height) ;
+		void CreateSlice(const std::string& name, unsigned int width, unsigned int height);
 
 		void DeleteSlice(const std::string& name);
 

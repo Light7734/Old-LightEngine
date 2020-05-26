@@ -16,6 +16,7 @@ namespace Light {
 		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_TargetView;
 	public:
 		dxMSAA(unsigned int samples);
+		~dxMSAA();
 
 		void BindFrameBuffer() override;
 

@@ -18,8 +18,10 @@ namespace Light {
 
 		unsigned int m_BufferID;
 		unsigned int m_TextureID;
+
+		TextureBindingSlot m_BindingSlot;
 	public:
-		glFramebuffer(const std::string& vertex, const std::string& fragment);
+		glFramebuffer(const std::string& vertex, const std::string& fragment, TextureBindingSlot slot);
 		~glFramebuffer();
 
 		void BindAsTarget() override;
