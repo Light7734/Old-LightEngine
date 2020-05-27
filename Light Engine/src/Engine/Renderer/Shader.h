@@ -18,7 +18,6 @@ namespace Light {
 	class Shader
 	{
 	protected:
-		static std::unordered_map<std::string, TextureBindingSlot> s_TextureSlotsMap;
 		std::vector<std::pair<std::string, VertexElementType>> m_Elements;
 	public:
 		virtual ~Shader() = default;

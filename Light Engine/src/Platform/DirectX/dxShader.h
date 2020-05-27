@@ -12,12 +12,14 @@ namespace Light {
 	class dxShader : public Shader
 	{
 	private:
+		static std::vector<std::pair<const std::string, const std::string>> s_TextureSlotsMap;
+
 		Microsoft::WRL::ComPtr<ID3D11VertexShader> m_VertexShader;
 		Microsoft::WRL::ComPtr<ID3D11PixelShader> m_PixelShader;	
 
 		Microsoft::WRL::ComPtr<ID3D10Blob> m_VertexBlob;
 	public:
-		dxShader(const std::string& vertexSource, const std::string& pixelSource);
+		dxShader(const std::string& vertexSource, std::string& pixelSource);
 		~dxShader();
 
 		void Bind() override;

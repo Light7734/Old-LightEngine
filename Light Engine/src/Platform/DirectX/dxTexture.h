@@ -9,7 +9,6 @@
 
 namespace Light {
 
-
 	class dxTextureArray : public TextureArray
 	{
 	private:

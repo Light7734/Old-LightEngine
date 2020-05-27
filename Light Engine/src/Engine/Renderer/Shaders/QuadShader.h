@@ -80,7 +80,7 @@ void main()
 
 +HLSL
 SamplerState samplerState : register(s0);
-Texture2DArray textureArray : register(t0);
+Texture2DArray textureArray : register(BINDING_TEXTUREARRAY0);
 
 float4 main(float4 Color : COLOR, float3 TexCoords : TEXCOORDS) : SV_Target
 {

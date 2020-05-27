@@ -5,6 +5,15 @@
 
 namespace Light {
 
+	std::unordered_map<std::string, TextureBindingSlot> glShader::s_TextureSlotsMap =
+	{
+		LT_PAIR_TOKEN_NAME_TO_VALUE(BINDING_TEXTUREARRAY0),
+		LT_PAIR_TOKEN_NAME_TO_VALUE(BINDING_FONTGLYPHARRAY0),
+		LT_PAIR_TOKEN_NAME_TO_VALUE(BINDING_FRAMEBUFFER0),
+		LT_PAIR_TOKEN_NAME_TO_VALUE(BINDING_FRAMEBUFFER1),
+		LT_PAIR_TOKEN_NAME_TO_VALUE(BINDING_FRAMEBUFFER2),
+	};
+
 	glShader::glShader(const std::string& vertexSource, const std::string& fragmentSource)
 	{
 		LT_PROFILE_FUNC();

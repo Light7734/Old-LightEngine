@@ -9,6 +9,7 @@ namespace Light {
 	class glShader : public Shader
 	{
 	private:
+		static std::unordered_map<std::string, TextureBindingSlot> s_TextureSlotsMap;
 		unsigned int m_ShaderID;
 	public:
 		glShader(const std::string& vertexSource, const std::string& fragmentSource);

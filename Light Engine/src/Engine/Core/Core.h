@@ -60,8 +60,9 @@
 
 
 // utility
-#define LT_MAP_MACRO_VALUE_TO_NAME(macro) { macro, #macro }
-#define LT_MAP_MACRO_NAME_TO_VALUE(macro) { #macro, macro }
+#define LT_PAIR_TOKEN_VALUE_TO_NAME(token) { token, #token }
+#define LT_PAIR_TOKEN_NAME_TO_VALUE(token) { #token, token }
+#define LT_TOKEN_TO_STRING(token) #token
 #define BIT(x) 1 << x
 
 

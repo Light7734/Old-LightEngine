@@ -17,8 +17,8 @@ void main()
 
 
 +HLSL // HLSL PIXEL SHADER //
-Texture2D frameTexture : register(t2);
 SamplerState linearSampler : register(s0);
+Texture2D frameTexture : register(BINDING_FRAMEBUFFER0);
 
 float4 main(float2 TexCoords : TEXCOORDS) : SV_TARGET
 {

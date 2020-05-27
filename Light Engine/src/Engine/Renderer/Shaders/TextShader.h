@@ -77,7 +77,7 @@ void main()
 
 +HLSL
 SamplerState samplerState : register(s1);
-Texture2DArray textureArray : register(t1);
+Texture2DArray textureArray : register(BINDING_FONTGLYPHARRAY0);
 
 float4 main(float4 Color : COLOR, float3 TexCoords : TEXCOORDS) : SV_Target
 {

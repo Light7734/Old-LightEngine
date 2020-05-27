@@ -40,8 +40,8 @@ void main()
 
 
 +HLSL // HLSL PIXEL SHADER //
-Texture2D frameTexture : register(t2);
 SamplerState linearSampler : register(s0);
+Texture2D frameTexture : register(BINDING_FRAMEBUFFER0);
 
 cbuffer	KarnelFSConstant : register(b0)
 {

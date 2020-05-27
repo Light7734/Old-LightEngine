@@ -9,11 +9,24 @@
 
 namespace Light {
 
-	dxShader::dxShader(const std::string& vertexSource, const std::string& pixelSource)
+	std::vector<std::pair<const std::string, const std::string>> dxShader::s_TextureSlotsMap =
+	{
+		{ LT_TOKEN_TO_STRING(BINDING_TEXTUREARRAY0)  , 't' + std::to_string(BINDING_TEXTUREARRAY0)   },
+		{ LT_TOKEN_TO_STRING(BINDING_FONTGLYPHARRAY0), 't' + std::to_string(BINDING_FONTGLYPHARRAY0) },
+		{ LT_TOKEN_TO_STRING(BINDING_FRAMEBUFFER0)   , 't' + std::to_string(BINDING_FRAMEBUFFER0)    },
+		{ LT_TOKEN_TO_STRING(BINDING_FRAMEBUFFER1)   , 't' + std::to_string(BINDING_FRAMEBUFFER1)    },
+		{ LT_TOKEN_TO_STRING(BINDING_FRAMEBUFFER2)   , 't' + std::to_string(BINDING_FRAMEBUFFER2)    },
+	};
+
+	dxShader::dxShader(const std::string& vertexSource, std::string& pixelSource)
 	{
 		LT_PROFILE_FUNC();
 
 		Microsoft::WRL::ComPtr<ID3DBlob> ps = nullptr, vsErr = nullptr, psErr = nullptr;
+
+		for (const auto& it : s_TextureSlotsMap)
+			while (pixelSource.find(it.first) != std::string::npos)
+				pixelSource.replace(pixelSource.find(it.first), it.first.size(), it.second);
 
 		D3DCompile(vertexSource.c_str(), vertexSource.length(), NULL, nullptr, nullptr, "main", "vs_4_0", NULL, NULL, &m_VertexBlob, &vsErr);
 		D3DCompile(pixelSource.c_str() , pixelSource.length() , NULL, nullptr, nullptr, "main", "ps_4_0", NULL, NULL, &ps, &psErr);
