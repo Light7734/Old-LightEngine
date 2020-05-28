@@ -10,7 +10,7 @@ namespace Light {
 	{
 	private:
 		unsigned int m_TextureArrayID;
-		unsigned int m_Channels, m_Format;
+		unsigned int m_Format;
 	public:
 		glTextureArray(unsigned int width, unsigned int height, unsigned int depth, unsigned int channels);
 		~glTextureArray();

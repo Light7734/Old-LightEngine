@@ -17,9 +17,13 @@ namespace Light {
 		static std::unordered_map<std::string, std::shared_ptr<Font>> s_Fonts;
 	public:
 		static void LoadTexture(const std::string& name, const std::string& texturePath, const std::string& atlasPath);
-		static void DeleteTexture(const std::string& name);
-
+		static void LoadTexture(const std::string& name, const std::string& texturePath);
 		static void LoadFont(const std::string& name, const std::string& path, unsigned int size);
+
+		static void ResolveTextures();
+		static void ResolceFonts();
+
+		static void DeleteTexture(const std::string& name);
 		static void DeleteFont(const std::string& name);
 
 		static inline std::shared_ptr<Texture> GetTexture(const std::string& name) { return s_TextureArray->GetTexture(name); }

@@ -65,6 +65,9 @@
 #define LT_TOKEN_TO_STRING(token) #token
 #define BIT(x) 1 << x
 
+// resource limits (mostly arbitrary)
+#define LT_MAX_TEXTURE_ARRAY_SLICES    16u
+#define LT_MAX_TEXTURE_DIMENSIONS      2048u
 
 namespace Light {
 

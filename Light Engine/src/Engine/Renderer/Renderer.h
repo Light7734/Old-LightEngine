@@ -147,7 +147,7 @@ namespace Light {
 		static void BeginScene(const std::shared_ptr<Camera>& camera);
 
 		// quad renderer
-		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, SubTexture* texture, const glm::vec4& tint = glm::vec4(1.0f));
+		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const SubTexture& texture, const glm::vec4& tint = glm::vec4(1.0f));
 
 		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, float angle, SubTexture* texture, const glm::vec4& tint = glm::vec4(1.0f));
 

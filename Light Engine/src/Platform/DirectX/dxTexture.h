@@ -19,7 +19,6 @@ namespace Light {
 		unsigned int m_BoundSlot;
 
 		DXGI_FORMAT m_Format;
-		unsigned int m_Channels;
 	public:
 		dxTextureArray(unsigned int width, unsigned int height, unsigned int depth, unsigned int channels);
 		~dxTextureArray();

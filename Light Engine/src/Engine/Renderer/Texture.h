@@ -3,6 +3,7 @@
 #include "Core/Core.h"
 
 #include <unordered_map>
+#include <bitset>
 #include <set>
 
 namespace Light {
@@ -15,12 +16,18 @@ namespace Light {
 		TextureImageData(unsigned char* pixels_, int width_, int height_, int channels_)
 		                 : pixels(pixels_), width(width_), height(height_), channels(channels_) {}
 		TextureImageData() : pixels(nullptr), width(0), height(0), channels(0) {}
-		TextureImageData(const TextureImageData&) = delete;
-		TextureImageData& operator=(const TextureImageData&) = delete;
-
-		~TextureImageData() { free(pixels); }
-
+			
 		inline operator bool() const { return pixels && width && height && channels; }
+
+		inline bool operator<(const TextureImageData& other)
+		{
+			return width * height < other.width* other.height;
+		}
+
+		inline bool operator>(const TextureImageData& other)
+		{
+			return width * height > other.width * other.height;
+		}
 	};
 
 	struct SubTexture
@@ -44,29 +51,41 @@ namespace Light {
 		inline SubTexture* GetTexture() { return &m_Texture; }
 
 		inline unsigned int GetSliceIndex() const { return m_Texture.sliceIndex; }
+		inline unsigned int GetWidth() const { return m_Texture.xMax - m_Texture.xMin; }
+		inline unsigned int GetHeight() const { return m_Texture.yMax - m_Texture.yMin; }
 	};
 
 	class TextureArray
 	{
 	protected:
-		std::vector<unsigned int> m_AvailableSlots;	
 		std::unordered_map<std::string, std::shared_ptr<Texture>> m_Textures;
 
-		unsigned int m_Width, m_Height, m_Depth;
-		unsigned int m_CurrentIndex;
+		unsigned int m_Width, m_Height, m_Depth, m_Channels;
 
-		std::set<unsigned int> m_FreedSlices;
+		struct UnresolvedTextureData {
+			std::string name;
+			std::string atlasPath;
+			TextureImageData texture;	
+
+			inline bool operator>(const UnresolvedTextureData& other) { // to be used by std::sort
+				return texture.width * texture.height > other.texture.width * other.texture.height;
+			}
+		};
+		std::vector<UnresolvedTextureData> m_UnresolvedTextures;
+		std::vector< std::array<std::bitset<2048>, 2048> > m_Pixels;
 	public:
-		TextureArray(unsigned int width, unsigned int height, unsigned int depth);
+		TextureArray(unsigned int width, unsigned int height, unsigned int depth, unsigned int channels);
 		virtual ~TextureArray() = default;
 
 		static std::shared_ptr<TextureArray> Create(unsigned int width, unsigned int height, unsigned int depth, unsigned int channels = 4);
 
-		void CreateSlice(const std::string& name, const std::string& texturePath, const std::string& atlasPath);
+		void LoadTexture(const std::string& name, const std::string& texturePath, const std::string& atlasPath);
+		void LoadTexture(const std::string& name, const std::string& texturePath);
+		void LoadTexture(const std::string& name, unsigned width, unsigned int height);
 
-		void CreateSlice(const std::string& name, unsigned int width, unsigned int height);
+		void ResolveTextures();
 
-		void DeleteSlice(const std::string& name);
+		void DeleteTexture(const std::string& name);
 
 		virtual void UpdateSubTexture(unsigned int xoffset, unsigned int yoffset, unsigned int zoffset, unsigned int width, unsigned int height, void* pixels) = 0;
 

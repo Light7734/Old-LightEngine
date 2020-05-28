@@ -22,8 +22,11 @@ namespace Light {
 		std::stringstream stream(atlas);
 		std::string line;
 
-		float xRatio = texture.xMax / slice.xMax;
-		float yRatio = texture.yMax / slice.yMax;
+		float xRatio = (texture.xMax - texture.xMin) / slice.xMax;
+		float yRatio = (texture.yMax - texture.yMin) / slice.yMax;
+
+		float xOffset = texture.xMin * xRatio;
+		float yOffset = texture.yMin * yRatio;
 
 		// note: I'm using (CodeAndWeb)TexturePacker with a custom exporter
 		while (std::getline(stream, line))
@@ -40,7 +43,11 @@ namespace Light {
 			std::getline(lineStream, temp, ' '); xMax = std::stof(temp); xMax += xMin;
 			std::getline(lineStream, temp, ' '); yMax = std::stof(temp); yMax += yMin;
 
-			m_SubTextures[name] = { xMin * xRatio, yMin * yRatio, xMax * xRatio, yMax * yRatio, texture.sliceIndex };
+			m_SubTextures[name] = { xMin * xRatio + xOffset,
+			                        yMin * yRatio + yOffset,
+			                        xMax * xRatio + xOffset,
+			                        yMax * yRatio + yOffset,
+			                        texture.sliceIndex };
 		}
 	}
 
@@ -49,9 +56,10 @@ namespace Light {
 	{
 	}
 
-	TextureArray::TextureArray(unsigned int width, unsigned int height, unsigned int depth)
-		: m_Width(width), m_Height(height), m_Depth(depth), m_CurrentIndex(0)
+	TextureArray::TextureArray(unsigned int width, unsigned int height, unsigned int depth, unsigned int channels)
+		: m_Width(width), m_Height(height), m_Depth(depth), m_Channels(channels)
 	{
+		m_Pixels.resize(depth);
 	}
 
 	std::shared_ptr<Light::TextureArray> TextureArray::Create(unsigned int width, unsigned int height, unsigned int depth, unsigned int channels /*= 4*/)
@@ -68,52 +76,82 @@ namespace Light {
 			LT_CORE_ASSERT(false, "TextureArray::Create: invalid GraphicsAPI");
 		}
 	}
-	
-	void TextureArray::CreateSlice(const std::string& name, const std::string& texturePath, const std::string& atlasPath)
+
+	void TextureArray::LoadTexture(const std::string& name, const std::string& texturePath, const std::string& atlasPath)
 	{
-		TextureImageData data = FileManager::LoadTextureFile(texturePath);
-		unsigned int slice;
+		m_UnresolvedTextures.push_back({ name, atlasPath, FileManager::LoadTextureFile(texturePath) });
+	}
 
-		if (!m_FreedSlices.empty())
+	void TextureArray::LoadTexture(const std::string& name, const std::string& texturePath)
+	{
+		m_UnresolvedTextures.push_back( { name, "", FileManager::LoadTextureFile(texturePath)} );
+	}
+
+	void TextureArray::LoadTexture(const std::string& name, unsigned width, unsigned int height)
+	{
+		m_UnresolvedTextures.push_back({ name, "", TextureImageData(nullptr, width, height, m_Channels) });
+	}
+
+	void TextureArray::ResolveTextures()
+	{
+		bool found = false;
+
+		std::sort(m_UnresolvedTextures.begin(), m_UnresolvedTextures.end(), std::greater());
+
+		for (auto& data : m_UnresolvedTextures)
 		{
-			slice = *m_FreedSlices.begin();
-			m_FreedSlices.erase(slice);
+			auto& t = data.texture;
+
+			for (int z = 0; z < m_Depth; z++)
+			{
+				for (int y = 0; y < m_Height - t.height && !found; y++)
+				{
+					for (int x = 0; x <= m_Width - t.width && !found; x++)
+					{
+						bool valid = !(m_Pixels[z][       y        ][       x       ] ||
+							           m_Pixels[z][       y        ][x + t.width - 1] ||
+							           m_Pixels[z][y + t.height - 1][       x       ] ||
+							           m_Pixels[z][y + t.height - 1][x + t.width - 1]);
+
+						if (valid)
+							for (int yi = 0; yi < t.height - 1 && valid; yi++)
+								for (int xi = 0; xi < t.width - 1; xi++)
+									if (m_Pixels[z][y + yi][x + xi])
+										{ valid = false; break; }
+
+						if (valid)
+						{
+							found = true;
+
+							for (int yi = 0; yi < t.height - 1 && valid; yi++)
+								for (int xi = 0; xi < t.width - 1; xi++)
+									m_Pixels[z][y + yi][x + xi] = true;
+
+							if(t.pixels)
+								UpdateSubTexture(x, y, 0u, t.width, t.height, t.pixels);
+
+							if(!data.atlasPath.empty())
+								m_Textures[data.name] = std::make_shared<Texture>(data.atlasPath, SubTexture(x, y, x + t.width, y + t.height, z),
+								                                                                  SubTexture(0, 0, m_Width, m_Height, z));
+							else
+								m_Textures[data.name] = std::make_shared<Texture>(SubTexture(x, y, x + t.width, y + t.height, z));
+						}
+					}
+				}
+			}
+
+			LT_CORE_ASSERT(found, " BLYAAAAAAAAAAAAT !");
+			found = false;
+			free(t.pixels);
 		}
-		else
-			slice = m_CurrentIndex++;
-
-		LT_CORE_ASSERT(data, "TextureArray::CreateSlice: failed to load texture file: {}", texturePath);
-		LT_CORE_ASSERT(slice <= m_Depth - 1, "TextureArray::CreateSlice: too many texture slices, limit: ", m_Depth);
-
-		UpdateSubTexture(0, 0, slice, data.width, data.height, data.pixels);
+		m_UnresolvedTextures.clear();
 		GenerateMips();
-
-		m_Textures[name] = std::make_shared<Texture>(atlasPath, SubTexture(0.0f, 0.0f, data.width, data.height, slice),
-		                                             SubTexture(0.0f, 0.0f, m_Width, m_Height, slice));
 	}
 
-	void TextureArray::CreateSlice(const std::string& name, unsigned int width, unsigned int height)
-	{
-		unsigned int slice;
-
-		if (!m_FreedSlices.empty())
-		{
-			slice = *m_FreedSlices.begin();
-			m_FreedSlices.erase(slice);
-		}
-		else
-			slice = m_CurrentIndex++;
-
-		LT_CORE_ASSERT(slice <= m_Depth - 1, "TextureArray::CreateSlice: too many texture slices, limit: {}", m_Depth);
-
-		m_Textures[name] = std::make_shared<Texture>(SubTexture(0.0f, 0.0f, width, height, slice));
-	}
-
-	void TextureArray::DeleteSlice(const std::string& name)
+	void TextureArray::DeleteTexture(const std::string& name)
 	{
 		if (m_Textures.find(name) != m_Textures.end())
 		{
-			m_FreedSlices.insert(m_Textures[name]->GetSliceIndex());
 			m_Textures.erase(name);
 		}
 		else

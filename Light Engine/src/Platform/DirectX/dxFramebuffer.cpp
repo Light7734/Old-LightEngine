@@ -78,6 +78,9 @@ namespace Light {
 	{
 		LT_PROFILE_FUNC();
 
+		if (!width)
+			return;
+
 		HRESULT hr;
 
 		D3D11_TEXTURE2D_DESC texture2dDesc;
@@ -94,7 +97,6 @@ namespace Light {
 		DXC(dxGraphicsContext::GetDevice()->CreateTexture2D(&texture2dDesc, nullptr, &m_Texture));
 		DXC(dxGraphicsContext::GetDevice()->CreateShaderResourceView(m_Texture.Get(), &srvDesc, &m_TextureView));
 		DXC(dxGraphicsContext::GetDevice()->CreateRenderTargetView(m_Texture.Get(), &rtvDesc, &m_TargetView));
-
 	}
 
 }

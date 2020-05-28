@@ -71,6 +71,9 @@ namespace Light {
 	{
 		LT_PROFILE_FUNC();
 
+		if (!width)
+			return;
+
 		glBindTexture(GL_TEXTURE_2D, m_TextureID);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, NULL, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 	}

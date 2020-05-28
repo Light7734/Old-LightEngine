@@ -8,7 +8,7 @@
 namespace Light {
 
 	glTextureArray::glTextureArray(unsigned int width, unsigned int height, unsigned int depth, unsigned int channels)
-		: TextureArray(width, height, depth), m_Channels(channels)
+		: TextureArray(width, height, depth, channels)
 	{
 		LT_PROFILE_FUNC();
 

@@ -116,7 +116,7 @@ namespace Light {
 		s_TextRenderer.Map();
 	}
 	
-	void Renderer::DrawQuad(const glm::vec2& position, const glm::vec2& size, SubTexture* texture, const glm::vec4& tint)
+	void Renderer::DrawQuad(const glm::vec2& position, const glm::vec2& size, const SubTexture& texture, const glm::vec4& tint)
 	{
 		if (s_QuadRenderer.mapCurrent == s_QuadRenderer.mapEnd)
 		{
@@ -135,25 +135,25 @@ namespace Light {
 
 		// TOP_LEFT  [ -0.5, -0.5 ]
 		s_QuadRenderer.mapCurrent->position = { xMin, yMin };
-		s_QuadRenderer.mapCurrent->str = { texture->xMin, texture->yMin, texture->sliceIndex };
+		s_QuadRenderer.mapCurrent->str = { texture.xMin, texture.yMin, texture.sliceIndex };
 		s_QuadRenderer.mapCurrent->tint = tint;
 		s_QuadRenderer.mapCurrent++;
 
 		// TOP_RIGHT [ 0.5, -0.5 ]
 		s_QuadRenderer.mapCurrent->position = { xMax, yMin };
-		s_QuadRenderer.mapCurrent->str = { texture->xMax, texture->yMin, texture->sliceIndex };
+		s_QuadRenderer.mapCurrent->str = { texture.xMax, texture.yMin, texture.sliceIndex };
 		s_QuadRenderer.mapCurrent->tint = tint;
 		s_QuadRenderer.mapCurrent++;
 
 		// BOTTOM_RIGHT [ 0.5, 0.5 ]
 		s_QuadRenderer.mapCurrent->position = { xMax, yMax };
-		s_QuadRenderer.mapCurrent->str = { texture->xMax, texture->yMax, texture->sliceIndex };
+		s_QuadRenderer.mapCurrent->str = { texture.xMax, texture.yMax, texture.sliceIndex };
 		s_QuadRenderer.mapCurrent->tint = tint;
 		s_QuadRenderer.mapCurrent++;
 
 		// BOTTOM_LEFT [ -0.5, 0.5 ]
 		s_QuadRenderer.mapCurrent->position = { xMin, yMax };
-		s_QuadRenderer.mapCurrent->str = { texture->xMin, texture->yMax, texture->sliceIndex };
+		s_QuadRenderer.mapCurrent->str = { texture.xMin, texture.yMax, texture.sliceIndex };
 		s_QuadRenderer.mapCurrent->tint = tint;
 		s_QuadRenderer.mapCurrent++;
 
