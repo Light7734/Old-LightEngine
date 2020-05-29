@@ -10,7 +10,7 @@
 
 namespace Light {
 
-	Font::Font(std::shared_ptr<TextureArray> textureArray, unsigned int slice, const std::string& path, unsigned int size)
+	Font::Font(std::shared_ptr<TextureArray> textureArray, SubTexture bounds, const std::string& path, unsigned int size)
 	{
 		LT_PROFILE_FUNC();
 
@@ -23,8 +23,14 @@ namespace Light {
 		LT_CORE_ASSERT(!FT_Set_Pixel_Sizes(face, 0, size), "Font::Font: FT_Set_Pixel_Sizes failed");
 
 		// load characters
+		float xOffset = bounds.xMin;
+		float yOffset = bounds.yMin;
+
 		float tcuX = 1.0f / textureArray->GetWidth();  // texture coordinates unit - x axis
 		float tcuY = 1.0f / textureArray->GetHeight(); // texture coordinates unit - y axis
+
+		float tcuXOffset = tcuX * bounds.xMin;
+		float tcuYOffset = tcuX * bounds.yMin;
 
 		unsigned int x = 0u, y = 0u;
 		unsigned int prevY = 0u, nextY = 0u;
@@ -39,20 +45,22 @@ namespace Light {
 									   (unsigned int)face->glyph->advance.x >> 6 };
 
 			// not enough space? go next line
-			if (x > textureArray->GetWidth() - character.size.x)
+			if (x + xOffset > bounds.xMax - character.size.x)
 			{
 				x = 0;
 				prevY = y;
 				y = nextY + LT_FONT_CHAR_PADDING;
+
+				LT_CORE_ASSERT(y < bounds.yMax, "BLYAT");
 			}
 
 			// write to texture slice
-			textureArray->UpdateSubTexture(x, y, slice, character.size.x, character.size.y, face->glyph->bitmap.buffer);
+			textureArray->UpdateSubTexture(x + xOffset, y + yOffset, bounds.sliceIndex, character.size.x, character.size.y, face->glyph->bitmap.buffer);
 
 			// figure out and set character's texture coordinates
-			character.glyph = { tcuX * x                     , tcuY * y,                      // xMin, yMin
-								tcuX * (x + character.size.x), tcuY * (y + character.size.y), // xMax, yMax
-			                    (float)slice }; // sliceIndex
+			character.glyph = { tcuX * (x + xOffset)                   , tcuY * (y + yOffset),                      // xMin, yMin
+								tcuX * (x + character.size.x + xOffset), tcuY * (y + character.size.y + yOffset), // xMax, yMax
+			                    (float)bounds.sliceIndex }; // sliceIndex
 
 			// find the character with largest 'height', we will add that much to 'y' when we go next line
 			if (nextY - prevY < character.size.y)

@@ -18,7 +18,7 @@ DemoLayer::DemoLayer()
 	m_AudioLayer = new AudioLayer;
 	m_QuadsLayer = new QuadsLayer(m_Camera);
 	m_PostProcessLayer = new PostProcessLayer;
-	// m_TextLayer = new TextLayer(m_Camera);
+	m_TextLayer = new TextLayer(m_Camera);
 }
 
 void DemoLayer::OnAttach()
@@ -30,7 +30,7 @@ void DemoLayer::OnAttach()
 	Light::Application::AttachLayer(m_AudioLayer);
 	Light::Application::AttachLayer(m_QuadsLayer);
 	Light::Application::AttachLayer(m_PostProcessLayer);
-	// Light::Application::AttachLayer(m_TextLayer);
+	Light::Application::AttachLayer(m_TextLayer);
 }
 
 void DemoLayer::OnDetatch()
@@ -55,12 +55,17 @@ void DemoLayer::OnUpdate(float DeltaTime)
 
 void DemoLayer::OnUserInterfaceUpdate()
 {
-	ImGui::Begin("Metrics", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
-	ImGui::Text("DeltaTime: %.3f", m_DeltaTime);
-	ImGui::Text("FPS:       %.3f", 1.0f / m_DeltaTime);
-	ImGui::End();
 
 	ImGui::Begin("DemoLayer", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+
+	if (ImGui::TreeNode("Metrics"))
+	{
+		ImGui::BulletText("DeltaTime: %.3f", m_DeltaTime);
+		ImGui::BulletText("FPS:       %.3f", 1.0f / m_DeltaTime);
+
+		ImGui::TreePop();
+	}
+	ImGui::Separator();
 
 	if (ImGui::TreeNode("Keyboard map"))
 	{

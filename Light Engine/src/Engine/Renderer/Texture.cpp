@@ -140,7 +140,7 @@ namespace Light {
 				}
 			}
 
-			LT_CORE_ASSERT(found, " BLYAAAAAAAAAAAAT !");
+			LT_CORE_ASSERT(found, "TextureArray::ResolveTextures: could not find a valid space for texture");
 			found = false;
 			free(t.pixels);
 		}

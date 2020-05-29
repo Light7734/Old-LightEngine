@@ -24,7 +24,7 @@ namespace Light {
 	{
 		s_FontGlyphs->LoadTexture(name, 1024u, 1024u);
 		s_FontGlyphs->ResolveTextures();
-		s_Fonts[name] = std::make_shared<Font>(s_FontGlyphs, s_FontGlyphs->GetTexture(name)->GetSliceIndex(), path, size);
+		s_Fonts[name] = std::make_shared<Font>(s_FontGlyphs, *s_FontGlyphs->GetTexture(name)->GetTexture(), path, size);
 	}
 
 	void ResourceManager::ResolveTextures()

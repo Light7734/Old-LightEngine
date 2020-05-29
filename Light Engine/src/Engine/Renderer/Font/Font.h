@@ -22,7 +22,7 @@ namespace Light {
 	private:
 		std::unordered_map<char, FontCharData> m_CharactersData;
 	public:
-		Font(std::shared_ptr<TextureArray> textureArray, unsigned int slice, const std::string& path, unsigned int size);
+		Font(std::shared_ptr<TextureArray> textureArray, SubTexture bounds, const std::string& path, unsigned int size);
 
 		inline const FontCharData& GetCharacterData(char character) const { return m_CharactersData.at(character); }
 	};
