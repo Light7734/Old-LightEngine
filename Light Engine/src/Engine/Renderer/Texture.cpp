@@ -12,10 +12,15 @@
 
 namespace Light {
 	
-	Texture::Texture(const std::string& atlasPath, const SubTexture& texture, const SubTexture& slice)
-		: m_Texture(texture)
+	Texture::Texture(const std::string& atlasPath, const TextureCoordinates& texture, const TextureCoordinates& slice)
+		: m_OccupiedSpace(texture), m_TextureUV(texture)
 	{
 		LT_PROFILE_FUNC();
+
+		m_TextureUV.xMin *= 1.0f / slice.xMax;
+		m_TextureUV.xMax *= 1.0f / slice.xMax;
+		m_TextureUV.yMin *= 1.0f / slice.yMax;
+		m_TextureUV.yMax *= 1.0f / slice.yMax;
 
 		std::string atlas = FileManager::LoadTextFile(atlasPath);
 
@@ -51,14 +56,13 @@ namespace Light {
 		}
 	}
 
-	Texture::Texture(const SubTexture& texture, const SubTexture& slice)
+	Texture::Texture(const TextureCoordinates& texture, const TextureCoordinates& slice)
+		: m_OccupiedSpace(texture), m_TextureUV(texture)
 	{
-		m_Texture = texture;
-
-		m_Texture.xMin *= 1.0f / slice.xMax;
-		m_Texture.xMax *= 1.0f / slice.xMax;
-		m_Texture.yMin *= 1.0f / slice.yMax;
-		m_Texture.yMax *= 1.0f / slice.yMax;
+		m_TextureUV.xMin *= 1.0f / slice.xMax;
+		m_TextureUV.xMax *= 1.0f / slice.xMax;
+		m_TextureUV.yMin *= 1.0f / slice.yMax;
+		m_TextureUV.yMax *= 1.0f / slice.yMax;
 	}
 
 	TextureArray::TextureArray(unsigned int width, unsigned int height, unsigned int depth, unsigned int channels)
@@ -81,25 +85,28 @@ namespace Light {
 		}
 	}
 
-	void TextureArray::LoadTexture(const std::string& name, const std::string& texturePath, const std::string& atlasPath)
+	void TextureArray::LoadTextureAtlas(const std::string& name, const std::string& texturePath, const std::string& atlasPath)
 	{
+		LT_PROFILE_FUNC();
 		m_UnresolvedTextures.push_back({ name, atlasPath, FileManager::LoadTextureFile(texturePath) });
 	}
 
 	void TextureArray::LoadTexture(const std::string& name, const std::string& texturePath)
 	{
+		LT_PROFILE_FUNC();
 		m_UnresolvedTextures.push_back( { name, "", FileManager::LoadTextureFile(texturePath)} );
 	}
 
-	void TextureArray::LoadTexture(const std::string& name, unsigned width, unsigned int height)
+	void TextureArray::AllocateTexture(const std::string& name, unsigned width, unsigned int height)
 	{
+		LT_PROFILE_FUNC();
 		m_UnresolvedTextures.push_back({ name, "", TextureImageData(nullptr, width, height, m_Channels) });
 	}
 
 	void TextureArray::ResolveTextures()
 	{
+		LT_PROFILE_FUNC();
 		std::sort(m_UnresolvedTextures.begin(), m_UnresolvedTextures.end(), std::greater());
-
 
 		for (const auto& data : m_UnresolvedTextures)
 		{
@@ -108,30 +115,31 @@ namespace Light {
 
 			for (uint16_t z = 0; z < m_Depth && !found; z++)
 			{
+				found = false;
 				for (uint16_t y = 0; y < m_Height - t.height && !found; y++)
 				{
 					for (uint16_t x = 0; x <= m_Width - t.width; x++)
 					{
-						const SubTexture bounds(x, y, x + t.width, y + t.height, z);
-						bool valid = true;
+						const TextureCoordinates uv(x, y, x + t.width, y + t.height, z);
 
+						bool valid = true;
 						for (const auto& subt : m_OccupiedSpace)
-							if(subt.Intersects(bounds))
+							if(subt.Intersects(uv))
 								{ valid = false; break; }
 
 						if (valid)
 						{
 							found = true;
-							m_OccupiedSpace.push_back(bounds);
+							m_OccupiedSpace.push_back(uv);
 
 							if(t.pixels)
-								UpdateSubTexture(bounds, t.pixels);
+								UpdateSubTexture(uv, t.pixels);
 
 							if (!data.atlasPath.empty())
-								m_Textures[data.name] = std::make_shared<Texture>(data.atlasPath, bounds,
-								                                                  SubTexture(0, 0, m_Width, m_Height, z));
+								m_Textures[data.name] = std::make_shared<Texture>(data.atlasPath, uv,
+									                                              TextureCoordinates(0, 0, m_Width, m_Height, z));
 							else
-								m_Textures[data.name] = std::make_shared<Texture>(bounds, SubTexture(0, 0, m_Width, m_Height, z));
+								m_Textures[data.name] = std::make_shared<Texture>(uv, TextureCoordinates(0, 0, m_Width, m_Height, z));
 
 							break;
 						}
@@ -141,7 +149,6 @@ namespace Light {
 
 			LT_CORE_ASSERT(found, "TextureArray::ResolveTextures: could not find a valid space for texture");
 			found = false;
-			free(t.pixels);
 		}
 
 		m_UnresolvedTextures.clear();
@@ -150,12 +157,13 @@ namespace Light {
 
 	void TextureArray::DeleteTexture(const std::string& name)
 	{
-		if (m_Textures.find(name) != m_Textures.end())
-		{
-			m_Textures.erase(name);
-		}
-		else
-			LT_CORE_ERROR("TextureArray::DeleteSlice: failed to find slice: {}", name);
+		LT_CORE_ASSERT(m_Textures.find(name) != m_Textures.end(), "TextureArray::DeleteTexture: failed to find texture: {}", name);
+
+		auto it = std::find(m_OccupiedSpace.begin(), m_OccupiedSpace.end(), *m_Textures[name]->GetOccupiedSpace());
+		LT_CORE_ASSERT(it != m_OccupiedSpace.end(), "TextureArray::DeleteTexture: occupied space of '{}' doesn't match any of TextureArray's", name);
+		
+		m_OccupiedSpace.erase(it);
+		m_Textures.erase(name);
 	}
 	
 }	

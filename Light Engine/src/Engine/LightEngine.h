@@ -70,7 +70,7 @@
 // ---------------------------
 
 // Renderer -----------------
-#include "Renderer/Font/Font.h"
+#include "Renderer/Font.h"
 #include "Renderer/Camera.h"
 #include "Renderer/CameraController.h"
 #include "Renderer/Blender.h"

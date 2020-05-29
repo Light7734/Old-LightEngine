@@ -4,7 +4,7 @@
 
 #include "Renderer/Texture.h"
 
-#include "Renderer/Font/Font.h"
+#include "Renderer/Font.h"
 
 namespace Light {
 
@@ -16,7 +16,7 @@ namespace Light {
 
 		static std::unordered_map<std::string, std::shared_ptr<Font>> s_Fonts;
 	public:
-		static void LoadTexture(const std::string& name, const std::string& texturePath, const std::string& atlasPath);
+		static void LoadTextureAtlas(const std::string& name, const std::string& texturePath, const std::string& atlasPath);
 		static void LoadTexture(const std::string& name, const std::string& texturePath);
 		static void LoadFont(const std::string& name, const std::string& path, unsigned int size);
 

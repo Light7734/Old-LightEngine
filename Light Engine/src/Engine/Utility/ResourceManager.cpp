@@ -10,9 +10,9 @@ namespace Light {
 
 	std::unordered_map<std::string, std::shared_ptr<Font>> ResourceManager::s_Fonts;
 
-	void ResourceManager::LoadTexture(const std::string& name, const std::string& texturePath, const std::string& atlasPath)
+	void ResourceManager::LoadTextureAtlas(const std::string& name, const std::string& texturePath, const std::string& atlasPath)
 	{
-		s_TextureArray->LoadTexture(name, texturePath, atlasPath);
+		s_TextureArray->LoadTextureAtlas(name, texturePath, atlasPath);
 	}
 
 	void ResourceManager::LoadTexture(const std::string& name, const std::string& texturePath)
@@ -22,9 +22,8 @@ namespace Light {
 
 	void ResourceManager::LoadFont(const std::string& name, const std::string& path, unsigned int size)
 	{
-		s_FontGlyphs->LoadTexture(name, 1024u, 1024u);
 		s_FontGlyphs->ResolveTextures();
-		s_Fonts[name] = std::make_shared<Font>(s_FontGlyphs, *s_FontGlyphs->GetTexture(name)->GetTexture(), path, size);
+		s_Fonts[name] = std::make_shared<Font>(name, path, s_FontGlyphs, size);
 	}
 
 	void ResourceManager::ResolveTextures()
@@ -34,12 +33,12 @@ namespace Light {
 
 	void ResourceManager::DeleteTexture(const std::string& name)
 	{
-		// s_TextureArray->DeleteSlice(name);
+		s_TextureArray->DeleteTexture(name);
 	}
 
 	void ResourceManager::DeleteFont(const std::string& name)
 	{
-		// s_FontGlyphs->DeleteSlice(name);
+		s_FontGlyphs->DeleteTexture(name);
 		s_Fonts.erase(name);
 	}
 

@@ -77,7 +77,7 @@ namespace Light {
 		                                                         width * height * m_Channels);
 	}
 
-	void dxTextureArray::UpdateSubTexture(const SubTexture& bounds, void* pixels)
+	void dxTextureArray::UpdateSubTexture(const TextureCoordinates& bounds, void* pixels)
 	{
 		LT_PROFILE_FUNC();
 

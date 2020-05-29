@@ -49,13 +49,13 @@ namespace Light {
 		glTextureSubImage3D(m_TextureArrayID, 0, xoffset, yoffset, zoffset, width, height, 1, m_Format, GL_UNSIGNED_BYTE, pixels);
 	}
 
-	void glTextureArray::UpdateSubTexture(const SubTexture& bounds, void* pixels)
+	void glTextureArray::UpdateSubTexture(const TextureCoordinates& uv, void* pixels)
 	{
 		LT_PROFILE_FUNC();
 
 		glPixelStorei(GL_UNPACK_ALIGNMENT, m_Channels);
-		glTextureSubImage3D(m_TextureArrayID, 0, bounds.xMin, bounds.yMin, bounds.sliceIndex,
-		                                         bounds.xMax - bounds.xMin, bounds.yMax - bounds.yMin, 1, m_Format, GL_UNSIGNED_BYTE, pixels);
+		glTextureSubImage3D(m_TextureArrayID, 0, uv.xMin, uv.yMin, uv.sliceIndex,
+		                                         uv.xMax - uv.xMin, uv.yMax - uv.yMin, 1, m_Format, GL_UNSIGNED_BYTE, pixels);
 	}
 
 	void glTextureArray::GenerateMips()

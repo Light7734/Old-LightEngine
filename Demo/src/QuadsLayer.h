@@ -8,7 +8,7 @@ struct Sprite
 	glm::vec2 size;
 	glm::vec4 tint = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
-	Light::SubTexture* texture;
+	Light::TextureCoordinates* uv;
 };
 
 class QuadsLayer : public Light::Layer

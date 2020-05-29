@@ -7,7 +7,7 @@
 #include "RenderCommand.h"
 #include "Texture.h"
 
-#include "Font/Font.h"
+#include "Font.h"
 #include "Shaders/QuadShader.h"
 #include "Shaders/TextShader.h"
 
@@ -116,7 +116,7 @@ namespace Light {
 		s_TextRenderer.Map();
 	}
 	
-	void Renderer::DrawQuad(const glm::vec2& position, const glm::vec2& size, const SubTexture& texture, const glm::vec4& tint)
+	void Renderer::DrawQuad(const glm::vec2& position, const glm::vec2& size, const TextureCoordinates& texture, const glm::vec4& tint)
 	{
 		if (s_QuadRenderer.mapCurrent == s_QuadRenderer.mapEnd)
 		{
@@ -160,7 +160,7 @@ namespace Light {
 		s_QuadRenderer.quadCount++;
 	}
 
-	void Renderer::DrawQuad(const glm::vec2& position, const glm::vec2& size, float angle, SubTexture* texture, const glm::vec4& tint)
+	void Renderer::DrawQuad(const glm::vec2& position, const glm::vec2& size, float angle, TextureCoordinates* texture, const glm::vec4& tint)
 	{
 		if (s_QuadRenderer.mapCurrent == s_QuadRenderer.mapEnd)
 		{
