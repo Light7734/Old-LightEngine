@@ -180,22 +180,22 @@ bool DemoLayer::OnKeyPress(Light::KeyboardKeyPressedEvent& event)
 	{
 		Light::Application::DetachLayer(m_QuadsLayer);
 		Light::Application::DetachLayer(m_PostProcessLayer);
-		// Light::Application::DetachLayer(m_TextLayer);
+		Light::Application::DetachLayer(m_TextLayer);
 
 		delete m_QuadsLayer;
 		delete m_PostProcessLayer;
-		// delete m_TextLayer;
+		delete m_TextLayer;
 
 		Light::GraphicsContext::CreateContext(event.GetKey() == KEY_E ? Light::GraphicsAPI::Opengl : Light::GraphicsAPI::Directx,
 		                                      Light::GraphicsContext::GetConfigurations());
 
 		m_QuadsLayer = new QuadsLayer(m_Camera);
 		m_PostProcessLayer = new PostProcessLayer;
-		// m_TextLayer = new TextLayer(m_Camera);
+		m_TextLayer = new TextLayer(m_Camera);
 
 		Light::Application::AttachLayer(m_QuadsLayer);
 		Light::Application::AttachLayer(m_PostProcessLayer);
-		// Light::Application::AttachLayer(m_TextLayer);
+		Light::Application::AttachLayer(m_TextLayer);
 	}
 
 	if (event.GetKey() == KEY_Z)

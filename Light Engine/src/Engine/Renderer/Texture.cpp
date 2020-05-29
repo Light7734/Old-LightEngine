@@ -51,15 +51,19 @@ namespace Light {
 		}
 	}
 
-	Texture::Texture(const SubTexture& texture)
-		: m_Texture(texture)
+	Texture::Texture(const SubTexture& texture, const SubTexture& slice)
 	{
+		m_Texture = texture;
+
+		m_Texture.xMin *= 1.0f / slice.xMax;
+		m_Texture.xMax *= 1.0f / slice.xMax;
+		m_Texture.yMin *= 1.0f / slice.yMax;
+		m_Texture.yMax *= 1.0f / slice.yMax;
 	}
 
 	TextureArray::TextureArray(unsigned int width, unsigned int height, unsigned int depth, unsigned int channels)
 		: m_Width(width), m_Height(height), m_Depth(depth), m_Channels(channels)
 	{
-		m_Pixels.resize(depth);
 	}
 
 	std::shared_ptr<Light::TextureArray> TextureArray::Create(unsigned int width, unsigned int height, unsigned int depth, unsigned int channels /*= 4*/)
@@ -94,47 +98,42 @@ namespace Light {
 
 	void TextureArray::ResolveTextures()
 	{
-		bool found = false;
-
 		std::sort(m_UnresolvedTextures.begin(), m_UnresolvedTextures.end(), std::greater());
 
-		for (auto& data : m_UnresolvedTextures)
+
+		for (const auto& data : m_UnresolvedTextures)
 		{
-			auto& t = data.texture;
+			bool found = false;
+			auto t = data.texture;
 
-			for (int z = 0; z < m_Depth; z++)
+			for (uint16_t z = 0; z < m_Depth && !found; z++)
 			{
-				for (int y = 0; y < m_Height - t.height && !found; y++)
+				for (uint16_t y = 0; y < m_Height - t.height && !found; y++)
 				{
-					for (int x = 0; x <= m_Width - t.width && !found; x++)
+					for (uint16_t x = 0; x <= m_Width - t.width; x++)
 					{
-						bool valid = !(m_Pixels[z][       y        ][       x       ] ||
-							           m_Pixels[z][       y        ][x + t.width - 1] ||
-							           m_Pixels[z][y + t.height - 1][       x       ] ||
-							           m_Pixels[z][y + t.height - 1][x + t.width - 1]);
+						const SubTexture bounds(x, y, x + t.width, y + t.height, z);
+						bool valid = true;
 
-						if (valid)
-							for (int yi = 0; yi < t.height - 1 && valid; yi++)
-								for (int xi = 0; xi < t.width - 1; xi++)
-									if (m_Pixels[z][y + yi][x + xi])
-										{ valid = false; break; }
+						for (const auto& subt : m_OccupiedSpace)
+							if(subt.Intersects(bounds))
+								{ valid = false; break; }
 
 						if (valid)
 						{
 							found = true;
-
-							for (int yi = 0; yi < t.height - 1 && valid; yi++)
-								for (int xi = 0; xi < t.width - 1; xi++)
-									m_Pixels[z][y + yi][x + xi] = true;
+							m_OccupiedSpace.push_back(bounds);
 
 							if(t.pixels)
-								UpdateSubTexture(x, y, 0u, t.width, t.height, t.pixels);
+								UpdateSubTexture(bounds, t.pixels);
 
-							if(!data.atlasPath.empty())
-								m_Textures[data.name] = std::make_shared<Texture>(data.atlasPath, SubTexture(x, y, x + t.width, y + t.height, z),
-								                                                                  SubTexture(0, 0, m_Width, m_Height, z));
+							if (!data.atlasPath.empty())
+								m_Textures[data.name] = std::make_shared<Texture>(data.atlasPath, bounds,
+								                                                  SubTexture(0, 0, m_Width, m_Height, z));
 							else
-								m_Textures[data.name] = std::make_shared<Texture>(SubTexture(x, y, x + t.width, y + t.height, z));
+								m_Textures[data.name] = std::make_shared<Texture>(bounds, SubTexture(0, 0, m_Width, m_Height, z));
+
+							break;
 						}
 					}
 				}
@@ -144,6 +143,7 @@ namespace Light {
 			found = false;
 			free(t.pixels);
 		}
+
 		m_UnresolvedTextures.clear();
 		GenerateMips();
 	}

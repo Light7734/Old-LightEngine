@@ -139,7 +139,9 @@ namespace Light {
 		m_DeviceContext.Reset();
 		m_Device.Reset();
  		
+#ifdef LIGHT_DEBUG
 		debugInterface->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
+#endif
 	}
 
 	void dxGraphicsContext::SwapBuffers()

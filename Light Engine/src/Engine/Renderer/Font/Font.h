@@ -21,6 +21,7 @@ namespace Light {
 	{
 	private:
 		std::unordered_map<char, FontCharData> m_CharactersData;
+		SubTexture m_Texture;
 	public:
 		Font(std::shared_ptr<TextureArray> textureArray, SubTexture bounds, const std::string& path, unsigned int size);
 

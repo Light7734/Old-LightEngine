@@ -77,6 +77,26 @@ namespace Light {
 		                                                         width * height * m_Channels);
 	}
 
+	void dxTextureArray::UpdateSubTexture(const SubTexture& bounds, void* pixels)
+	{
+		LT_PROFILE_FUNC();
+
+		D3D11_BOX box;
+		box.left = bounds.xMin;
+		box.right = bounds.xMax;
+		box.top = bounds.yMin;
+		box.bottom = bounds.yMax;
+		box.front = bounds.sliceIndex;
+		box.back = bounds.sliceIndex + 1;
+
+		dxGraphicsContext::GetDeviceContext()->UpdateSubresource(m_Texture.Get(),
+		                                                         D3D11CalcSubresource(0, bounds.sliceIndex, m_MipLevels),
+		                                                         &box,
+		                                                         pixels,
+		                                                         (bounds.xMax - bounds.xMin) * m_Channels,
+		                                                         (bounds.xMax - bounds.xMin) * (bounds.yMax - bounds.yMin) * m_Channels);
+	}
+
 	void dxTextureArray::GenerateMips()
 	{
 		LT_PROFILE_FUNC();

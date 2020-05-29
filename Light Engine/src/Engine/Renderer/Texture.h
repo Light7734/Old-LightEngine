@@ -36,6 +36,23 @@ namespace Light {
 
 		SubTexture() = default;
 		SubTexture(float xMin_, float yMin_, float xMax_, float yMax_, float index) : xMin(xMin_), xMax(xMax_), yMin(yMin_), yMax(yMax_), sliceIndex(index) {}
+
+		bool Contains(const SubTexture& other) const
+		{
+			return sliceIndex == other.sliceIndex &&
+				   xMin >= other.xMin &&
+			       xMax <= other.xMax &&
+			       yMin >= other.yMin &&
+			       yMax <= other.yMax;
+		}
+
+		bool Intersects(const SubTexture& other) const
+		{
+			return sliceIndex == other.sliceIndex && 
+			       (xMax >= other.xMin) && (other.xMax >= xMin) &&
+			       (yMax >= other.yMin) && (other.yMax >= yMin);
+		}
+
 	};
 
 	class Texture
@@ -45,7 +62,7 @@ namespace Light {
 		SubTexture m_Texture;
 	public:
 		Texture(const std::string& atlasPath, const SubTexture& texture, const SubTexture& slice);
-		Texture(const SubTexture& texture);
+		Texture(const SubTexture& texture, const SubTexture& slice);
 
 		inline SubTexture* GetSubTexture(const std::string& name) { return &m_SubTextures[name]; }
 		inline SubTexture* GetTexture() { return &m_Texture; }
@@ -59,7 +76,6 @@ namespace Light {
 	{
 	protected:
 		std::unordered_map<std::string, std::shared_ptr<Texture>> m_Textures;
-
 		unsigned int m_Width, m_Height, m_Depth, m_Channels;
 
 		struct UnresolvedTextureData {
@@ -72,7 +88,7 @@ namespace Light {
 			}
 		};
 		std::vector<UnresolvedTextureData> m_UnresolvedTextures;
-		std::vector< std::array<std::bitset<2048>, 2048> > m_Pixels;
+		std::vector<SubTexture> m_OccupiedSpace;
 	public:
 		TextureArray(unsigned int width, unsigned int height, unsigned int depth, unsigned int channels);
 		virtual ~TextureArray() = default;
@@ -88,6 +104,7 @@ namespace Light {
 		void DeleteTexture(const std::string& name);
 
 		virtual void UpdateSubTexture(unsigned int xoffset, unsigned int yoffset, unsigned int zoffset, unsigned int width, unsigned int height, void* pixels) = 0;
+		virtual void UpdateSubTexture(const SubTexture& bounds, void* pixels) = 0;
 
 		virtual void GenerateMips() = 0;
 

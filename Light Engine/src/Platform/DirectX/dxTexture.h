@@ -24,6 +24,7 @@ namespace Light {
 		~dxTextureArray();
 
 		void UpdateSubTexture(unsigned int xoffset, unsigned int yoffset, unsigned int zoffset, unsigned int width, unsigned int height, void* pixels) override;
+		void UpdateSubTexture(const SubTexture& bounds, void* pixels) override;
 
 		void GenerateMips() override;
 

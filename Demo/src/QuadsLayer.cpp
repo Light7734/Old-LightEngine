@@ -11,8 +11,10 @@ QuadsLayer::QuadsLayer(std::shared_ptr<Light::Camera> camera)
 
 	// create texture atlas to extract coordinates of texture array's slices
 	Light::ResourceManager::LoadTexture("QuadsLayerAtlas", "res/atlas.png", "res/atlas.txt");
+
 	Light::ResourceManager::ResolveTextures();
 	std::shared_ptr<Light::Texture> atlas = Light::ResourceManager::GetTexture("QuadsLayerAtlas");
+
 
 	Light::SubTexture* awesomeface = atlas->GetSubTexture("awesomeface");
 
@@ -56,8 +58,10 @@ void QuadsLayer::OnRender()
 {
 	Light::Renderer::BeginScene(m_Camera);
 
+	Light::Renderer::DrawQuad(glm::vec2(0.0f, 0.0f), glm::vec2(2048, 2048), Light::SubTexture(0.0f, 0.0f, 1.0f, 1.0f, 0.0f));
+
 	for (const auto& sprite : m_Sprites)
-		Light::Renderer::DrawQuad(sprite.position, sprite.size, glm::radians(m_Angle), sprite.texture, sprite.tint);
+		Light::Renderer::DrawQuad(sprite.position, sprite.size, glm::radians(m_Angle), sprite.texture, sprite.tint); 
 
 	Light::Renderer::EndScene();
 }
