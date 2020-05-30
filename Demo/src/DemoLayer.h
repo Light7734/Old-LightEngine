@@ -3,23 +3,23 @@
 #include <LightEngine.h>
 
 class AudioLayer;
-class QuadsLayer;
 class PostProcessLayer;
+class QuadsLayer;
 class TextLayer;
 
 class DemoLayer : public Light::Layer
 {
 private:	
+	// layers
 	AudioLayer* m_AudioLayer;
-	QuadsLayer* m_QuadsLayer;
 	PostProcessLayer* m_PostProcessLayer;
+	QuadsLayer* m_QuadsLayer;
 	TextLayer* m_TextLayer;
 
-	float m_DeltaTime = 0.0f;
-
+	// camera
 	std::shared_ptr<Light::Camera> m_Camera;
 	std::shared_ptr<Light::CameraController> m_CameraController;
-	float m_CameraSpeed;
+	float m_CameraSpeed, m_CameraZoomSpeed;
 public:
 	DemoLayer();
 

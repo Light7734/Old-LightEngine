@@ -3,41 +3,28 @@
 
 #include <Core/EntryPoint.h> // this must be included in only one cpp file
 
-class t : public Light::Layer
-{
-public:
-	t() { LT_TRACE("t construct"); }
-	void OnAttach() override { LT_TRACE("t attach!"); }
-	void OnDetatch() override { LT_TRACE("t detatch!"); }
-};
-
 Demo::Demo()
 {
 	LT_PROFILE_FUNC();
+	LT_TRACE("Demo::Demo");
 
-	// seed rand
-	srand(time(NULL));
-
-	// create window data
+	// initialize window
 	Light::WindowData wd;
-	wd.title       = "Demo";
+	wd.title = "Demo";
 	wd.displayMode = Light::DisplayMode::Windowed;
 
-	// create graphics configurations
 	Light::GraphicsConfigurations gc;
-	gc.resolution = Light::Resolution(1280, 720, Light::AspectRatio::AR_16_9);
-	gc.vSync      = true;
+	gc.resolution = Light::Resolution(1280u, 720u, Light::AspectRatio::AR_16_9);
 
-	// create window and set callback function
 	m_Window = std::make_unique<Light::Window>(wd, gc, Light::GraphicsAPI::Directx);
-	m_Window->SetEventCallbackFunction(LT_EVENT_FN(Light::Application::OnEvent));
 
+	// attach demo layer
 	Light::Application::AttachLayer(new DemoLayer);
 }
 
 Demo::~Demo()
 {
-	LT_TRACE("Destructing Demo");
+	LT_TRACE("Demo::~Demo");
 }
 
 Light::Application* Light::CreateApplication()

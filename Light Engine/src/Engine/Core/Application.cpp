@@ -27,6 +27,7 @@ namespace Light {
 		LT_PROFILE_FUNC();
 
 		Logger::Init();
+		srand(time(NULL));
 
 		LT_CORE_ASSERT(!s_Instance, "Application::Application: multiple Application instances");
 		s_Instance = this;
@@ -60,6 +61,7 @@ namespace Light {
 
 		LT_CORE_ASSERT(m_Window, "Application::GameLoop: Application::m_Window is not initialized");
 		LT_CORE_ASSERT(m_LayerStack.GetSize(), "Application::GameLoop: LayerStack has no attached layers");
+		m_Window->SetEventCallbackFunction(LT_EVENT_FN(Light::Application::OnEvent));
 
 		while (!m_Window->IsClosed())
 		{

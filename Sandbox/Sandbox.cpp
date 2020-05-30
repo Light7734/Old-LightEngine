@@ -8,20 +8,17 @@ class Sandbox : public Light::Application
 public:
 	Sandbox()
 	{
-		// create window data
+		// initialize window
 		Light::WindowData wd;
-		wd.title = "Demo";
+		wd.title = "Sandbox";
 		wd.displayMode = Light::DisplayMode::Windowed;
 
-		// create graphics configurations
 		Light::GraphicsConfigurations gc;
 		gc.resolution = Light::Resolution(800.0f, 600.0f, Light::AspectRatio::AR_4_3);
-		gc.vSync = true;
 
-		// create window and set callback function
 		m_Window = std::make_unique<Light::Window>(wd, gc, Light::GraphicsAPI::Default);
-		m_Window->SetEventCallbackFunction(LT_EVENT_FN(Light::Application::OnEvent));
 
+		// attach da dumb layer
 		Light::Application::AttachLayer(new dummyLayer());
 	}
 };

@@ -6,10 +6,10 @@
 #include "TextLayer.h"
 
 DemoLayer::DemoLayer()
-	: m_CameraSpeed(525)
+	: m_CameraSpeed(525.0f), m_CameraZoomSpeed(25.0f)
 {
 	LT_PROFILE_FUNC();
-
+	LT_TRACE("DemoLayer::DemoLayer");
 	m_LayeDebugrName = "DemoLayer";
 
 	m_Camera = std::make_shared<Light::Camera>(glm::vec2(0.0f, 0.0f), Light::GraphicsContext::GetAspectRatio(), 1000.0f);
@@ -23,7 +23,8 @@ DemoLayer::DemoLayer()
 
 void DemoLayer::OnAttach()
 {
-	LT_TRACE("Attached: {}", m_LayeDebugrName);
+	LT_PROFILE_FUNC();
+	LT_TRACE("DemoLayer::OnAttach");
 
 	Light::Window::Get()->SetMouseCursor("res/cursor.png", 1u, 1u);
 
@@ -35,13 +36,11 @@ void DemoLayer::OnAttach()
 
 void DemoLayer::OnDetatch()
 {
-	LT_TRACE("Detached: {}", m_LayeDebugrName);
+	LT_TRACE("DemoLayer::OnDetatch");
 }
 
 void DemoLayer::OnUpdate(float DeltaTime)
 {
-	m_DeltaTime = DeltaTime;
-
 	if (Light::Input::GetKey(KEY_A))
 		m_CameraController->MoveX(-m_CameraSpeed * DeltaTime);
 	if (Light::Input::GetKey(KEY_D))
@@ -55,17 +54,8 @@ void DemoLayer::OnUpdate(float DeltaTime)
 
 void DemoLayer::OnUserInterfaceUpdate()
 {
-
+	ImGui::SetNextWindowSize(ImVec2(Light::GraphicsContext::GetResolution().width / 3.0f, Light::GraphicsContext::GetResolution().height));
 	ImGui::Begin("DemoLayer", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
-
-	if (ImGui::TreeNode("Metrics"))
-	{
-		ImGui::BulletText("DeltaTime: %.3f", m_DeltaTime);
-		ImGui::BulletText("FPS:       %.3f", 1.0f / m_DeltaTime);
-
-		ImGui::TreePop();
-	}
-	ImGui::Separator();
 
 	if (ImGui::TreeNode("Keyboard map"))
 	{
@@ -125,6 +115,9 @@ void DemoLayer::OnUserInterfaceUpdate()
 	if (ImGui::TreeNode("Camera"))
 	{
 		m_Camera->ShowDebugWindow();
+		ImGui::SliderFloat("CameraMoveSpeed", &m_CameraSpeed, 25.0f, 2000.0f, "%.1f");
+		ImGui::SliderFloat("CameraZoomSpeed", &m_CameraZoomSpeed, 5.0f, 100.0f, "%.1f");
+
 		ImGui::TreePop();
 	}
 	ImGui::Separator();
@@ -251,16 +244,17 @@ bool DemoLayer::OnKeyPress(Light::KeyboardKeyPressedEvent& event)
 	return true;
 }
 
-bool DemoLayer::OnWindowResize(Light::WindowResizedEvent& event)
-{
-	m_CameraController->SetProjection(Light::GraphicsContext::GetAspectRatio(), m_CameraController->GetZoomLevel());
-	return false;
-}
-
 bool DemoLayer::OnMouseScroll(Light::MouseScrolledEvent& event)
 {
 	if (Light::Input::GetKey(KEY_LEFT_CONTROL))
-		m_CameraController->Zoom(event.GetOffset() * 25);
+		m_CameraController->Zoom(event.GetOffset() * m_CameraZoomSpeed);
 
+	return false;
+}
+
+bool DemoLayer::OnWindowResize(Light::WindowResizedEvent& event)
+{
+	m_CameraController->SetProjection(Light::GraphicsContext::GetAspectRatio(), m_CameraController->GetZoomLevel());
+	
 	return false;
 }

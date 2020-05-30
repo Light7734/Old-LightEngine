@@ -65,6 +65,7 @@
 #define KEY_WORLD_1          161 /* non-US #1 */
 #define KEY_WORLD_2          162 /* non-US #2 */
 #define KEY_ESCAPE           256
+#define KEY_ESC              KEY_ESCAPE
 #define KEY_ENTER            257
 #define KEY_TAB              258
 #define KEY_BACKSPACE        259

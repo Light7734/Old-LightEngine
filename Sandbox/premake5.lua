@@ -49,10 +49,13 @@ project "Sandbox"
     filter "configurations:distribution"
 		postbuildcommands
 		{
-			"copy \"%{wks.location}/Dependencies/irrKlang/lib/ikpFlac.dll/ "  .. TargetDir .. "\"" ,
-			"copy \"%{wks.location}/Dependencies/irrKlang/lib/ikpMP3.dll/ "   .. TargetDir .. "\"" ,
-			"copy \"%{wks.location}/Dependencies/irrKlang/lib/irrKlang.dll/ " .. TargetDir .. "\"" ,
-			"copy \"%{prj.location}/res " .. TargetDir .. "\"" 
+			"copy \"%{wks.location}\\Dependencies\\irrKlang\\lib\\ikpFlac.dll\" \""  .. TargetDir .. "\"" ,
+			"copy \"%{wks.location}\\Dependencies\\irrKlang\\lib\\ikpMP3.dll\" \""   .. TargetDir .. "\"" ,
+			"copy \"%{wks.location}\\Dependencies\\irrKlang\\lib\\irrKlang.dll\" \"" .. TargetDir .. "\"" ,
+
+			"mkdir \"" .. TargetDir .. "/res/",
+			"copy \"%{prj.location}/res\" \"" .. TargetDir .. "/res\"" ,
+			"copy \"%{prj.location}/imgui.ini\" \"" .. TargetDir .. "\"" ,
 		}
 		defines "LIGHT_DIST"
 		optimize "on"

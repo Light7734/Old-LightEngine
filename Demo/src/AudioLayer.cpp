@@ -2,18 +2,21 @@
 
 AudioLayer::AudioLayer()
 {
+	LT_PROFILE_FUNC();
+	LT_TRACE("AudioLayer::AudioLayer");
 	m_LayeDebugrName = "AudioLayer";
+
 	m_Music = Light::AudioEngine::Get().PlayAudio2D("res/getout.ogg", true, true);
 }
 
 void AudioLayer::OnAttach()
 {
-	LT_TRACE("Attached: {}", m_LayeDebugrName);
+	LT_TRACE("AudioLayer::OnAttach");
 }
 
 void AudioLayer::OnDetach()
 {
-	LT_TRACE("Detached: {}", m_LayeDebugrName);
+	LT_TRACE("AudioLayer::OnDetach");
 }
 
 void AudioLayer::ShowDebugWindow()

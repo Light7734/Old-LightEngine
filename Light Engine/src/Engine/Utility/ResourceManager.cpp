@@ -44,14 +44,17 @@ namespace Light {
 
 	void ResourceManager::Terminate()
 	{
+		LT_PROFILE_FUNC();
+
 		s_TextureArray.reset();
 		s_FontGlyphs.reset();
+
 		s_Fonts.clear();
 	}
 
 	void ResourceManager::Init()
 	{
-		s_Fonts.clear();
+		LT_PROFILE_FUNC();
 
 		s_TextureArray = TextureArray::Create(2048u, 2048u, 16u, 4u);
 		s_FontGlyphs   = TextureArray::Create(2048u, 2048u, 3u, 1u);

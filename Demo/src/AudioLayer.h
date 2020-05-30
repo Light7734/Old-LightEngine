@@ -13,5 +13,4 @@ public:
 	void OnDetach();
 
 	void ShowDebugWindow() override;
-
 };

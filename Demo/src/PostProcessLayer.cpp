@@ -4,7 +4,7 @@ PostProcessLayer::PostProcessLayer()
 	: m_GrayscaleAttached(false), m_InverseAttached(false), m_KernelAttached(false)
 {
 	LT_PROFILE_FUNC();
-
+	LT_TRACE("PostProcessLayer::PostProcessLayer");
 	m_LayeDebugrName = "PostProcessLayer";
 
 	// create framebuffers
@@ -30,12 +30,12 @@ PostProcessLayer::PostProcessLayer()
 
 void PostProcessLayer::OnAttach()
 {
-	LT_TRACE("Attached: {}", m_LayeDebugrName);
+	LT_TRACE("PostProcessLayer::OnAttach");
 }
 
 void PostProcessLayer::OnDetatch()
 {
-	LT_TRACE("Detached: {}", m_LayeDebugrName);
+	LT_TRACE("PostProcessLayer::OnDetatch");
 }
 
 void PostProcessLayer::ShowDebugWindow()

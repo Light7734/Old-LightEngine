@@ -4,7 +4,7 @@ TextLayer::TextLayer(std::shared_ptr<Light::Camera> camera)
 	: m_Angle(-2.5f), m_Camera(camera), m_BlenderEnabled(true)
 {
 	LT_PROFILE_FUNC();
-
+	LT_TRACE("TextLayer::TextLayer");
 	m_LayeDebugrName = "TextLayer";
 
 	Light::ResourceManager::LoadFont("arial", "res/arial.ttf", 24);
@@ -32,6 +32,9 @@ TextLayer::TextLayer(std::shared_ptr<Light::Camera> camera)
 
 TextLayer::~TextLayer()
 {
+	LT_PROFILE_FUNC();
+	LT_TRACE("TextLayer::~TextLayer");
+
 	Light::ResourceManager::DeleteFont("arial");
 	Light::ResourceManager::DeleteFont("comic");
 	Light::ResourceManager::DeleteFont("impact");
@@ -39,12 +42,12 @@ TextLayer::~TextLayer()
 
 void TextLayer::OnAttach()
 {
-	LT_TRACE("Attached: {}", m_LayeDebugrName);
+	LT_TRACE("TextLayer::OnAttach");
 }
 
 void TextLayer::OnDetatch()
 {
-	LT_TRACE("Detached: {}", m_LayeDebugrName);
+	LT_TRACE("TextLayer::OnDetatch");
 }
 
 void TextLayer::OnRender()

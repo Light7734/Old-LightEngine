@@ -4,7 +4,7 @@ QuadsLayer::QuadsLayer(std::shared_ptr<Light::Camera> camera)
 	: m_Camera(camera), m_SelectedSprite(nullptr), b_BoundToTimer(true)
 {
 	LT_PROFILE_FUNC();
-
+	LT_TRACE("QuadsLayer::QuadsLayer");
 	m_LayeDebugrName = "QuadsLayer";
 
 	Light::ResourceManager::LoadTextureAtlas("QuadsLayerAtlas", "res/atlas.png", "res/atlas.txt");
@@ -28,14 +28,22 @@ QuadsLayer::QuadsLayer(std::shared_ptr<Light::Camera> camera)
 	}
 }
 
+QuadsLayer::~QuadsLayer()
+{
+	LT_PROFILE_FUNC();
+	LT_TRACE("QuadsLayer::~QuadsLayer");
+
+	Light::ResourceManager::DeleteTexture("QuadsLayerAtlas");
+}
+
 void QuadsLayer::OnAttach()
 {
-	LT_TRACE("Attached: {}", m_LayeDebugrName);
+	LT_TRACE("QuadsLayer::OnAttach");
 }
 
 void QuadsLayer::OnDetatch()
 {
-	LT_TRACE("Detached: {}", m_LayeDebugrName);
+	LT_TRACE("QuadsLayer::OnDetatch");
 }
 
 void QuadsLayer::OnUpdate(float DeltaTime)

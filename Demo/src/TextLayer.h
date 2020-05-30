@@ -21,14 +21,14 @@ private:
 		}
 	};
 
-	std::shared_ptr<Light::Camera> m_Camera;
-
 	Text m_Arial;
 	Text m_Comic;
 	Text m_Impact;
 
 	float m_Angle;
 	bool m_BlenderEnabled;
+
+	std::shared_ptr<Light::Camera> m_Camera;
 public:
 	TextLayer(std::shared_ptr<Light::Camera> camera);
 	~TextLayer();
