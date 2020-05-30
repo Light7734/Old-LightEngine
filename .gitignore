@@ -13,6 +13,9 @@
 Demo/*.dll
 Sandbox/*.dll
 
+# Test project for da developer
+Testing/
+
 # User-specific files
 *.rsuser
 *.suo
