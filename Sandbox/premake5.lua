@@ -34,13 +34,6 @@ project "Sandbox"
 		"%{wks.location}/Dependencies/irrKlang/include" ,
 	}
 
-	prebuildcommands
-	{
-		"copy \"%{wks.location}\\Dependencies\\irrKlang\\lib\\ikpFlac.dll\" \""  .. "%{prj.location}" .. "\"" ,
-		"copy \"%{wks.location}\\Dependencies\\irrKlang\\lib\\ikpMP3.dll\" \""   .. "%{prj.location}" .. "\"" ,
-		"copy \"%{wks.location}\\Dependencies\\irrKlang\\lib\\irrKlang.dll\" \"" .. "%{prj.location}" .. "\"" ,
-	}
-
     -- Configurations
     filter "configurations:debug"
 		defines  "LIGHT_DEBUG"
@@ -56,9 +49,10 @@ project "Sandbox"
     filter "configurations:distribution"
 		postbuildcommands
 		{
-			"copy \"%{wks.location}\\Dependencies\\irrKlang\\lib\\ikpFlac.dll\" \""  .. TargetDir .. "\"" ,
-			"copy \"%{wks.location}\\Dependencies\\irrKlang\\lib\\ikpMP3.dll\" \""   .. TargetDir .. "\"" ,
-			"copy \"%{wks.location}\\Dependencies\\irrKlang\\lib\\irrKlang.dll\" \"" .. TargetDir .. "\"" ,
+			"copy \"%{wks.location}/Dependencies/irrKlang/lib/ikpFlac.dll/ "  .. TargetDir .. "\"" ,
+			"copy \"%{wks.location}/Dependencies/irrKlang/lib/ikpMP3.dll/ "   .. TargetDir .. "\"" ,
+			"copy \"%{wks.location}/Dependencies/irrKlang/lib/irrKlang.dll/ " .. TargetDir .. "\"" ,
+			"copy \"%{prj.location}/res " .. TargetDir .. "\"" 
 		}
 		defines "LIGHT_DIST"
 		optimize "on"

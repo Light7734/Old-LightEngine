@@ -40,13 +40,6 @@ project "Demo"
 		"%{wks.location}/Dependencies/irrKlang/lib" ,
 	}
 
-	prebuildcommands
-	{
-		"copy \"%{wks.location}\\Dependencies\\irrKlang\\lib\\ikpFlac.dll\" \""  .. "%{prj.location}" .. "\"" ,
-		"copy \"%{wks.location}\\Dependencies\\irrKlang\\lib\\ikpMP3.dll\" \""   .. "%{prj.location}" .. "\"" ,
-		"copy \"%{wks.location}\\Dependencies\\irrKlang\\lib\\irrKlang.dll\" \"" .. "%{prj.location}" .. "\"" ,
-	}
-
     -- Configurations
     filter "configurations:debug"
         defines  "LIGHT_DEBUG"
@@ -65,6 +58,10 @@ project "Demo"
 			"copy \"%{wks.location}\\Dependencies\\irrKlang\\lib\\ikpFlac.dll\" \""  .. TargetDir .. "\"" ,
 			"copy \"%{wks.location}\\Dependencies\\irrKlang\\lib\\ikpMP3.dll\" \""   .. TargetDir .. "\"" ,
 			"copy \"%{wks.location}\\Dependencies\\irrKlang\\lib\\irrKlang.dll\" \"" .. TargetDir .. "\"" ,
+
+			"mkdir \"" .. TargetDir .. "/res/",
+			"copy \"%{prj.location}/res\" \"" .. TargetDir .. "/res\"" ,
+			"copy \"%{prj.location}/imgui.ini\" \"" .. TargetDir .. "\"" ,
 		}
        defines "LIGHT_DIST"
        optimize "on"
