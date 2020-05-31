@@ -41,6 +41,8 @@ void PostProcessLayer::OnDetatch()
 void PostProcessLayer::ShowDebugWindow()
 {
 	ImGui::BulletText("**** order matters ****");
+
+	// add or remove the specified framebuffers, order matters
 	if (ImGui::Checkbox("grayscale", &m_GrayscaleAttached))
 	{
 		if (m_GrayscaleAttached)
@@ -68,6 +70,8 @@ void PostProcessLayer::ShowDebugWindow()
 			Light::Renderer::RemoveFramebuffer(m_Kernel);
 	}
 
+	// change values of kernel effect's convolution matrix, for more information about kernel effects:
+	// https://setosa.io/ev/image-kernels/ and https://learnopengl.com/Advanced-OpenGL/Framebuffers.
 	if (ImGui::TreeNode("kernel effect's convolution matrix"))
 	{
 		bool valueChanged = false;
@@ -99,6 +103,7 @@ void PostProcessLayer::OnEvent(Light::Event& event)
 
 bool PostProcessLayer::OnWindowResize(Light::WindowResizedEvent& event)
 {
+	// resize framebuffers to the size of the window
 	m_Grayscale->Resize(event.GetWidth(), event.GetHeight());
 	m_Inverse->Resize(event.GetWidth(), event.GetHeight());
 	m_Kernel->Resize(event.GetWidth(), event.GetHeight());

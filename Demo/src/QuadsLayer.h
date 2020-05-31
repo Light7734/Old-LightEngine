@@ -2,6 +2,7 @@
 
 #include <LightEngine.h>
 
+// struct to hold the information needed to render a quad.
 struct Sprite
 {
 	glm::vec2 position;
@@ -16,14 +17,15 @@ class QuadsLayer : public Light::Layer
 private:
 	std::shared_ptr<Light::Camera> m_Camera;
 
-	std::vector<Sprite> m_Sprites;
-	Sprite* m_SelectedSprite;
+	std::vector<Sprite> m_Sprites; // to render quads with
+	Sprite* m_SelectedSprite; // to drag & drop with mouse
 
+	// to rotate the sprites
 	float m_Angle;
 	bool b_BoundToTimer;
 public:
 	QuadsLayer(std::shared_ptr<Light::Camera> camera);
-	~QuadsLayer() { Light::ResourceManager::DeleteTexture("QuadsLayerAtlas"); }
+	~QuadsLayer();
 
 	void OnAttach() override;
 	void OnDetatch() override;
