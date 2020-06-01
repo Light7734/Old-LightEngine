@@ -116,7 +116,7 @@ namespace Light {
 		s_TextRenderer.Map();
 	}
 	
-	void Renderer::DrawQuad(const glm::vec2& position, const glm::vec2& size, const TextureCoordinates& texture, const glm::vec4& tint)
+	void Renderer::DrawQuad(const glm::vec3& position, const glm::vec2& size, const TextureCoordinates& texture, const glm::vec4& tint)
 	{
 		if (s_QuadRenderer.mapCurrent == s_QuadRenderer.mapEnd)
 		{
@@ -134,25 +134,25 @@ namespace Light {
 		const float yMax = position.y + size.y / 2.0f;
 
 		// TOP_LEFT  [ -0.5, -0.5 ]
-		s_QuadRenderer.mapCurrent->position = { xMin, yMin };
+		s_QuadRenderer.mapCurrent->position = { xMin, yMin, position.z };
 		s_QuadRenderer.mapCurrent->str = { texture.xMin, texture.yMin, texture.sliceIndex };
 		s_QuadRenderer.mapCurrent->tint = tint;
 		s_QuadRenderer.mapCurrent++;
 
 		// TOP_RIGHT [ 0.5, -0.5 ]
-		s_QuadRenderer.mapCurrent->position = { xMax, yMin };
+		s_QuadRenderer.mapCurrent->position = { xMax, yMin, position.z };
 		s_QuadRenderer.mapCurrent->str = { texture.xMax, texture.yMin, texture.sliceIndex };
 		s_QuadRenderer.mapCurrent->tint = tint;
 		s_QuadRenderer.mapCurrent++;
 
 		// BOTTOM_RIGHT [ 0.5, 0.5 ]
-		s_QuadRenderer.mapCurrent->position = { xMax, yMax };
+		s_QuadRenderer.mapCurrent->position = { xMax, yMax, position.z };
 		s_QuadRenderer.mapCurrent->str = { texture.xMax, texture.yMax, texture.sliceIndex };
 		s_QuadRenderer.mapCurrent->tint = tint;
 		s_QuadRenderer.mapCurrent++;
 
 		// BOTTOM_LEFT [ -0.5, 0.5 ]
-		s_QuadRenderer.mapCurrent->position = { xMin, yMax };
+		s_QuadRenderer.mapCurrent->position = { xMin, yMax, position.z };
 		s_QuadRenderer.mapCurrent->str = { texture.xMin, texture.yMax, texture.sliceIndex };
 		s_QuadRenderer.mapCurrent->tint = tint;
 		s_QuadRenderer.mapCurrent++;
@@ -160,7 +160,7 @@ namespace Light {
 		s_QuadRenderer.quadCount++;
 	}
 
-	void Renderer::DrawQuad(const glm::vec2& position, const glm::vec2& size, float angle, TextureCoordinates* texture, const glm::vec4& tint)
+	void Renderer::DrawQuad(const glm::vec3& position, const glm::vec2& size, float angle, TextureCoordinates* texture, const glm::vec4& tint)
 	{
 		if (s_QuadRenderer.mapCurrent == s_QuadRenderer.mapEnd)
 		{
@@ -180,25 +180,25 @@ namespace Light {
 
 		/* write to the buffer */
 		// TOP_LEFT  [ -0.5, -0.5 ]
-		s_QuadRenderer.mapCurrent->position = glm::vec2(-(quadCos.x - quadSin.y), -(quadSin.x + quadCos.y)) + position;
+		s_QuadRenderer.mapCurrent->position = glm::vec3(-(quadCos.x - quadSin.y), -(quadSin.x + quadCos.y), 0.0f) + position;
 		s_QuadRenderer.mapCurrent->str = { texture->xMin, texture->yMin, texture->sliceIndex };
 		s_QuadRenderer.mapCurrent->tint = tint;
 		s_QuadRenderer.mapCurrent++;
 
 		// TOP_RIGHT [ 0.5, -0.5 ]
-		s_QuadRenderer.mapCurrent->position = glm::vec2(quadCos.x - -quadSin.y, quadSin.x + -quadCos.y) + position;
+		s_QuadRenderer.mapCurrent->position = glm::vec3(quadCos.x - -quadSin.y, quadSin.x + -quadCos.y, 0.0f) + position;
 		s_QuadRenderer.mapCurrent->str = glm::vec3(texture->xMax, texture->yMin, texture->sliceIndex);
 		s_QuadRenderer.mapCurrent->tint = tint;
 		s_QuadRenderer.mapCurrent++;
 
 		// BOTTOM_RIGHT [ 0.5, 0.5 ]
-		s_QuadRenderer.mapCurrent->position = glm::vec2(quadCos.x - quadSin.y, quadSin.x + quadCos.y) + position;
+		s_QuadRenderer.mapCurrent->position = glm::vec3(quadCos.x - quadSin.y, quadSin.x + quadCos.y, 0.0f) + position;
 		s_QuadRenderer.mapCurrent->str = { texture->xMax, texture->yMax, texture->sliceIndex };
 		s_QuadRenderer.mapCurrent->tint = tint;
 		s_QuadRenderer.mapCurrent++;
 
 		// BOTTOM_LEFT [ -0.5, 0.5 ]
-		s_QuadRenderer.mapCurrent->position = glm::vec2(-quadCos.x - quadSin.y, -quadSin.x + quadCos.y) + position;
+		s_QuadRenderer.mapCurrent->position = glm::vec3(-quadCos.x - quadSin.y, -quadSin.x + quadCos.y, 0.0f) + position;
 		s_QuadRenderer.mapCurrent->str = { texture->xMin, texture->yMax, texture->sliceIndex };
 		s_QuadRenderer.mapCurrent->tint = tint;
 		s_QuadRenderer.mapCurrent++;
@@ -207,7 +207,7 @@ namespace Light {
 	}
 
 	void Renderer::DrawString(const std::string& text, const std::shared_ptr<Font>& font,
-	                          const glm::vec2& position, float scale, const glm::vec4& tint)
+	                          const glm::vec3& position, float scale, const glm::vec4& tint)
 	{
 		/* locals */
 		glm::vec2 beginning(position);
@@ -241,25 +241,25 @@ namespace Light {
 
 			/* write to the buffer */
 			// TOP_LEFT [ 0.0, 0.0 ]
-			s_TextRenderer.mapCurrent->position = { xMin, yMin };
+			s_TextRenderer.mapCurrent->position = { xMin, yMin, position.z };
 			s_TextRenderer.mapCurrent->str = { character.glyph.xMin, character.glyph.yMin, character.glyph.sliceIndex };
 			s_TextRenderer.mapCurrent->tint = tint;
 			s_TextRenderer.mapCurrent++;
 
 			// TOP_RIGHT [ 1.0, 0.0 ]
-			s_TextRenderer.mapCurrent->position = { xMax, yMin };
+			s_TextRenderer.mapCurrent->position = { xMax, yMin, position.z };
 			s_TextRenderer.mapCurrent->str = { character.glyph.xMax, character.glyph.yMin, character.glyph.sliceIndex };
 			s_TextRenderer.mapCurrent->tint = tint;
 			s_TextRenderer.mapCurrent++;
 
 			// BOTTOM_RIGHT [ 1.0, 1.0 ]
-			s_TextRenderer.mapCurrent->position = { xMax, yMax };
+			s_TextRenderer.mapCurrent->position = { xMax, yMax, position.z };
 			s_TextRenderer.mapCurrent->str = { character.glyph.xMax, character.glyph.yMax, character.glyph.sliceIndex};
 			s_TextRenderer.mapCurrent->tint = tint;
 			s_TextRenderer.mapCurrent++;
 
 			// BOTTOM_LEFT [ 0.0, 1.0 ] 
-			s_TextRenderer.mapCurrent->position = { xMin, yMax };
+			s_TextRenderer.mapCurrent->position = { xMin, yMax, position.z };
 			s_TextRenderer.mapCurrent->str = { character.glyph.xMin, character.glyph.yMax, character.glyph.sliceIndex };
 			s_TextRenderer.mapCurrent->tint = tint;
 			s_TextRenderer.mapCurrent++;
@@ -269,7 +269,7 @@ namespace Light {
 	}
 
 	void Renderer::DrawString(const std::string& text, const std::shared_ptr<Font>& font,
-	                          const glm::vec2& position, float angle, float scale, const glm::vec4& tint)
+	                          const glm::vec3& position, float angle, float scale, const glm::vec4& tint)
 	{
 		/* locals */
 		glm::vec2 advance(0.0f);
@@ -299,10 +299,10 @@ namespace Light {
 			/* locals */
 			const auto& character = font->GetCharacterData(ch);
 			 
-			glm::vec2 bearing(character.bearing.x  * COS + (character.bearing.y) * SIN,
-			                  character.bearing.x  * SIN - (character.bearing.y) * COS);
+			const glm::vec2 bearing(character.bearing.x  * COS + (character.bearing.y) * SIN,
+			                        character.bearing.x  * SIN - (character.bearing.y) * COS);
 
-			glm::vec2 charPosition = beginning + advance + bearing;
+			const glm::vec3 charPosition = glm::vec3(beginning + advance + bearing, position.z);
 
 			advance.x += (character.advance) * COS;
 			advance.y += (character.advance) * SIN;
@@ -318,19 +318,19 @@ namespace Light {
 			s_TextRenderer.mapCurrent++;
 
 			// TOP_RIGHT [ 1.0, 0.0 ]
-			s_TextRenderer.mapCurrent->position = glm::vec2(charCos.x, charSin.x) + charPosition;
+			s_TextRenderer.mapCurrent->position = glm::vec3(charCos.x, charSin.x, 0.0f) + charPosition;
 			s_TextRenderer.mapCurrent->str = { character.glyph.xMax, character.glyph.yMin, character.glyph.sliceIndex };
 			s_TextRenderer.mapCurrent->tint = tint;
 			s_TextRenderer.mapCurrent++;
 
 			// BOTTOM_RIGHT [ 1.0, 1.0 ]
-			s_TextRenderer.mapCurrent->position = glm::vec2(charCos.x - charSin.y, charSin.x + charCos.y) + charPosition;
+			s_TextRenderer.mapCurrent->position = glm::vec3(charCos.x - charSin.y, charSin.x + charCos.y, 0.0f) + charPosition;
 			s_TextRenderer.mapCurrent->str = { character.glyph.xMax, character.glyph.yMax, character.glyph.sliceIndex };
 			s_TextRenderer.mapCurrent->tint = tint;
 			s_TextRenderer.mapCurrent++;
 
 			// BOTTOM_LEFT [ 0.0, 1.0 ] 
-			s_TextRenderer.mapCurrent->position = glm::vec2(-charSin.y, charCos.y) + charPosition;
+			s_TextRenderer.mapCurrent->position = glm::vec3(-charSin.y, charCos.y, 0.0f) + charPosition;
 			s_TextRenderer.mapCurrent->str = { character.glyph.xMin, character.glyph.yMax, character.glyph.sliceIndex };
 			s_TextRenderer.mapCurrent->tint = tint;
 			s_TextRenderer.mapCurrent++;

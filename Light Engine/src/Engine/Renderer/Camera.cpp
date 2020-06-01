@@ -21,18 +21,17 @@ namespace Light {
 		const float aspectRatio = m_Controller->GetAspectRatio();
 		const float zoomLevel = m_Controller->GetZoomLevel();
 
-		m_View = glm::lookAt(glm::vec3(position, 1.0f), glm::vec3(position, 0.0f), m_Up);
+		m_View = glm::lookAt(glm::vec3(position, 255000.0f), glm::vec3(position, 0.0f), m_Up);
 
 		m_Projection = glm::ortho(aspectRatio * -zoomLevel,
 		                          aspectRatio *  zoomLevel,
 		                                         zoomLevel,
-		                                        -zoomLevel);
+		                                        -zoomLevel, FLT_MAX, FLT_MIN);
 	}
 
 	void Camera::ShowDebugWindow()
 	{
 		CameraBounds bounds = m_Controller->GetCameraBounds();
-
 
 		ImGui::BulletText("position: %.2f, %.2f", m_Controller->GetPosition().x, m_Controller->GetPosition().y);
 		ImGui::BulletText("ratio:    %.5f", m_Controller->GetAspectRatio());
@@ -41,7 +40,6 @@ namespace Light {
 		ImGui::BulletText("left, right: %.2f, %.2f", bounds.left, bounds.right);
 		ImGui::BulletText("top, bottom: %.2f, %.2f", bounds.top, bounds.bottom);
 		ImGui::BulletText("width - height: [%.2f x %.2f] ", bounds.GetWidth(), bounds.GetHeight());
-
 	}
 
 }

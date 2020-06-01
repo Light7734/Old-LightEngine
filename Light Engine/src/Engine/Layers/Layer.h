@@ -13,6 +13,7 @@ namespace Light {
 	protected:
 		std::string m_LayeDebugrName = "UnassignedLayerName";
 		bool b_Enabled = true;
+		float m_DrawPriority;
 	public:
 		Layer() = default;
 		virtual ~Layer() = default;
@@ -37,7 +38,9 @@ namespace Light {
 		// getters
 		inline const std::string& GetName() const { return m_LayeDebugrName; }
 		inline bool IsEnabled() const { return b_Enabled; }
-
+	private:
+		friend class LayerStack;
+		void SetDrawProiority(unsigned int priority) { m_DrawPriority = priority; }
 	};
 
 }

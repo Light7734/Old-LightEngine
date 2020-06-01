@@ -5,7 +5,7 @@ R"(
 +GLSL
 #version 450 core
 
-layout(location = 0) in vec2 InPosition;
+layout(location = 0) in vec3 InPosition;
 layout(location = 1) in vec3 InTexCoords;
 layout(location = 2) in vec4 InColor;
 
@@ -23,7 +23,7 @@ out VS_OUT
 
 void main()
 {
-	gl_Position = ProjectionMatrix * ViewMatrix * vec4(InPosition, 0.0, 1.0);
+	gl_Position = ProjectionMatrix * ViewMatrix * vec4(InPosition, 1.0);
 	VertexOut.TexCoords = InTexCoords;
 	VertexOut.Color = InColor;
 }
@@ -43,11 +43,11 @@ cbuffer	ViewVSConstant : register(b6)
 	row_major matrix ProjectionMatrix;
 }
 
-VertexOut main(float2 InPosition : POSITION, float3 InTexCoords : TEXCOORDS, float4 InColor : COLOR)
+VertexOut main(float3 InPosition : POSITION, float3 InTexCoords : TEXCOORDS, float4 InColor : COLOR)
 {
 	VertexOut vso;
 
-	vso.Position = mul(float4(InPosition, 0.0, 1.0), mul(ViewMatrix, ProjectionMatrix));
+	vso.Position = mul(float4(InPosition, 1.0), mul(ViewMatrix, ProjectionMatrix));
 
 	vso.TexCoords = InTexCoords;
 	vso.Color = InColor;

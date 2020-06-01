@@ -59,7 +59,7 @@ void QuadsLayer::OnUpdate(float DeltaTime)
 		m_Angle = timer.ElapsedTime() * 25.0f;
 
 	if (m_SelectedSprite)
-		m_SelectedSprite->position = Light::Input::MousePosToCameraView(m_Camera); // converts mouse pos to world pos
+		m_SelectedSprite->position = glm::vec3(Light::Input::MousePosToCameraView(m_Camera), m_DrawPriority); // converts mouse pos to world pos
 }
 
 void QuadsLayer::OnRender()
@@ -75,10 +75,11 @@ void QuadsLayer::OnRender()
 	// we have to call BeginScene before any drawing session
 	Light::Renderer::BeginScene(m_Camera);
 
+	// m_DrawPriority 
 	// note: do not use DrawQuad with angle parameter if the angle is always 0,
-	// calculating quad's vertices' position is a bit costly.
+	// calculating quad's vertices' rotated position is a bit costly.
 	for (const auto& sprite : m_Sprites)
-		Light::Renderer::DrawQuad(sprite.position, sprite.size, glm::radians(m_Angle), sprite.uv, sprite.tint); 
+		Light::Renderer::DrawQuad(glm::vec3(sprite.position, m_DrawPriority), sprite.size, glm::radians(m_Angle), sprite.uv, sprite.tint); 
 
 	// we have to call EndScene before another BeginScene, otherwise it results in mapping Vertexbuffer twice without
 	// unmapping it, which results in a runtime error.

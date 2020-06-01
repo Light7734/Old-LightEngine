@@ -15,9 +15,10 @@ namespace Light {
 		unsigned char* pixels;
 		int width, height, channels;
 
+		TextureImageData() : pixels(nullptr), width(0), height(0), channels(0) {}
+
 		TextureImageData(unsigned char* pixels_, int width_, int height_, int channels_)
 		                 : pixels(pixels_), width(width_), height(height_), channels(channels_) {}
-		TextureImageData() : pixels(nullptr), width(0), height(0), channels(0) {}
 			
 		inline operator bool() const { return pixels && width && height && channels; }
 
@@ -37,6 +38,7 @@ namespace Light {
 		float xMin, yMin, xMax, yMax, sliceIndex;
 
 		TextureCoordinates() = default;
+
 		TextureCoordinates(float xMin_, float yMin_, float xMax_, float yMax_, float index) : xMin(xMin_), xMax(xMax_), yMin(yMin_), yMax(yMax_), sliceIndex(index) {}
 
 		bool Contains(const TextureCoordinates& other) const

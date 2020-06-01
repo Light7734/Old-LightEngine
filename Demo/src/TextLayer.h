@@ -5,7 +5,7 @@
 class TextLayer : public Light::Layer
 {
 private:
-	// struct to hold the information needed to draw a string (usually you wouldn't want to do it this way)
+	// struct to hold the information needed to draw a string (usually you wouldn't want to do it this way).
 	struct Text
 	{
 		std::shared_ptr<Light::Font> font;

@@ -64,7 +64,7 @@ void DemoLayer::OnUserInterfaceUpdate()
 	// ImGui stuff, if you don't understand these, call Light::UserInterface::ShowImGuiDemoWindow(),
 	// and see imgui_demo.cpp in ImGui project
 
-	// all ImGui calls should be inside OnUserInterfaceUpdate, because it's wrapped with UserInterface::Begin/End
+	// ** all ImGui calls should be inside OnUserInterfaceUpdate, because it's wrapped with UserInterface::Begin/End
 	// calling ImGui functions in a function other than OnUserInterfaceUpdate results in runtime error
 
 	ImGui::SetNextWindowSize(ImVec2(Light::GraphicsContext::GetResolution().width / 3.0f, Light::GraphicsContext::GetResolution().height));

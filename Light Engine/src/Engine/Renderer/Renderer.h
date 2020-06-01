@@ -44,7 +44,7 @@ namespace Light {
 
 			struct QuadVertexData
 			{
-				glm::vec2 position;
+				glm::vec3 position;
 				glm::vec3 str;
 				glm::vec4 tint;
 			};
@@ -90,7 +90,7 @@ namespace Light {
 
 			struct TextVertexData
 			{
-				glm::vec2 position;
+				glm::vec3 position;
 				glm::vec3 str;
 				glm::vec4 tint;
 			};
@@ -147,16 +147,16 @@ namespace Light {
 		static void BeginScene(const std::shared_ptr<Camera>& camera);
 
 		// quad renderer
-		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const TextureCoordinates& texture, const glm::vec4& tint = glm::vec4(1.0f));
+		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const TextureCoordinates& texture, const glm::vec4& tint = glm::vec4(1.0f));
 
-		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, float angle, TextureCoordinates* texture, const glm::vec4& tint = glm::vec4(1.0f));
+		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, float angle, TextureCoordinates* texture, const glm::vec4& tint = glm::vec4(1.0f));
 
 		// text renderer
 		static void DrawString(const std::string& text, const std::shared_ptr<Font>& font,
-		                       const glm::vec2& position, float scale = 1.0f, const glm::vec4& tint = glm::vec4(1.0f));
+		                       const glm::vec3& position, float scale = 1.0f, const glm::vec4& tint = glm::vec4(1.0f));
 		
 		static void DrawString(const std::string& text, const std::shared_ptr<Font>& font,
-		                       const glm::vec2& position, float angle, float scale = 1.0f, const glm::vec4& tint = glm::vec4(1.0f));
+		                       const glm::vec3& position, float angle, float scale = 1.0f, const glm::vec4& tint = glm::vec4(1.0f));
 
 		static void EndScene();
 		static void EndFrame();
