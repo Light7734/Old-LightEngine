@@ -6,8 +6,8 @@
 Demo::Demo()
 {
 	// LT_PROFILE_FUNC / LT_PROFILE_SCOPE profiles a function / scope, the output files:
-	// Create.json, GameLoop.json, Delete.json will be saved on project's root directory
-	// and can be visually seen via chrome://tracing
+	//     Create.json, GameLoop.json, Delete.json will be saved on project's root directory
+	//     and can be visually seen via chrome://tracing
 	LT_PROFILE_FUNC();
 	LT_TRACE("Demo::Demo");
 

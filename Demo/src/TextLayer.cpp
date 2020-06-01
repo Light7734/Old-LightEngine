@@ -58,10 +58,16 @@ void TextLayer::OnDetatch()
 
 void TextLayer::OnRender()
 {
+	// note: each layer's m_DrawPriority is different from the next/previous layer by 1.0f,
+	//    and all DrawString calls gets rendered after DrawQuads call (when Renderer::EndScene is called),
+	//    so if you want to have a string drawn in front of a quad in a single Renderer::Begin/EndScene,
+	//    you have to pass a value no greater than 0.99..., otherwise it would be rendered in front of the next layer
+
 	// all layers should specify whether their quads should be renderer with blending enabled or disabled because previous layers
-	// can change the blending state.
+	//     can change the blending state.
+
 	// note: you can't enable and disable this between DrawQuads, Renderer batches all the quads together to minimize render calls,
-	// you can have only one blending state for each EndScene.
+	//     you can have only one blending state for each EndScene.
 	if(m_BlenderEnabled)
 		Light::Blender::Get()->Enable();
 	else
@@ -72,7 +78,7 @@ void TextLayer::OnRender()
 	                            glm::vec3(m_Arial.position, m_DrawPriority), m_Arial.scale, m_Arial.tint);
 
 	// again, do not call the function with angle parameter if it's always 0, calculating quad's vertices' rotated position is a bit costly.
-	// this amplifies on rendering strings because each character counts as a separate quad.
+	//     this amplifies on rendering strings because each character counts as a separate quad.
 	Light::Renderer::DrawString("The quick brown fox jumps over the lazy dog", m_Comic.font,
 	                            glm::vec3(m_Comic.position, m_DrawPriority), glm::radians(m_Angle), m_Comic.scale, m_Comic.tint);
 

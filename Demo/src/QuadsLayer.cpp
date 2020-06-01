@@ -67,22 +67,27 @@ void QuadsLayer::OnRender()
 	// ** all Renderer functions should be called in OnRender() function because it is wrapped with Renderer::Begin/EndFrame.
 
 	// all layers should specify whether their quads should be renderer with blending enabled or disabled because previous layers
-	// can change the blending state.
+	//     can change the blending state.
+
 	// note: you can't enable and disable this between DrawQuads, Renderer batches all the quads together to minimize render calls,
-	// you can have only one blending state for each EndScene.
+	//     you can have only one blending state for each EndScene.
 	Light::Blender::Get()->Enable();
 
 	// we have to call BeginScene before any drawing session
 	Light::Renderer::BeginScene(m_Camera);
 
-	// m_DrawPriority 
+	// note: each layer's m_DrawPriority is different from the next/previous layer by 1.0f,
+	//    and all DrawString calls gets rendered after DrawQuads call (when Renderer::EndScene is called),
+	//    so if you want to have a string drawn in front of a quad in a single Renderer::Begin/EndScene,
+	//    you have to pass a value no greater than 0.99..., otherwise it would be rendered in front of the next layer
+
 	// note: do not use DrawQuad with angle parameter if the angle is always 0,
-	// calculating quad's vertices' rotated position is a bit costly.
+	//     calculating quad's vertices' rotated position is a bit costly.
 	for (const auto& sprite : m_Sprites)
 		Light::Renderer::DrawQuad(glm::vec3(sprite.position, m_DrawPriority), sprite.size, glm::radians(m_Angle), sprite.uv, sprite.tint); 
 
 	// we have to call EndScene before another BeginScene, otherwise it results in mapping Vertexbuffer twice without
-	// unmapping it, which results in a runtime error.
+	//     unmapping it, which results in a runtime error.
 	Light::Renderer::EndScene();
 }
 
