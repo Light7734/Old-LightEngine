@@ -242,25 +242,25 @@ namespace Light {
 			/* write to the buffer */
 			// TOP_LEFT [ 0.0, 0.0 ]
 			s_TextRenderer.mapCurrent->position = { xMin, yMin, position.z };
-			s_TextRenderer.mapCurrent->str = { character.glyph.xMin, character.glyph.yMin, character.glyph.sliceIndex };
+			s_TextRenderer.mapCurrent->str = { character.glyphUV.xMin, character.glyphUV.yMin, character.glyphUV.sliceIndex };
 			s_TextRenderer.mapCurrent->tint = tint;
 			s_TextRenderer.mapCurrent++;
 
 			// TOP_RIGHT [ 1.0, 0.0 ]
 			s_TextRenderer.mapCurrent->position = { xMax, yMin, position.z };
-			s_TextRenderer.mapCurrent->str = { character.glyph.xMax, character.glyph.yMin, character.glyph.sliceIndex };
+			s_TextRenderer.mapCurrent->str = { character.glyphUV.xMax, character.glyphUV.yMin, character.glyphUV.sliceIndex };
 			s_TextRenderer.mapCurrent->tint = tint;
 			s_TextRenderer.mapCurrent++;
 
 			// BOTTOM_RIGHT [ 1.0, 1.0 ]
 			s_TextRenderer.mapCurrent->position = { xMax, yMax, position.z };
-			s_TextRenderer.mapCurrent->str = { character.glyph.xMax, character.glyph.yMax, character.glyph.sliceIndex};
+			s_TextRenderer.mapCurrent->str = { character.glyphUV.xMax, character.glyphUV.yMax, character.glyphUV.sliceIndex};
 			s_TextRenderer.mapCurrent->tint = tint;
 			s_TextRenderer.mapCurrent++;
 
 			// BOTTOM_LEFT [ 0.0, 1.0 ] 
 			s_TextRenderer.mapCurrent->position = { xMin, yMax, position.z };
-			s_TextRenderer.mapCurrent->str = { character.glyph.xMin, character.glyph.yMax, character.glyph.sliceIndex };
+			s_TextRenderer.mapCurrent->str = { character.glyphUV.xMin, character.glyphUV.yMax, character.glyphUV.sliceIndex };
 			s_TextRenderer.mapCurrent->tint = tint;
 			s_TextRenderer.mapCurrent++;
 
@@ -313,25 +313,25 @@ namespace Light {
 			/* write to the buffer  */	
 			// TOP_LEFT [ 0.0, 0.0 ]
 			s_TextRenderer.mapCurrent->position = charPosition;
-			s_TextRenderer.mapCurrent->str = { character.glyph.xMin, character.glyph.yMin, character.glyph.sliceIndex };
+			s_TextRenderer.mapCurrent->str = { character.glyphUV.xMin, character.glyphUV.yMin, character.glyphUV.sliceIndex };
 			s_TextRenderer.mapCurrent->tint = tint;
 			s_TextRenderer.mapCurrent++;
 
 			// TOP_RIGHT [ 1.0, 0.0 ]
 			s_TextRenderer.mapCurrent->position = glm::vec3(charCos.x, charSin.x, 0.0f) + charPosition;
-			s_TextRenderer.mapCurrent->str = { character.glyph.xMax, character.glyph.yMin, character.glyph.sliceIndex };
+			s_TextRenderer.mapCurrent->str = { character.glyphUV.xMax, character.glyphUV.yMin, character.glyphUV.sliceIndex };
 			s_TextRenderer.mapCurrent->tint = tint;
 			s_TextRenderer.mapCurrent++;
 
 			// BOTTOM_RIGHT [ 1.0, 1.0 ]
 			s_TextRenderer.mapCurrent->position = glm::vec3(charCos.x - charSin.y, charSin.x + charCos.y, 0.0f) + charPosition;
-			s_TextRenderer.mapCurrent->str = { character.glyph.xMax, character.glyph.yMax, character.glyph.sliceIndex };
+			s_TextRenderer.mapCurrent->str = { character.glyphUV.xMax, character.glyphUV.yMax, character.glyphUV.sliceIndex };
 			s_TextRenderer.mapCurrent->tint = tint;
 			s_TextRenderer.mapCurrent++;
 
 			// BOTTOM_LEFT [ 0.0, 1.0 ] 
 			s_TextRenderer.mapCurrent->position = glm::vec3(-charSin.y, charCos.y, 0.0f) + charPosition;
-			s_TextRenderer.mapCurrent->str = { character.glyph.xMin, character.glyph.yMax, character.glyph.sliceIndex };
+			s_TextRenderer.mapCurrent->str = { character.glyphUV.xMin, character.glyphUV.yMax, character.glyphUV.sliceIndex };
 			s_TextRenderer.mapCurrent->tint = tint;
 			s_TextRenderer.mapCurrent++;
 

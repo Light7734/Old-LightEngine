@@ -79,7 +79,7 @@ namespace Light {
 		else
 			LT_CORE_ERROR("LayerStack::DetachLayer: failed to find the layer: {}", layer->GetName());
 
-		for (int i = i; i < m_Layers.size(); i++)
+		for (int i = 0; i < m_Layers.size(); i++)
 			m_Layers[i]->SetDrawProiority(i);
 	}
 

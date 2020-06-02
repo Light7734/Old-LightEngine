@@ -3,7 +3,6 @@
 #include "Debug/Logger.h"
 #include "Debug/Benchmark/Instrumentor.h"
 
-
 // platform
 #ifdef _WIN32
 	#define LIGHT_PLATFORM_WINDOWS
@@ -19,7 +18,6 @@
 #else
 	#error Unsupported platform: Unknown
 #endif
-
 
 // directx
 #ifdef LIGHT_PLATFORM_WINDOWS
@@ -58,7 +56,6 @@
 #define LT_ASSERT(x, ...)      if(!(x)) { LT_FATAL(__VA_ARGS__)     ; LT_DBREAK; throw ::Light::FailedAssertion(__FILE__, __LINE__); }
 #define LT_CORE_ASSERT(x, ...) if(!(x)) { LT_CORE_FATAL(__VA_ARGS__); LT_DBREAK; throw ::Light::FailedAssertion(__FILE__, __LINE__); }
 
-
 // utility
 #define LT_PAIR_TOKEN_VALUE_TO_NAME(token) { token, #token }
 #define LT_PAIR_TOKEN_NAME_TO_VALUE(token) { #token, token }
@@ -67,7 +64,7 @@
 
 // resource limits (mostly arbitrary)
 #define LT_MAX_TEXTURE_ARRAY_SLICES    16u
-#define LT_MAX_TEXTURE_DIMENSIONS      2048u
+#define LT_MAX_TEXTURE_DIMENSIONS      4096u
 
 namespace Light {
 

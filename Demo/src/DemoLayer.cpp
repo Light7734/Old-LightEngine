@@ -10,10 +10,10 @@ DemoLayer::DemoLayer()
 {
 	LT_PROFILE_FUNC();
 	LT_TRACE("DemoLayer::DemoLayer");
-	m_LayeDebugrName = "DemoLayer"; // can be retrived with GetName()
+	m_LayeDebugrName = "DemoLayer"; // can be retrived with GetName().
 
-	// Camera class is used to get view/projection/bounds of the camera
-	// CameraController is used to change position/zoomLevel/aspectRatio. you probably want to use it only in 1 layer
+	// Camera class is used to get view/projection/bounds of the camera.
+	// CameraController is used to change position/zoomLevel/aspectRatio. you probably want to use it only in 1 layer.
 	m_Camera = std::make_shared<Light::Camera>(glm::vec2(0.0f, 0.0f), Light::GraphicsContext::GetAspectRatio(), 1000.0f);
 	m_CameraController = m_Camera->GetController();
 
@@ -46,7 +46,7 @@ void DemoLayer::OnDetatch()
 
 void DemoLayer::OnUpdate(float DeltaTime)
 {
-	// Control the camera
+	// camera control
 
 	if (Light::Input::GetKey(KEY_A))
 		m_CameraController->MoveX(-m_CameraSpeed * DeltaTime);
@@ -62,10 +62,10 @@ void DemoLayer::OnUpdate(float DeltaTime)
 void DemoLayer::OnUserInterfaceUpdate()
 {
 	// ImGui stuff, if you don't understand these, call Light::UserInterface::ShowImGuiDemoWindow(),
-	// and see imgui_demo.cpp in ImGui project
+	//     and see imgui_demo.cpp in ImGui project.
 
 	// ** all ImGui calls should be inside OnUserInterfaceUpdate, because it's wrapped with UserInterface::Begin/End
-	// calling ImGui functions in a function other than OnUserInterfaceUpdate results in runtime error
+	//       calling ImGui functions in a function other than OnUserInterfaceUpdate results in runtime error.
 
 	ImGui::SetNextWindowSize(ImVec2(Light::GraphicsContext::GetResolution().width / 3.0f, Light::GraphicsContext::GetResolution().height));
 	ImGui::Begin("DemoLayer", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
@@ -141,7 +141,7 @@ void DemoLayer::OnUserInterfaceUpdate()
 		if (ImGui::Button(Light::GraphicsContext::IsMSAAEnabled() ? "disable" : "enable"))
 			Light::GraphicsContext::Get()->SetMSAA(!Light::GraphicsContext::IsMSAAEnabled());
 
-		// samples count should be a power of 2, '2, 4, 8, or 16'
+		// samples count should be a power of 2, '2, 4, 8, or 16'.
 		static int samples = 1;
 		if (ImGui::DragInt("^ 2 = SampleCount", &samples, 1.0f, 1, 4))
 			Light::GraphicsContext::Get()->SetMSAASampleCount(BIT(samples));
@@ -169,12 +169,12 @@ void DemoLayer::OnUserInterfaceUpdate()
 
 void DemoLayer::OnEvent(Light::Event& event)
 {
-	// uncomment to log every event
+	// uncomment to log every event.
 	// LT_TRACE(event.GetLogInfo());
 
 	Light::Dispatcher dispatcher(event); 
 
-	// if one of these functions return true, next layers won't receive 'event'
+	// if one of these functions return true, next layers won't receive 'event'.
 	dispatcher.Dispatch<Light::KeyboardKeyPressedEvent>(LT_EVENT_FN(DemoLayer::OnKeyPress));
 	dispatcher.Dispatch<Light::MouseScrolledEvent>(LT_EVENT_FN(DemoLayer::OnMouseScroll));
 

@@ -6,9 +6,9 @@ AudioLayer::AudioLayer()
 	LT_TRACE("AudioLayer::AudioLayer");
 	m_LayeDebugrName = "AudioLayer";
 
-	// load the audio by playing it paused, playLooped is true
+	// load the audio by playing it paused, playLooped is true.
 	// if none of playLooped or startPaused or track is true, then PlayAudio2D plays the audio once and won't return anything.
-	// if PlayAudio2D does return Audio*, you should call m_Music->drop() otherwise it results in memory waste.
+	//     if PlayAudio2D does return Audio*, you should call m_Music->drop() otherwise it results in memory waste.
 	m_Music = Light::AudioEngine::Get().PlayAudio2D("res/getout.ogg", true, true);
 }
 

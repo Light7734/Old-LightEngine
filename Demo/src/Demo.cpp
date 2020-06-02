@@ -16,13 +16,13 @@ Demo::Demo()
 	wd.title = "Demo";
 	wd.displayMode = Light::DisplayMode::Windowed;
 
-	// we pass aspect ratio as enum value so the engine can check if the dimensions are correct
+	// we pass aspect ratio as enum value so the engine can check if the dimensions are correct.
 	Light::GraphicsConfigurations gc;
 	gc.resolution = Light::Resolution(1280u, 720u, Light::AspectRatio::AR_16_9); 
 
 	m_Window = std::make_unique<Light::Window>(wd, gc, Light::GraphicsAPI::Directx);
 
-	// attach demo layer ( layer stack will call delete on attached layers on destructor )
+	// attach the DemoLayer ( layer stack will call delete only on **attached** layers on destructor )
 	Light::Application::AttachLayer(new DemoLayer);
 }
 

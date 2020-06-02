@@ -100,6 +100,8 @@ namespace Light {
 	void TextureArray::AllocateTexture(const std::string& name, unsigned width, unsigned int height)
 	{
 		LT_PROFILE_FUNC();
+		LT_CORE_ASSERT(std::max(width, height) <= LT_MAX_TEXTURE_DIMENSIONS,
+		               "TextureArray::AllocateTexture: dimensions too large for texture: {}, {} > {}", name, std::max(width, height), LT_MAX_TEXTURE_DIMENSIONS);
 		m_UnresolvedTextures.push_back({ name, "", TextureImageData(nullptr, width, height, m_Channels) });
 	}
 
@@ -132,8 +134,11 @@ namespace Light {
 							found = true;
 							m_OccupiedSpace.push_back(uv);
 
-							if(t.pixels)
+							if (t.pixels)
+							{
 								UpdateSubTexture(uv, t.pixels);
+								FileManager::FreeTextureFile(t.pixels);
+							}
 
 							if (!data.atlasPath.empty())
 								m_Textures[data.name] = std::make_shared<Texture>(data.atlasPath, uv,

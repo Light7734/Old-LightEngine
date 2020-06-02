@@ -71,7 +71,7 @@ void PostProcessLayer::ShowDebugWindow()
 	}
 
 	// change values of kernel effect's convolution matrix, for more information about kernel effects:
-	// https://setosa.io/ev/image-kernels/ and https://learnopengl.com/Advanced-OpenGL/Framebuffers.
+	//     https://setosa.io/ev/image-kernels/ and https://learnopengl.com/Advanced-OpenGL/Framebuffers.
 	if (ImGui::TreeNode("kernel effect's convolution matrix"))
 	{
 		bool valueChanged = false;

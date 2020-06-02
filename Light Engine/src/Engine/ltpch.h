@@ -1,5 +1,16 @@
 #pragma once
 
+// 3rd-party libraries
+#include <irrKlang.h>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+#include <spdlog/spdlog.h>
+
+#include <imgui.h>
+
 // Engine
 #include "Debug/Logger.h"
 #include "Debug/Benchmark/Instrumentor.h"
