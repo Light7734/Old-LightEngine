@@ -4,10 +4,7 @@
 
 #include "Renderer/GraphicsContext.h"
 
-#include <glfw/glfw3.h>
-
 #include <d3d11.h>
-#include <dxgi.h>
 #include <wrl.h>
 
 namespace Light {

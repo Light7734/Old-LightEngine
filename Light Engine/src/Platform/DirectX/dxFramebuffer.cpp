@@ -5,11 +5,9 @@
 
 #include "Debug/Exceptions.h"
 
-#include "Renderer/Shader.h"
-
 namespace Light {
 
-	dxFramebuffer::dxFramebuffer(const std::string& vertex, const std::string& pixel, TextureBindingSlot slot)
+	dxFramebuffer::dxFramebuffer(const std::string& vertex, const std::string& pixel, unsigned int width, unsigned int height, TextureBindingSlot slot)
 		: m_BindingSlot(slot)
 	{
 		LT_PROFILE_FUNC();

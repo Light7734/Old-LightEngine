@@ -2,36 +2,13 @@
 
 #include "Core/Core.h"
 
-#include <glm/glm.hpp>
+#include "Utility/FileManager.h"
 
 #include <unordered_map>
-#include <bitset>
-#include <set>
+
+#include <glm/glm.hpp>
 
 namespace Light {
-
-	struct TextureImageData
-	{
-		unsigned char* pixels;
-		int width, height, channels;
-
-		TextureImageData() : pixels(nullptr), width(0), height(0), channels(0) {}
-
-		TextureImageData(unsigned char* pixels_, int width_, int height_, int channels_)
-		                 : pixels(pixels_), width(width_), height(height_), channels(channels_) {}
-			
-		inline operator bool() const { return pixels && width && height && channels; }
-
-		inline bool operator<(const TextureImageData& other)
-		{
-			return width * height < other.width* other.height;
-		}
-
-		inline bool operator>(const TextureImageData& other)
-		{
-			return width * height > other.width * other.height;
-		}
-	};
 
 	struct TextureCoordinates
 	{
@@ -94,10 +71,10 @@ namespace Light {
 		struct UnresolvedTextureData {
 			std::string name;
 			std::string atlasPath;
-			TextureImageData texture;	
+			TextureFileData texture;
 
-			inline bool operator>(const UnresolvedTextureData& other) { // to be used by std::sort
-				return texture.width * texture.height > other.texture.width * other.texture.height;
+			bool operator>(const UnresolvedTextureData& other) const { // to be used by std::sort
+				return texture > other.texture;
 			}
 		};
 		std::vector<UnresolvedTextureData> m_UnresolvedTextures;

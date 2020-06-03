@@ -1,8 +1,6 @@
 #include "ltpch.h"
 #include "UserInterface.h"
 
-#include "Core/Window.h"
-
 #include "Renderer/GraphicsContext.h"
 
 #ifdef LIGHT_PLATFORM_WINDOWS

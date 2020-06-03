@@ -1,24 +1,14 @@
 #pragma once
 
-// 3rd-party libraries
-#include <irrKlang.h>
-
-#include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
-#include <spdlog/spdlog.h>
-
-#include <imgui.h>
-
 // Engine
-#include "Debug/Logger.h"
-#include "Debug/Benchmark/Instrumentor.h"
+#include "Core/Core.h"
 
 // Platform
 #ifdef _WIN32
 	#define NOMINMAX
 	#include <Windows.h>
+	#include <d3d11.h>
+	#include <wrl.h>
 	#undef NOMINMAX
 #endif
 

@@ -6,8 +6,6 @@
 
 #include <unordered_map>
 
-#include "Utility/FIleManager.h"
-
 namespace Light {
 
 	struct FontCharData
@@ -19,7 +17,6 @@ namespace Light {
 		TextureCoordinates glyphUV;
 		
 		FontCharData() = default;
-		FontCharData(FontCharGlyphData data) : size(data.size), bearing(data.bearing), advance(data.advance) { LT_CORE_DEBUG("AC"); }
 	};
 
 	class Font

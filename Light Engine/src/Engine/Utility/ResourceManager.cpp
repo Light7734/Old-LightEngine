@@ -1,7 +1,9 @@
 #include "ltpch.h"
 #include "ResourceManager.h"
 
+#include "Renderer/Texture.h"
 #include "Renderer/Shader.h"
+#include "Renderer/Font.h"
 
 namespace Light {
 
@@ -9,6 +11,27 @@ namespace Light {
 	std::shared_ptr<TextureArray> ResourceManager::s_FontGlyphs;
 
 	std::unordered_map<std::string, std::shared_ptr<Font>> ResourceManager::s_Fonts;
+
+	void ResourceManager::Init()
+	{
+		LT_PROFILE_FUNC();
+
+		s_TextureArray = TextureArray::Create(2048u, 2048u, 16u, 4u);
+		s_FontGlyphs = TextureArray::Create(2048u, 2048u, 3u, 1u);
+
+		s_TextureArray->Bind(BINDING_TEXTUREARRAY0);
+		s_FontGlyphs->Bind(BINDING_FONTGLYPHARRAY0);
+	}
+
+	void ResourceManager::Terminate()
+	{
+		LT_PROFILE_FUNC();
+
+		s_TextureArray.reset();
+		s_FontGlyphs.reset();
+
+		s_Fonts.clear();
+	}
 
 	void ResourceManager::LoadTextureAtlas(const std::string& name, const std::string& texturePath, const std::string& atlasPath)
 	{
@@ -42,25 +65,8 @@ namespace Light {
 		s_Fonts.erase(name);
 	}
 
-	void ResourceManager::Terminate()
-	{
-		LT_PROFILE_FUNC();
+	std::shared_ptr<Texture> ResourceManager::GetTexture(const std::string& name) { return s_TextureArray->GetTexture(name); }
 
-		s_TextureArray.reset();
-		s_FontGlyphs.reset();
-
-		s_Fonts.clear();
-	}
-
-	void ResourceManager::Init()
-	{
-		LT_PROFILE_FUNC();
-
-		s_TextureArray = TextureArray::Create(2048u, 2048u, 16u, 4u);
-		s_FontGlyphs   = TextureArray::Create(2048u, 2048u, 3u, 1u);
-
-		s_TextureArray->Bind(BINDING_TEXTUREARRAY0);
-		s_FontGlyphs->Bind(BINDING_FONTGLYPHARRAY0);
-	}
+	std::shared_ptr<Font> ResourceManager::GetFont(const std::string& name) { return s_Fonts[name]; }
 
 }

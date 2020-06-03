@@ -1,8 +1,5 @@
 #pragma once
 
-#include "glVertexLayout.h"
-#include "Renderer/Buffers.h"
-
 #include "Core/Core.h"
 
 #include "Renderer/Framebuffer.h"
@@ -21,7 +18,7 @@ namespace Light {
 
 		TextureBindingSlot m_BindingSlot;
 	public:
-		glFramebuffer(const std::string& vertex, const std::string& fragment, TextureBindingSlot slot);
+		glFramebuffer(const std::string& vertex, const std::string& fragment, unsigned int width, unsigned int height, TextureBindingSlot slot);
 		~glFramebuffer();
 
 		void BindAsTarget() override;

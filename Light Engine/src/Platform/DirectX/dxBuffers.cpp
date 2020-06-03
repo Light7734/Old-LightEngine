@@ -5,8 +5,6 @@
 
 #include "Debug/Exceptions.h"
 
-#include <glm/gtc/type_ptr.hpp>
-
 namespace Light {
 	
 	// ConstantBuffers //

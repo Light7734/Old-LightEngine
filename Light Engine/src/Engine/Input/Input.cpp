@@ -7,6 +7,8 @@
 
 #include "Renderer/GraphicsContext.h"
 
+#include "Renderer/Camera.h"
+
 #include <glfw/glfw3.h>
 
 #include <imgui.h>

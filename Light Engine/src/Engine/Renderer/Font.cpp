@@ -1,17 +1,11 @@
 #include "ltpch.h"
 #include "Font.h"
 
-#include "Utility/ResourceManager.h"
-
-#define LT_FONT_CHAR_PADDING 4u
-
 namespace Light {
 
 	Font::Font(const std::string& name, const std::string& path, std::shared_ptr<TextureArray> textureArray, unsigned int size)
 	{
 		LT_PROFILE_FUNC();
-
-		FileManager::LoadFont(path, size);
 
 		std::vector<TextureCoordinates> glyphsSpace;
 
@@ -21,11 +15,15 @@ namespace Light {
 		std::vector<unsigned char*> buffers(128);
 		buffers.resize(128);
 
+		FontFileData font = FileManager::LoadFont(path, size);
+
 		for (uint8_t i = 0; i < 128; i++)
 		{
 			bool found = false;
-			m_CharactersData[i] = FontCharData(FileManager::LoadFontCharGlyph(i, &buffers[i]));
-						
+
+			font.LoadChar(i);
+			m_CharactersData[i] = { font.GetSize(), font.GetBearing(), font.GetAdvance() };
+
 			for (uint16_t y = 0; y < 2048u && !found; y++)
 			{
 				found = false;
@@ -65,12 +63,12 @@ namespace Light {
 
 		for (uint8_t i = 0; i < 128; i++)
 		{
-			// write to texture slice
-			FileManager::LoadFontCharGlyph(i, &buffers[i]);
+			font.LoadChar(i);
 
+			// write to texture slice
 			textureArray->UpdateSubTexture(glyphsSpace[i].xMin + xOffset, glyphsSpace[i].yMin + yOffset, coords.sliceIndex,
 			                               glyphsSpace[i].GetWidth(), glyphsSpace[i].GetHeight(),
-			                               buffers[i]);
+			                               font.GetBuffer());
 
 			// figure out and set character's texture coordinates
 			m_CharactersData.at(i).glyphUV = { tcuX * (glyphsSpace[i].xMin + xOffset), tcuY * (glyphsSpace[i].yMin + yOffset), // xMin, yMin
@@ -78,9 +76,6 @@ namespace Light {
 			                              coords.sliceIndex }; // sliceIndex
 		}
 		textureArray->GenerateMips();
-
-		// free memory
-		FileManager::FreeLoadedFont();
 	}
 
 }

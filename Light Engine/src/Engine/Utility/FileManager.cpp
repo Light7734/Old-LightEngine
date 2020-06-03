@@ -1,7 +1,6 @@
 #include "ltpch.h"
 #include "FIleManager.h"
 
-#define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
 #include <ft2build.h>
@@ -11,6 +10,48 @@ namespace Light {
 
 	FT_LibraryRec_* FileManager::s_Library = nullptr;
 	FT_FaceRec_* FileManager::s_Face = nullptr;
+
+	FontFileData::FontFileData(FT_LibraryRec_* library, const char* path, unsigned int size)
+	{
+		LT_CORE_ASSERT(!FT_New_Face(library, path, 0l, &face), "FontFileData::FontFileData: FT_New_Face failed");
+		LT_CORE_ASSERT(!FT_Set_Pixel_Sizes(face, 0u, size), "FontFileData::FontFileData: FT_Set_Pixel_Sizes failed");
+	}
+
+	FontFileData::~FontFileData()
+	{
+		FT_Done_Face(face);
+	}
+
+	void FontFileData::SetSize(unsigned int size)
+	{
+		LT_CORE_ASSERT(!FT_Set_Pixel_Sizes(face, 0u, size), "FontFileData::FontFileData: FT_Set_Pixel_Sizes failed");
+	}
+
+	void FontFileData::LoadChar(unsigned char charCode)
+	{
+		LT_CORE_ASSERT(face, "FontFileData::LoadChar: no fonts are loaded");
+		LT_CORE_ASSERT(!FT_Load_Char(face, charCode, FT_LOAD_RENDER), "FontFileData::LoadChar: FT_Load_Char failed: {}", (char)charCode);
+	}
+
+	const glm::vec2& FontFileData::GetSize() const
+	{
+		return glm::vec2(face->glyph->bitmap.width, face->glyph->bitmap.rows);
+	}
+
+	const glm::vec2& FontFileData::GetBearing() const
+	{
+		return glm::vec2(face->glyph->bitmap_left, face->glyph->bitmap_top);
+	}
+
+	unsigned int FontFileData::GetAdvance() const
+	{
+		return face->glyph->advance.x >> 6;
+	}
+
+	unsigned char* FontFileData::GetBuffer() const
+	{
+		return face->glyph->bitmap.buffer;
+	}
 
 	std::string FileManager::LoadTextFile(const std::string& path)
 	{
@@ -31,7 +72,7 @@ namespace Light {
 		return ss.str();
 	}
 
-	TextureImageData FileManager::LoadTextureFile(const std::string& path)
+	TextureFileData FileManager::LoadTextureFile(const std::string& path)
 	{
 		LT_PROFILE_FUNC();
 
@@ -44,41 +85,12 @@ namespace Light {
 		return { pixels, x, y, channels };
 	}
 
-	void FileManager::FreeTextureFile(unsigned char* pixels)
-	{
-		stbi_image_free(pixels);
-	}
-
-	void FileManager::LoadFont(const std::string& path, unsigned int size)
+	FontFileData FileManager::LoadFont(const std::string& path, unsigned int size)
 	{
 		if (!s_Library)
 			LT_CORE_ASSERT(!FT_Init_FreeType(&s_Library), "FileManager::LoadFont: FT_Init_FreeType failed");
 
-		if (s_Face)
-		{
-			LT_CORE_WARN("FileManager::LoadFont: FreeLoadedFont was not called after the previous LoadFont");
-		}
-
-		LT_CORE_ASSERT(!FT_New_Face(s_Library, path.c_str(), 0, &s_Face), "FileManager::LoadFont: FT_New_Face failed");
-		LT_CORE_ASSERT(!FT_Set_Pixel_Sizes(s_Face, 0, size), "FileManager::LoadFont: FT_Set_Pixel_Sizes failed");
-	}
-
-	const FontCharGlyphData& FileManager::LoadFontCharGlyph(unsigned char charCode, unsigned char** outBuffer)
-	{
-		LT_CORE_ASSERT(s_Face, "FileManager::LoadFontChar: no fonts are loaded");
-		LT_CORE_ASSERT(!FT_Load_Char(s_Face, charCode, FT_LOAD_RENDER), "FileManager::LoadFontChar: FT_Load_Char failed: {}", (char)charCode);
-
-		*outBuffer = s_Face->glyph->bitmap.buffer;
-
-		return FontCharGlyphData(glm::vec2(s_Face->glyph->bitmap.width, s_Face->glyph->bitmap.rows),
-		                         glm::vec2(s_Face->glyph->bitmap_left, s_Face->glyph->bitmap_top),
-		                         (unsigned int)s_Face->glyph->advance.x >> 6);
-	}
-
-	void FileManager::FreeLoadedFont()
-	{
-		FT_Done_Face(s_Face);
-		s_Face = nullptr;
+		return FontFileData(s_Library, path.c_str(), size);
 	}
 
 }

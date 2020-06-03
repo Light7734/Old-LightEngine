@@ -17,9 +17,9 @@ namespace Light {
 		switch (GraphicsContext::GetAPI())
 		{
 		case GraphicsAPI::Opengl:
-			return std::make_shared<glFramebuffer>(vertex, fragment, slot);
+			return std::make_shared<glFramebuffer>(vertex, fragment, GraphicsContext::GetResolution().width, GraphicsContext::GetResolution().height, slot);
 		case GraphicsAPI::Directx: LT_DX(
-			return std::make_shared<dxFramebuffer>(vertex, fragment, slot);)	
+			return std::make_shared<dxFramebuffer>(vertex, fragment, GraphicsContext::GetResolution().width, GraphicsContext::GetResolution().height, slot);)
 		default:
 			LT_CORE_ASSERT(false, "Framebuffer::Create: invalid GraphicsAPI");
 		}

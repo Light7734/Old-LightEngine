@@ -14,9 +14,6 @@ project "Demo"
     files    "%{prj.location}/**.**"
     excludes "%{prj.location}/**.vcxproj**"
 	
-	pchheader "LightEngine.h"
-	pchsource "%{prj.location}/LightEngine/src/Engine/LightEngine.cpp"
-
     links
     {
         "Light Engine" ,

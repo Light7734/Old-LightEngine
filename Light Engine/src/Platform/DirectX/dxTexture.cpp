@@ -5,8 +5,6 @@
 
 #include "Debug/Exceptions.h"
 
-#include "Utility/FileManager.h"
-
 namespace Light {
 
 	dxTextureArray::dxTextureArray(unsigned int width, unsigned int height, unsigned int depth, unsigned int channels)

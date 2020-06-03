@@ -11,12 +11,6 @@
 #include "Shaders/QuadShader.h"
 #include "Shaders/TextShader.h"
 
-#include "Core/Timer.h"
-
-#include "Utility/ResourceManager.h"
-
-#include <glm/gtc/matrix_transform.hpp>
-
 namespace Light {
 
 	Renderer::QuadRenderer Renderer::s_QuadRenderer;

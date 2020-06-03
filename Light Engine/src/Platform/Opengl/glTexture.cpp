@@ -1,8 +1,6 @@
 #include "ltpch.h"
 #include "glTexture.h"
 
-#include "Utility/FileManager.h"
-
 #include <glad/glad.h>
 
 namespace Light {

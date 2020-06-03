@@ -22,7 +22,7 @@ namespace Light {
 
 		TextureBindingSlot m_BindingSlot;
 	public:
-		dxFramebuffer(const std::string& vertex, const std::string& pixel, TextureBindingSlot slot);
+		dxFramebuffer(const std::string& vertex, const std::string& pixel, unsigned int width, unsigned int height, TextureBindingSlot slot);
 		~dxFramebuffer();
 
 		void BindAsTarget() override;

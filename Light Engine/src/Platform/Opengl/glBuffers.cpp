@@ -1,8 +1,6 @@
 #include "ltpch.h"
 #include "glBuffers.h"
 
-#include "Renderer/GraphicsContext.h"
-
 #include <glad/glad.h>
 
 namespace Light {

@@ -4,14 +4,14 @@
 
 #include "Core/Core.h"
 
-#include "Renderer/Camera.h"
-
 #include <glm/glm.hpp>
 
 #define LIGHT_MAX_KEYS       348
 #define LIGHT_MAX_BUTTONS    8
 
 namespace Light {
+
+	class Camera;
 
 	class Event;
 

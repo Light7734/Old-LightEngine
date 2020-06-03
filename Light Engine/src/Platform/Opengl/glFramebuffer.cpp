@@ -1,16 +1,11 @@
 #include "ltpch.h"
 #include "glFramebuffer.h"
 
-
-#include "Renderer/GraphicsContext.h"
-#include "Renderer/RenderCommand.h"
-#include "Renderer/Shader.h"
-
 #include <glad/glad.h>
 
 namespace Light {
 
-	glFramebuffer::glFramebuffer(const std::string& vertex, const std::string& fragment, TextureBindingSlot slot)
+	glFramebuffer::glFramebuffer(const std::string& vertex, const std::string& fragment, unsigned int width, unsigned int height, TextureBindingSlot slot)
 		: m_BindingSlot(slot)
 	{
 		LT_PROFILE_FUNC();
@@ -26,10 +21,7 @@ namespace Light {
 		glBindTexture(GL_TEXTURE_2D, m_TextureID);
 
 
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
-		             GraphicsContext::GetConfigurations().resolution.width,
-		             GraphicsContext::GetConfigurations().resolution.height,
-		             NULL, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, NULL, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

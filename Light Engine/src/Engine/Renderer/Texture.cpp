@@ -3,8 +3,6 @@
 
 #include "GraphicsContext.h"
 
-#include "Utility/FileManager.h"
-
 #ifdef LIGHT_PLATFORM_WINDOWS
 	#include "Platform/DirectX/dxTexture.h"
 #endif
@@ -102,7 +100,7 @@ namespace Light {
 		LT_PROFILE_FUNC();
 		LT_CORE_ASSERT(std::max(width, height) <= LT_MAX_TEXTURE_DIMENSIONS,
 		               "TextureArray::AllocateTexture: dimensions too large for texture: {}, {} > {}", name, std::max(width, height), LT_MAX_TEXTURE_DIMENSIONS);
-		m_UnresolvedTextures.push_back({ name, "", TextureImageData(nullptr, width, height, m_Channels) });
+		m_UnresolvedTextures.push_back({ name, "", TextureFileData(nullptr, width, height, m_Channels) });
 	}
 
 	void TextureArray::ResolveTextures()
@@ -110,11 +108,11 @@ namespace Light {
 		LT_PROFILE_FUNC();
 		std::sort(m_UnresolvedTextures.begin(), m_UnresolvedTextures.end(), std::greater());
 
-		for (const auto& data : m_UnresolvedTextures)
+		for (auto& data : m_UnresolvedTextures)
 		{
 			bool found = false;
-			auto t = data.texture;
-
+			auto& t = data.texture;
+		
 			for (uint16_t z = 0; z < m_Depth && !found; z++)
 			{
 				found = false;
@@ -123,39 +121,39 @@ namespace Light {
 					for (uint16_t x = 0; x <= m_Width - t.width; x++)
 					{
 						const TextureCoordinates uv(x, y, x + t.width, y + t.height, z);
-
+		
 						bool valid = true;
 						for (const auto& subt : m_OccupiedSpace)
 							if(subt.Intersects(uv))
 								{ valid = false; break; }
-
+		
 						if (valid)
 						{
 							found = true;
 							m_OccupiedSpace.push_back(uv);
-
+		
 							if (t.pixels)
 							{
 								UpdateSubTexture(uv, t.pixels);
-								FileManager::FreeTextureFile(t.pixels);
+								t.Free();
 							}
-
+		
 							if (!data.atlasPath.empty())
 								m_Textures[data.name] = std::make_shared<Texture>(data.atlasPath, uv,
 									                                              TextureCoordinates(0, 0, m_Width, m_Height, z));
 							else
 								m_Textures[data.name] = std::make_shared<Texture>(uv, TextureCoordinates(0, 0, m_Width, m_Height, z));
-
+		
 							break;
 						}
 					}
 				}
 			}
-
+		
 			LT_CORE_ASSERT(found, "TextureArray::ResolveTextures: could not find a valid space for texture");
 			found = false;
 		}
-
+		
 		m_UnresolvedTextures.clear();
 		GenerateMips();
 	}

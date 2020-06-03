@@ -6,6 +6,8 @@
 
 #include "Debug/Exceptions.h"
 
+#include <glfw/glfw3.h>
+
 namespace Light {
 
 	dxGraphicsContext* dxGraphicsContext::s_Instance = nullptr;

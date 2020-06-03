@@ -39,17 +39,17 @@ int main()
 	}
 	catch (Light::FailedAssertion fa)
 	{
-		LT_CORE_FATAL("Application exited due FailedAssertion");
+		LT_CORE_FATAL("Application exited due to FailedAssertion");
 		exitCode = -1;
 	}
 	catch (Light::glException gle) 
 	{
-		LT_CORE_FATAL("Application exited due glException");
+		LT_CORE_FATAL("Application exited due to glException");
 		exitCode = -2;
 	}
 	catch (Light::dxException dxe)
 	{
-		LT_CORE_FATAL("Application exited due dxException");
+		LT_CORE_FATAL("Application exited due to dxException");
 		exitCode = -3;
 	}
 
