@@ -12,9 +12,7 @@
 # dll files
 Demo/*.dll
 Sandbox/*.dll
-
-# Test project for da developer
-Testing/
+Testing/*.dll
 
 # User-specific files
 *.rsuser
