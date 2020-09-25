@@ -1,8 +1,9 @@
 # Light Engine
-Light Engine is a cross-platform, high performance 2d game engine currently under development.
+Light Engine was supposed to be a cross-platform, high performance 2d game engine until I've decided to dump this project.
 
-This README will be updated soon with more information
+It will no longer recieve any updates, but i'll just leave the code to be here.
+
+Thanks for starring/following/checking my code <3
 
 [Twitter](https://twitter.com/Verodicia1)
-
-[Trello board](https://trello.com/b/TrfLekBh/light-engine)
+[Reddit](https://www.reddit.com/user/-Light_)
