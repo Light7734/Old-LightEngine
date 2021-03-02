@@ -5,6 +5,6 @@ It will no longer recieve any updates, but i'll just leave the code to be here.
 
 Thanks for starring/following/checking my code <3
 
-[Twitter](https://twitter.com/Verodicia1)
+[Twitter](https://twitter.com/T3amJoy)
 
 [Reddit](https://www.reddit.com/user/-Light_)
